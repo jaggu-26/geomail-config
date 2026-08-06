@@ -1,0 +1,2948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Settings — GeoOne</title>
+<style>
+  :root {
+    /* ---- Tier 1: Primitives (gs-design-foundation.md) ---- */
+    --prim-marine: #1852FE;
+    --prim-blue-900: #001E4C;
+    --prim-blue-800: #1F3A8A;
+    --prim-blue-700: #1D40AF;
+    --prim-blue-600: #1C4ED8;
+    --prim-blue-500: #2463EB;
+    --prim-blue-400: #3B81F6;
+    --prim-blue-300: #5FA5F9;
+    --prim-blue-200: #92C5FD;
+    --prim-blue-100: #BEDBFE;
+    --prim-blue-50:  #DBEAFE;
+    --prim-blue-10:  #EEF6FF;
+
+    --prim-grey-900: #030712;
+    --prim-grey-800: #10172A;
+    --prim-grey-700: #1E293B;
+    --prim-grey-600: #334154;
+    --prim-grey-500: #475569;
+    --prim-grey-400: #64748B;
+    --prim-grey-300: #94A3B8;
+    --prim-grey-200: #CBD5E1;
+    --prim-grey-100: #E2E8F0;
+    --prim-grey-50:  #F1F5F9;
+    --prim-grey-10:  #F7FAFC;
+    --prim-white:    #FFFFFF;
+
+    --prim-red-500: #DC2625;
+    --prim-red-600: #B91C1B;
+    --prim-red-700: #981B1B;
+    --prim-red-100: #FECACA;
+    --prim-red-10:  #FEF1F2;
+
+    --prim-yellow-700: #844D0F;
+    --prim-yellow-50:  #FEF9C3;
+    --prim-yellow-500: #CA8A03;
+    --prim-yellow-400: #EAB305;
+    --prim-yellow-100: #FEEF89;
+    --prim-yellow-10:  #FEFCE8;
+    --prim-yellow-800: #713E11;
+
+    --prim-green-800: #0E4F26;
+    --prim-green-700: #147638;
+    --prim-green-600: #1B9E4B;
+    --prim-green-500: #22C55E;
+    --prim-green-200: #A7E8BF;
+    --prim-green-100: #BDEECF;
+    --prim-green-10:  #E9F9EF;
+
+    --prim-teal-700: #008475;
+    --prim-teal-600: #00AA97;
+    --prim-teal-100: #99FBEF;
+    --prim-teal-10:  #E6FEFB;
+
+    --prim-orange-700: #C25203;
+    --prim-orange-500: #E76A10;
+    --prim-orange-100: #FFB988;
+    --prim-orange-10:  #FFF3EB;
+
+    /* ---- Tier 2: Semantic aliases ---- */
+    --color-brand: var(--prim-marine);
+    --color-brand-hover: #1242D4;
+    --color-brand-active: #0D3299;
+    --color-brand-subtle: var(--prim-blue-10);
+    --color-brand-border: var(--prim-blue-100);
+
+    --color-text-default: var(--prim-grey-900);
+    --color-text-secondary: var(--prim-grey-600);
+    --color-text-placeholder: var(--prim-grey-400);
+    --color-text-disabled: var(--prim-grey-300);
+    --color-text-inverse: var(--prim-white);
+
+    --color-danger: var(--prim-red-500);
+    --color-danger-hover: var(--prim-red-600);
+    --color-danger-active: var(--prim-red-700);
+    --color-danger-subtle: var(--prim-red-10);
+    --color-danger-border: var(--prim-red-100);
+
+    --color-surface-default: var(--prim-white);
+    --color-surface-subtle: var(--prim-grey-10);
+    --color-surface-overlay: var(--prim-grey-50);
+
+    --color-border-default: var(--prim-grey-100);
+    --color-border-subtle: var(--prim-grey-50);
+    --color-border-strong: var(--prim-grey-200);
+
+    /* ---- Legacy short names (kept for existing components, values now spec-correct) ---- */
+    --brand: var(--color-brand);
+    --brand-hover: var(--color-brand-hover);
+    --nav: var(--prim-blue-900);
+    --card: var(--color-surface-default);
+    --bg: var(--color-surface-subtle);
+    --grey-50: var(--prim-grey-50);
+    --grey-100: var(--prim-grey-100);
+    --text: var(--color-text-default);
+    --text-2: var(--color-text-secondary);
+    --blue-10: var(--prim-blue-10);
+    --blue-300: var(--prim-blue-300);
+    --secondary-400: #B0CFF9;
+    --danger: var(--color-danger);
+    --success: var(--prim-green-500);
+    --warning: var(--prim-yellow-400);
+
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-full: 9999px;
+
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+    --shadow-md: 0 4px 16px rgba(0,0,0,0.10);
+    --shadow-lg: 0 8px 32px rgba(0,0,0,0.14);
+    --shadow-dropdown: var(--shadow-md);
+    --shadow-modal: var(--shadow-lg);
+
+    --color-overlay: rgba(14, 26, 51, 0.45);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: 'Gilroy', -apple-system, system-ui, sans-serif;
+    color: var(--text);
+    background: var(--grey-50);
+  }
+
+  .app {
+    display: flex;
+    align-items: stretch;
+    height: 100vh;
+    width: 100%;
+  }
+
+  /* ---------- Outer collapsed nav rail ---------- */
+  .nav-rail {
+    background: var(--card);
+    border-right: 1px solid var(--grey-100);
+    width: 56px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 10px;
+  }
+
+  .nav-rail__top {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+  }
+
+  .nav-rail__bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .nav-icon-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    color: var(--text);
+    background: transparent;
+    border: none;
+  }
+
+  .nav-icon-btn svg { width: 24px; height: 24px; }
+
+  .nav-avatar {
+    background: var(--nav);
+    color: #fff;
+    width: 28px;
+    height: 28px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 500;
+  }
+
+  /* ---------- Main container ---------- */
+  .main-container {
+    flex: 1 0 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  /* ---------- Banner ---------- */
+  .banner {
+    position: relative;
+    background: var(--nav);
+    height: 160px;
+    flex-shrink: 0;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
+  }
+
+  .banner__bg {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: auto;
+    pointer-events: none;
+  }
+
+  .banner__title {
+    position: relative;
+    font-size: 24px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.25;
+  }
+
+  .banner__row {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .banner__profile {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .banner__avatar {
+    background: var(--secondary-400);
+    border: 1.5px solid #fff;
+    width: 56px;
+    height: 56px;
+    border-radius: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--nav);
+    font-size: 32px;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  .banner__meta {
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .banner__name {
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 24px;
+  }
+
+  .banner__sub {
+    font-size: 14px;
+    font-weight: 500;
+    display: flex;
+    gap: 8px;
+    line-height: 20px;
+  }
+
+  .banner__sso {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .banner__sso span {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--blue-300);
+  }
+
+  /* ---------- Content area (sidebar + panel) ---------- */
+  .content-container {
+    flex: 1 0 0;
+    min-height: 0;
+    display: flex;
+    align-items: stretch;
+    width: 100%;
+  }
+
+  .sidepanel {
+    background: var(--card);
+    width: 240px;
+    flex-shrink: 0;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .sidebar-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px;
+    border-radius: 5px;
+    width: 100%;
+    background: var(--card);
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    font-family: inherit;
+    text-decoration: none;
+  }
+
+  .sidebar-btn svg {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    color: var(--nav);
+  }
+
+  .sidebar-btn span {
+    flex: 1 0 0;
+    min-width: 0;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 20px;
+    color: var(--nav);
+  }
+
+  .sidebar-btn:hover {
+    background: var(--grey-50);
+  }
+
+  .sidebar-btn--active {
+    background: var(--blue-10);
+  }
+
+  .sidebar-btn--active svg,
+  .sidebar-btn--active span {
+    color: var(--brand);
+  }
+
+  /* ---------- Sub-menu ---------- */
+  .sidebar-group { display: flex; flex-direction: column; gap: 2px; }
+
+  .sidebar-btn__chevron {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    color: var(--nav);
+    transition: transform .2s ease;
+  }
+
+  .sidebar-btn--expanded .sidebar-btn__chevron { transform: rotate(180deg); }
+
+  .sidebar-submenu {
+    display: none;
+    flex-direction: column;
+    gap: 2px;
+    padding-left: 16px;
+  }
+
+  .sidebar-submenu--open { display: flex; }
+
+  .sidebar-sub-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px;
+    border-radius: 5px;
+    width: 100%;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    font-family: inherit;
+    text-decoration: none;
+  }
+
+  .sidebar-sub-btn span {
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 20px;
+    color: var(--prim-grey-600);
+  }
+
+  .sidebar-sub-btn::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--prim-grey-300);
+    flex-shrink: 0;
+  }
+
+  .sidebar-sub-btn:hover { background: var(--grey-50); }
+  .sidebar-sub-btn:hover span { color: var(--nav); }
+
+  .sidebar-sub-btn--active span { color: var(--brand); font-weight: 600; }
+  .sidebar-sub-btn--active::before { background: var(--brand); }
+
+  .content {
+    background: var(--grey-50);
+    flex: 1 0 0;
+    min-width: 0;
+    height: 100%;
+    padding: 16px;
+    overflow-y: auto;
+  }
+
+  /* ---------- User Management table ---------- */
+  .table-group {
+    background: var(--card);
+    border: 1px solid var(--grey-100);
+    border-radius: var(--radius-md);
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .table-filters {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px;
+    gap: 12px;
+  }
+
+  .bunker-tabs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .chip-tab {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    height: 32px;
+    padding: 0 8px;
+    border-radius: var(--radius-sm);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+    border: none;
+    cursor: pointer;
+    background: var(--grey-50);
+    color: var(--prim-grey-700);
+    transition: background .15s ease;
+  }
+
+  .chip-tab:hover { background: var(--prim-grey-200); }
+
+  .chip-tab__count {
+    font-size: 14px;
+    font-weight: 500;
+    color: inherit;
+  }
+
+  .chip-tab--active {
+    background: var(--brand);
+    color: var(--color-text-inverse);
+  }
+
+  .chip-tab--active:hover { background: var(--brand-hover); }
+
+  .table-filters__right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .search-field {
+    background: var(--card);
+    border: 1px solid var(--prim-grey-200);
+    border-radius: var(--radius-sm);
+    height: 32px;
+    width: 370px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  .search-field input {
+    flex: 1 0 0;
+    min-width: 0;
+    height: 100%;
+    border: none;
+    outline: none;
+    padding: 12px;
+    font-size: 14px;
+    font-family: inherit;
+    color: var(--text);
+    background: transparent;
+  }
+
+  .search-field input::placeholder { color: var(--color-text-disabled); }
+
+  .search-field svg { width: 24px; height: 24px; flex-shrink: 0; color: var(--color-text-placeholder); }
+  .search-field__icon { padding-left: 12px; display: flex; align-items: center; }
+  .search-field__filter { padding: 4px; display: flex; align-items: center; cursor: pointer; }
+
+  .btn-add-user {
+    background: var(--brand);
+    border: none;
+    border-radius: var(--radius-sm);
+    height: 32px;
+    padding: 0 12px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--color-text-inverse);
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+    flex-shrink: 0;
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  .btn-add-user svg { width: 24px; height: 24px; }
+  .btn-add-user:hover { background: var(--brand-hover); }
+
+  .table-head-row {
+    display: flex;
+    align-items: center;
+    width: 100%;
+  }
+
+  .table-head-cell {
+    background: var(--grey-50);
+    flex: 1 0 0;
+    min-width: 0;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 20px;
+    color: var(--color-text-placeholder);
+  }
+
+  .table-head-cell--status { flex: none; width: 100px; }
+  .table-head-cell--actions { flex: none; width: 64px; }
+
+  .table-body {
+    flex: 1 0 0;
+    min-height: 0;
+    overflow-y: auto;
+    width: 100%;
+  }
+
+  .table-empty {
+    flex: 1 0 0;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    gap: 4px;
+  }
+
+  .table-empty__illustration { width: 160px; height: 160px; display: block; }
+
+  .table-empty__text {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+    color: var(--prim-grey-500);
+    margin: 0;
+    text-align: center;
+  }
+
+  .table-row {
+    display: flex;
+    align-items: center;
+    width: 100%;
+  }
+
+  .table-cell {
+    background: var(--card);
+    border-bottom: 1px solid var(--grey-100);
+    flex: 1 0 0;
+    min-width: 0;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    font-size: 14px;
+    line-height: 20px;
+    color: var(--color-text-default);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .table-cell--name { font-weight: 500; gap: 4px; }
+
+  .table-cell--provider { gap: 8px; }
+  .table-cell--provider img { width: 16px; height: 16px; flex-shrink: 0; }
+  .table-cell--provider svg { width: 16px; height: 16px; flex-shrink: 0; color: var(--prim-grey-500); }
+  .table-cell__name-text { flex: 0 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  .chip-not-verified {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    padding: 4px 8px;
+    border-radius: 6px;
+    background: var(--prim-yellow-100);
+    color: var(--prim-yellow-800);
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1;
+  }
+
+  .table-row:hover .table-cell { background: var(--prim-blue-10); }
+  .table-cell--status {
+    flex: none;
+    width: 100px;
+    padding: 10px 16px;
+  }
+
+  .table-cell--actions {
+    flex: none;
+    width: 64px;
+    justify-content: center;
+    padding: 12px 16px;
+  }
+
+  .status-chip {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 8px;
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 16px;
+  }
+
+  .status-chip--active { background: var(--prim-green-100); color: var(--prim-green-800); }
+  .status-chip--inactive { background: var(--grey-100); color: var(--color-text-placeholder); }
+  .status-chip--danger { background: var(--prim-red-100); color: var(--prim-red-600); }
+  .status-chip--blue { background: var(--prim-blue-50); color: var(--prim-blue-700); }
+  .status-chip--pending { background: var(--prim-yellow-100); color: var(--prim-yellow-700); }
+
+  .check-now-link {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--brand);
+    text-decoration: underline;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    font-family: inherit;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .check-now-link:hover { color: var(--brand-hover); }
+
+  .checking-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--prim-grey-500);
+  }
+
+  .checking-dots span {
+    display: inline-block;
+    animation: dotBounce 1.2s infinite ease-in-out;
+    font-weight: 700;
+  }
+  .checking-dots span:nth-child(1) { animation-delay: 0s; }
+  .checking-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .checking-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes dotBounce {
+    0%, 80%, 100% { opacity: 0.2; transform: translateY(0); }
+    40%            { opacity: 1;   transform: translateY(-3px); }
+  }
+
+  .no-response-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--prim-grey-400);
+    white-space: nowrap;
+  }
+
+  .reauth-link {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--brand);
+    text-decoration: underline;
+    white-space: nowrap;
+  }
+
+  .row-action-btn {
+    background: var(--card);
+    border: none;
+    border-radius: var(--radius-sm);
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+
+  .row-action-btn svg { width: 24px; height: 24px; color: var(--color-text-placeholder); }
+  .row-action-btn:hover { background: var(--grey-50); }
+
+  /* ---------- Add Users modal ---------- */
+  .modal-overlay {
+    display: flex;
+    position: fixed;
+    inset: 0;
+    background: var(--color-overlay);
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 150ms ease, visibility 0s linear 150ms;
+  }
+
+  .modal-overlay--open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transition: opacity 150ms ease;
+  }
+
+  .modal {
+    background: var(--card);
+    border-radius: var(--radius-lg);
+    width: 800px;
+    max-width: calc(100vw - 32px);
+    max-height: calc(100vh - 64px);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+    transition: height 200ms ease, opacity 200ms ease, transform 200ms ease;
+  }
+
+  .modal-overlay--open .modal {
+    opacity: 1;
+    transform: none;
+  }
+
+  .modal__header {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 12px 24px;
+    width: 100%;
+    flex-shrink: 0;
+  }
+
+  .modal__title {
+    flex: 1 0 0;
+    min-width: 0;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 24px;
+    color: var(--color-text-default);
+    margin: 0;
+  }
+
+  .modal__close {
+    background: var(--card);
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 8px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  .modal__close svg { width: 24px; height: 24px; color: var(--color-text-secondary); }
+  .modal__close:hover { background: var(--grey-50); }
+
+  .modal__content {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    align-items: flex-start;
+    padding: 12px 24px 24px;
+    width: 100%;
+    min-height: 0;
+    overflow-y: auto;
+    box-sizing: border-box;
+  }
+
+  .form-row {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  .form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+    flex: 1 0 0;
+    min-width: 0;
+  }
+
+  .form-field__label {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 16px;
+    color: var(--color-text-secondary);
+    white-space: nowrap;
+  }
+
+  .form-field__required { color: var(--color-danger); }
+
+  .form-field__input {
+    width: 100%;
+    height: 40px;
+    box-sizing: border-box;
+    font-family: inherit;
+    font-size: 16px;
+    color: var(--color-text-default);
+    background: var(--card);
+    border: 1px solid var(--prim-grey-200);
+    border-radius: var(--radius-sm);
+    outline: none;
+    padding: 0 12px;
+    transition: border-color 120ms ease, box-shadow 120ms ease;
+  }
+
+  .form-field__input::placeholder { color: var(--color-text-placeholder); }
+  .form-field__input:hover:not(:disabled) { border-color: var(--prim-grey-300); }
+  .form-field__input:focus { border-color: var(--prim-blue-500); box-shadow: 0 0 0 3px rgba(36,99,235,0.18); }
+  .form-field__input:disabled {
+    background: var(--prim-grey-100);
+    border-color: var(--prim-grey-100);
+    color: var(--color-text-placeholder);
+    cursor: not-allowed;
+  }
+
+  .modal__subtitle {
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 24px;
+    color: var(--color-text-secondary);
+    margin: 0;
+    width: 100%;
+  }
+
+  .field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  .field-label {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    width: 100%;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 16px;
+    color: var(--color-text-secondary);
+  }
+
+  .modal__footer {
+    background: var(--card);
+    border-top: 1px solid var(--grey-100);
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 24px;
+    padding: 12px 24px;
+    width: 100%;
+    flex-shrink: 0;
+  }
+
+  .modal__actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+
+  .btn-cancel {
+    background: var(--blue-10);
+    border: 1px solid var(--brand);
+    border-radius: 4px;
+    height: 40px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--brand);
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  /* Generic primary modal button (GeoMail Configuration modals) */
+  .btn-primary {
+    background: var(--brand);
+    border: none;
+    border-radius: var(--radius-sm);
+    height: 40px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  .btn-primary:hover { background: var(--brand-hover); }
+  .btn-primary:disabled { background: var(--prim-blue-50); cursor: not-allowed; }
+
+  /* GeoMail Configuration — agent card (small addition, reuses card token look) */
+  .agent-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    border: 1px solid var(--grey-100);
+    border-radius: var(--radius-md);
+    background: var(--card);
+    width: 100%;
+    transition: background 120ms ease;
+  }
+
+  .agent-card:hover { background: var(--grey-50); }
+
+  .agent-card__icon {
+    background: var(--grey-50);
+    border-radius: var(--radius-md);
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--brand);
+  }
+
+  .agent-card__icon svg, .agent-card__icon img { width: 22px; height: 22px; }
+
+  .agent-card__body {
+    flex: 1 0 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .agent-card__name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-text-default);
+  }
+
+  .agent-card__desc {
+    font-size: 12px;
+    color: var(--color-text-placeholder);
+  }
+
+  .agent-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  /* Pelagos Info Banner (gs-alert) — info/sm variant */
+  .gs-alert {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-radius: 5px;
+    border: 0.5px solid transparent;
+    font-family: inherit;
+    box-sizing: border-box;
+  }
+
+  .gs-alert--sm { padding: 8px; }
+
+  .gs-alert--info {
+    background: var(--prim-blue-10);
+    border-color: var(--prim-blue-100);
+    color: var(--prim-blue-700);
+  }
+
+  .gs-alert__icon {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+  }
+
+  .gs-alert__icon svg { width: 100%; height: 100%; }
+
+  .gs-alert__desc {
+    margin: 0;
+    color: inherit;
+    font-size: 12px;
+    line-height: 16px;
+  }
+
+  /* GeoMail Configuration — tab panels within .table-group */
+  .geomail-tab-panel {
+    flex: 1 0 0;
+    min-height: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+  }
+
+  .geomail-tab-panel--padded { padding: 16px; }
+
+  .oauth-btn-row {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .oauth-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    height: 48px;
+    padding: 0 16px;
+    border: 1px solid var(--prim-grey-200);
+    border-radius: var(--radius-sm);
+    background: var(--card);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-text-default);
+    cursor: pointer;
+  }
+
+  .oauth-btn:hover { background: var(--grey-50); }
+  .oauth-btn svg { width: 22px; height: 22px; flex-shrink: 0; color: var(--brand); }
+
+  .oauth-btn--active {
+    background: var(--color-brand-subtle);
+    border-color: var(--brand);
+  }
+
+  /* Manual Setup — accordion (button + fields share one growing box) */
+  .oauth-accordion {
+    width: 100%;
+    border: 1px solid var(--prim-grey-200);
+    border-radius: var(--radius-sm);
+    background: var(--card);
+    overflow: hidden;
+  }
+
+  .oauth-accordion .oauth-accordion__trigger {
+    border: none;
+    border-radius: 0;
+  }
+
+  .oauth-accordion__body {
+    padding: 12px 16px 16px;
+  }
+
+  /* SOP upload dropzone — Figma "Upload" component (Size=Large) */
+  .dropzone {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    min-height: 160px;
+    padding: 32px;
+    border: 1px dashed var(--prim-grey-400);
+    border-radius: var(--radius-md);
+    background: var(--card);
+    text-align: center;
+    box-sizing: border-box;
+    cursor: pointer;
+    position: relative;
+    transition: background 120ms ease, border-color 120ms ease;
+  }
+
+  .dropzone__input {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    margin: 0;
+  }
+
+  .dropzone__icon { width: 48px; height: 48px; flex-shrink: 0; }
+  .dropzone__icon img { width: 100%; height: 100%; display: block; }
+
+  .dropzone__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    width: 296px;
+    max-width: 100%;
+  }
+
+  .dropzone__row {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+
+  .dropzone__browse {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--brand);
+    text-decoration: underline;
+    position: relative;
+    z-index: 1;
+    background: none;
+    border: none;
+    padding: 0;
+    font-family: inherit;
+    cursor: pointer;
+  }
+
+  .dropzone__browse:hover { color: var(--brand-hover); }
+
+  .dropzone__title { font-size: 16px; font-weight: 600; color: var(--prim-blue-900); }
+  .dropzone__hint { font-size: 12px; font-weight: 600; color: var(--prim-grey-400); }
+
+  .dropzone--active {
+    border-color: var(--brand);
+    background: var(--prim-blue-10);
+  }
+
+  .dropzone--filled {
+    border-style: solid;
+    border-color: var(--brand);
+    background: var(--prim-blue-10);
+  }
+
+  /* Checklist Templates — vessel cards (Figma 8215:725329) */
+  .vessel-card-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .vessel-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px;
+    border: 1px solid var(--grey-100);
+    border-radius: var(--radius-lg);
+    background: var(--card);
+    transition: background 120ms ease;
+  }
+
+  .vessel-card:hover { background: var(--grey-50); }
+
+  .vessel-card__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    padding: 8px;
+    box-sizing: border-box;
+    border-radius: var(--radius-lg);
+    background: var(--grey-50);
+    color: var(--brand);
+  }
+
+  .vessel-card__icon svg { width: 32px; height: 32px; }
+
+  .vessel-card__body {
+    flex: 1 0 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .vessel-card__name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--prim-grey-600);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .vessel-card__meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--prim-grey-300);
+    min-width: 0;
+  }
+
+  .vessel-card__meta--configured { color: var(--prim-grey-500); }
+  .vessel-card__meta span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .vessel-card__meta-divider { flex-shrink: 0; width: 1.5px; height: 10px; background: #D9D9D9; }
+
+  .vessel-card__action {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    height: 32px;
+    padding: 4px 12px;
+    border-radius: var(--radius-sm);
+    border: none;
+    background: none;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--brand);
+    white-space: nowrap;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 120ms ease;
+  }
+
+  .vessel-card__action:hover { background: var(--color-brand-subtle); }
+  .vessel-card__action svg { width: 24px; height: 24px; }
+
+  .vessel-card__actions {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+
+  .vessel-card__deactivate {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: var(--radius-sm);
+    background: none;
+    color: var(--color-text-placeholder);
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 120ms ease, color 120ms ease;
+  }
+
+  .vessel-card__deactivate:hover { background: var(--prim-red-10); color: var(--danger); }
+  .vessel-card__deactivate svg { width: 20px; height: 20px; }
+
+  /* Checklist template modal */
+  .stage-chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .stage-chip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    height: 32px;
+    padding: 0 10px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--prim-grey-200);
+    background: var(--card);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+  }
+
+  .stage-chip--selected { border-color: var(--brand); box-shadow: 0 0 0 1px var(--brand); }
+  .stage-chip--included { background: var(--color-brand-subtle); color: var(--brand); }
+
+  .stage-chip__box {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    border: 1.5px solid var(--prim-grey-300);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .stage-chip--included .stage-chip__box { background: var(--brand); border-color: var(--brand); }
+  .stage-chip__box svg { width: 9px; height: 9px; stroke: #fff; fill: none; stroke-width: 3; display: none; }
+  .stage-chip--included .stage-chip__box svg { display: block; }
+
+  .checklist-items {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .checklist-item-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 8px;
+    border-radius: var(--radius-md);
+    box-sizing: border-box;
+    transition: background 120ms ease;
+  }
+
+  .checklist-item-row:hover, .checklist-item-row--dragging { background: var(--grey-50); }
+  .checklist-item-row--dragging { opacity: 0.5; }
+
+  .checklist-item-row .form-field__input { height: 40px; }
+
+  .drag-handle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    color: var(--prim-grey-400);
+    cursor: grab;
+  }
+
+  .drag-handle:active { cursor: grabbing; }
+  .drag-handle svg { width: 18px; height: 18px; }
+
+  .radio-group { display: flex; align-items: center; gap: 11px; flex-shrink: 0; }
+
+  .radio-option {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    height: 32px;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--prim-grey-800);
+    white-space: nowrap;
+  }
+
+  .radio-option__icon { width: 24px; height: 24px; flex-shrink: 0; }
+  .radio-option__icon svg { width: 100%; height: 100%; }
+
+  .checklist-item-remove {
+    width: 40px;
+    height: 40px;
+    border: none;
+    background: var(--card);
+    border-radius: var(--radius-sm);
+    color: var(--color-text-placeholder);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  .checklist-item-remove:hover { background: var(--prim-red-10); color: var(--danger); }
+  .checklist-item-remove svg { width: 18px; height: 18px; }
+
+  .btn-add-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    align-self: flex-start;
+    height: 32px;
+    padding: 4px 12px;
+    border-radius: var(--radius-sm);
+    background: none;
+    border: none;
+    color: var(--brand);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  .btn-add-item:hover { background: var(--grey-50); }
+  .btn-add-item svg { width: 20px; height: 20px; }
+
+  .toggle {
+    position: relative;
+    width: 44px;
+    height: 24px;
+    border-radius: 12px;
+    background: var(--prim-grey-200);
+    border: none;
+    cursor: pointer;
+    flex-shrink: 0;
+    padding: 0;
+    transition: background .15s ease;
+  }
+
+  .toggle::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #fff;
+    transition: transform .15s ease;
+    box-shadow: 0 1px 2px rgba(0,0,0,.15);
+  }
+
+  .toggle--on { background: var(--brand); }
+  .toggle--on::after { transform: translateX(20px); }
+
+  .modal--sm { width: 500px; }
+  .modal--xs { width: 400px; }
+
+  .delete-modal__header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 16px;
+    width: 100%;
+  }
+
+  .delete-modal__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 0 24px 24px;
+    width: 100%;
+  }
+
+  .delete-modal__illustration { width: 150px; height: 150px; display: block; }
+
+  .delete-modal__text {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+    width: 100%;
+    text-align: center;
+  }
+
+  .delete-modal__title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--nav);
+    line-height: 24px;
+    margin: 0;
+  }
+
+  .delete-modal__subtitle {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--prim-grey-500);
+    line-height: 20px;
+    margin: 0;
+  }
+
+  .delete-modal__footer {
+    display: flex;
+    gap: 16px;
+    padding: 16px;
+    width: 100%;
+  }
+
+  .delete-modal__footer .btn-cancel {
+    flex: 1 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .btn-delete-confirm {
+    flex: 1 0 0;
+    background: var(--danger);
+    border: none;
+    border-radius: var(--radius-sm);
+    height: 40px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  .btn-delete-confirm:hover { background: var(--color-danger-hover); }
+
+  .field-error {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--danger);
+    margin: 0;
+  }
+
+  /* ---------- Row actions popover ---------- */
+  .row-actions-popover {
+    display: none;
+    position: fixed;
+    flex-direction: column;
+    gap: 12px;
+    background: var(--card);
+    border-radius: var(--radius-md);
+    padding: 8px;
+    width: 200px;
+    box-shadow: var(--shadow-dropdown);
+    z-index: 150;
+  }
+
+  .row-actions-popover--open { display: flex; }
+
+  .popover-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    width: 100%;
+  }
+
+  .popover-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    min-height: 40px;
+    padding: 8px 12px;
+    background: var(--card);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: inherit;
+    text-align: left;
+  }
+
+  .popover-item:hover { background: var(--grey-50); }
+  .popover-item svg { width: 24px; height: 24px; color: var(--nav); flex-shrink: 0; }
+  .popover-item span { font-size: 14px; font-weight: 500; line-height: 20px; color: var(--nav); }
+
+  .popover-divider {
+    height: 1px;
+    background: var(--grey-100);
+    width: 100%;
+    flex-shrink: 0;
+  }
+
+  .popover-toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 2px 0;
+  }
+
+  .popover-toggle-row span {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+    color: var(--color-text-placeholder);
+  }
+
+  /* ---------- Toast ---------- */
+  .toast {
+    position: fixed;
+    top: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-16px);
+    background: var(--prim-green-10);
+    border: 0.5px solid var(--prim-green-200);
+    color: var(--prim-green-700);
+    padding: 16px;
+    border-radius: var(--radius-md);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    max-width: 450px;
+    z-index: 300;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .2s ease, transform .2s ease;
+  }
+
+  .toast--visible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .toast svg { width: 24px; height: 24px; flex-shrink: 0; }
+
+  /* ---------- Smaller screen sizes (~1133px and below) ---------- */
+  @media (max-width: 1140px) {
+    /* GeoMail Configuration */
+    .search-field { width: 240px; }
+
+    .table-cell--name {
+      height: auto;
+      min-height: 44px;
+      flex-wrap: wrap;
+      padding-top: 6px;
+      padding-bottom: 6px;
+    }
+
+    .table-cell__name-text { min-width: 60px; }
+  }
+
+  @media (max-width: 720px) {
+    .agent-list { grid-template-columns: 1fr; }
+    .vessel-card-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- Outer collapsed nav rail -->
+  <nav class="nav-rail" aria-label="Primary">
+    <div class="nav-rail__top">
+      <button class="nav-icon-btn" aria-label="Menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <button class="nav-icon-btn" aria-label="Vessels">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 17l1.5-6h13L20 17M4 17c0 1.5 1.5 3 4 3h8c2.5 0 4-1.5 4-3M9 11V7h6v4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="nav-icon-btn" aria-label="Alerts">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.73 21a2 2 0 01-3.46 0" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="nav-icon-btn" aria-label="Settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h13M20 18h0" stroke-linecap="round"/><circle cx="16" cy="6" r="2"/><circle cx="8" cy="12" r="2"/><circle cx="17" cy="18" r="2"/></svg>
+      </button>
+    </div>
+    <div class="nav-rail__bottom">
+      <button class="nav-icon-btn" aria-label="Notifications">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.73 21a2 2 0 01-3.46 0" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="nav-icon-btn" aria-label="Apps">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></svg>
+      </button>
+      <div class="nav-avatar">A</div>
+    </div>
+  </nav>
+
+  <div class="main-container">
+
+    <!-- Banner -->
+    <header class="banner">
+      <svg class="banner__bg" viewBox="0 0 1375 160" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMaxYMin slice">
+        <path d="M504.073 -71.338H714.029V489.713H574.694C587.499 463 594.672 433.073 594.672 401.472V249.204C594.672 178.443 558.714 116.081 504.073 79.3929V104.401C504.073 221.315 409.295 316.092 292.382 316.092H-49.7969V189.053C-16.2863 213.08 24.7899 227.226 69.1698 227.226H326.489C377.387 227.226 418.648 185.964 418.648 135.066V46.7653C409.377 45.478 399.906 44.812 390.281 44.812H210.325C179.982 44.8121 151.183 51.4248 125.291 63.2867V-71.338H418.648V-164.754C418.648 -207.626 405.447 -247.415 382.89 -280.279H504.073V-71.338Z" fill="#1852FE" fill-opacity="0.1"/>
+        <path d="M1257.22 345.085C1252.68 340.229 1247.86 335.547 1242.77 331.063L1092.69 198.954C1046.16 157.999 975.243 162.515 934.287 209.042L775.988 388.873C769.899 395.791 764.363 403.005 759.374 410.46L619.705 287.515L850.353 25.4937C925.937 -60.3723 1056.82 -68.707 1142.68 6.87772L1374.95 211.334L1257.22 345.085Z" fill="#1852FE" fill-opacity="0.1"/>
+      </svg>
+      <div class="banner__title">Settings</div>
+      <div class="banner__row">
+        <div class="banner__profile">
+          <div class="banner__avatar">J</div>
+          <div class="banner__meta">
+            <div class="banner__name">John Samuel</div>
+            <div class="banner__sub">
+              <span>Geoserve |</span>
+              <span>johnsam@geoserves.com</span>
+            </div>
+          </div>
+        </div>
+        <div class="banner__sso">
+          <svg width="19" height="19" viewBox="0 0 19 19" fill="none"><rect x="0" y="0" width="9" height="9" fill="#5FA5F9"/><rect x="10" y="0" width="9" height="9" fill="#5FA5F9"/><rect x="0" y="10" width="9" height="9" fill="#5FA5F9"/><rect x="10" y="10" width="9" height="9" fill="#5FA5F9"/></svg>
+          <span>Single sign-on is enabled for your account.</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Content: sidepanel + panel -->
+    <div class="content-container">
+      <aside class="sidepanel" aria-label="Settings navigation">
+        <button class="sidebar-btn" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 17l1.5-6h13L20 17M4 17c0 1.5 1.5 3 4 3h8c2.5 0 4-1.5 4-3M9 11V7h6v4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>My Vessels</span>
+        </button>
+        <div class="sidebar-group">
+          <button class="sidebar-btn" type="button" id="alertConfigToggle" onclick="toggleAlertSubmenu()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.73 21a2 2 0 01-3.46 0" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Alert Configuration</span>
+            <svg class="sidebar-btn__chevron" viewBox="0 0 16 16" fill="none" stroke="var(--prim-grey-400)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left:auto;flex-shrink:0;width:14px;height:14px;"><path d="M4 6l4 4 4-4"/></svg>
+          </button>
+          <div class="sidebar-submenu" id="alertSubmenu">
+            <button class="sidebar-sub-btn" type="button"><span>Preference</span></button>
+            <button class="sidebar-sub-btn" type="button"><span>Threshold</span></button>
+          </div>
+        </div>
+        <button class="sidebar-btn sidebar-btn--active" type="button" id="navGeoMailConfigBtn" aria-current="page">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="5" width="18" height="14" rx="2" stroke-linecap="round" stroke-linejoin="round"/><path d="m3 7 8.4 6.3a2.5 2.5 0 0 0 3.2 0L23 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>GeoMail Configuration</span>
+        </button>
+        <button class="sidebar-btn" type="button" id="navAgentsConfigBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          <span>Agents Configuration</span>
+        </button>
+      </aside>
+
+      <main class="content" id="geoMailConfigView">
+        <div class="table-group">
+          <div class="table-filters">
+            <div class="bunker-tabs" id="geoMailTabs">
+              <button class="chip-tab chip-tab--active" type="button" data-tab="mailboxes">Mailboxes</button>
+              <button class="chip-tab" type="button" data-tab="sop">SOP Documents</button>
+              <button class="chip-tab" type="button" data-tab="checklists">Checklist Templates</button>
+            </div>
+            <div class="table-filters__right" id="geoMailTabActions">
+              <button class="btn-add-user" type="button" id="openConnectMailboxBtn" data-for-tab="mailboxes">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19" stroke-linecap="round"/><line x1="5" y1="12" x2="19" y2="12" stroke-linecap="round"/></svg>
+                <span>Connect Mailbox</span>
+              </button>
+              <button class="btn-add-user" type="button" id="openUploadSopBtn" data-for-tab="sop" style="display: none;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19" stroke-linecap="round"/><line x1="5" y1="12" x2="19" y2="12" stroke-linecap="round"/></svg>
+                <span>Upload SOP</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Tab: Mailboxes -->
+          <div class="geomail-tab-panel" id="tabPanelMailboxes">
+            <div class="table-head-row">
+              <div class="table-head-cell">Mailbox</div>
+              <div class="table-head-cell">Provider</div>
+              <div class="table-head-cell">Status</div>
+              <div class="table-head-cell">Last Connected</div>
+              <div class="table-head-cell table-head-cell--actions"></div>
+            </div>
+            <div class="table-body" id="mailboxTableBody">
+              <div class="table-row" data-status="connected">
+                <div class="table-cell table-cell--name">ops@geoserves.com</div>
+                <div class="table-cell table-cell--provider"><img src="Assets/logo-microsoft.svg" width="16" height="16" alt="">Microsoft</div>
+                <div class="table-cell" data-status-cell>
+                  <span class="status-chip status-chip--active">Connected</span>
+                </div>
+                <div class="table-cell">12 Jun 2026, 09:41 AM</div>
+                <div class="table-cell table-cell--actions">
+                  <button class="row-action-btn" type="button" aria-label="Row actions">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
+                  </button>
+                </div>
+              </div>
+              <div class="table-row" data-status="disconnected">
+                <div class="table-cell table-cell--name">voyage@geoserves.com</div>
+                <div class="table-cell table-cell--provider"><img src="Assets/logo-google.svg" width="16" height="16" alt="">Google</div>
+                <div class="table-cell" data-status-cell>
+                  <span class="status-chip status-chip--danger">Disconnected</span>
+                </div>
+                <div class="table-cell">03 May 2026, 02:15 PM</div>
+                <div class="table-cell table-cell--actions">
+                  <button class="row-action-btn" type="button" aria-label="Row actions">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
+                  </button>
+                </div>
+              </div>
+              <div class="table-row" data-status="disabled">
+                <div class="table-cell table-cell--name">archive@geoserves.com</div>
+                <div class="table-cell table-cell--provider">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="6" rx="1.5"/><rect x="3" y="14" width="18" height="6" rx="1.5"/><line x1="7" y1="7" x2="7.01" y2="7" stroke-linecap="round"/><line x1="7" y1="17" x2="7.01" y2="17" stroke-linecap="round"/></svg>
+                  IMAP / SMTP
+                </div>
+                <div class="table-cell" data-status-cell>
+                  <span class="status-chip status-chip--inactive">Disabled</span>
+                </div>
+                <div class="table-cell">20 Apr 2026, 11:02 AM</div>
+                <div class="table-cell table-cell--actions">
+                  <button class="row-action-btn" type="button" aria-label="Row actions">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
+                  </button>
+                </div>
+              </div>
+              <div class="table-row" data-status="pending">
+                <div class="table-cell table-cell--name">notify@geoserves.com</div>
+                <div class="table-cell table-cell--provider"><img src="Assets/logo-microsoft.svg" width="16" height="16" alt="">Microsoft</div>
+                <div class="table-cell" data-status-cell style="gap: 8px;">
+                  <span class="status-chip status-chip--pending">Pending</span>
+                  <button class="check-now-link" type="button" onclick="runCheckNow(this.parentElement)">Check now</button>
+                </div>
+                <div class="table-cell">—</div>
+                <div class="table-cell table-cell--actions">
+                  <button class="row-action-btn" type="button" aria-label="Row actions">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab: SOP Documents -->
+          <div class="geomail-tab-panel" id="tabPanelSop" style="display: none;">
+            <div class="table-head-row">
+              <div class="table-head-cell">Document Name</div>
+              <div class="table-head-cell table-head-cell--status" style="width: 90px;">Format</div>
+              <div class="table-head-cell">Size</div>
+              <div class="table-head-cell">Uploaded By</div>
+              <div class="table-head-cell">Upload Date</div>
+              <div class="table-head-cell table-head-cell--actions" style="width: 96px;"></div>
+            </div>
+            <div class="table-body" id="sopTableBody">
+              <div class="table-row">
+                <div class="table-cell table-cell--name">Cargo Loading SOP.pdf</div>
+                <div class="table-cell table-cell--status" style="width: 90px;"><span class="status-chip status-chip--danger">PDF</span></div>
+                <div class="table-cell">1.2 MB</div>
+                <div class="table-cell">John Samuel</div>
+                <div class="table-cell">14 Jun 2026</div>
+                <div class="table-cell table-cell--actions" style="width: 64px;">
+                  <button class="row-action-btn" type="button" aria-label="Row actions" data-sop-menu>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="5" r="1" fill="currentColor"/><circle cx="12" cy="12" r="1" fill="currentColor"/><circle cx="12" cy="19" r="1" fill="currentColor"/></svg>
+                  </button>
+                </div>
+              </div>
+              <div class="table-row">
+                <div class="table-cell table-cell--name">Discharge Checklist.docx</div>
+                <div class="table-cell table-cell--status" style="width: 90px;"><span class="status-chip status-chip--blue">DOCX</span></div>
+                <div class="table-cell">480 KB</div>
+                <div class="table-cell">Aditi Rao</div>
+                <div class="table-cell">02 May 2026</div>
+                <div class="table-cell table-cell--actions" style="width: 64px;">
+                  <button class="row-action-btn" type="button" aria-label="Row actions" data-sop-menu>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="5" r="1" fill="currentColor"/><circle cx="12" cy="12" r="1" fill="currentColor"/><circle cx="12" cy="19" r="1" fill="currentColor"/></svg>
+                  </button>
+                </div>
+              </div>
+              <div class="table-row">
+                <div class="table-cell table-cell--name">Ballast Water Mgmt.txt</div>
+                <div class="table-cell table-cell--status" style="width: 90px;"><span class="status-chip status-chip--inactive">TXT</span></div>
+                <div class="table-cell">12 KB</div>
+                <div class="table-cell">John Samuel</div>
+                <div class="table-cell">18 Mar 2026</div>
+                <div class="table-cell table-cell--actions" style="width: 64px;">
+                  <button class="row-action-btn" type="button" aria-label="Row actions" data-sop-menu>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="5" r="1" fill="currentColor"/><circle cx="12" cy="12" r="1" fill="currentColor"/><circle cx="12" cy="19" r="1" fill="currentColor"/></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab: Checklist Templates -->
+          <div class="geomail-tab-panel geomail-tab-panel--padded" id="tabPanelChecklists" style="display: none;">
+            <div class="vessel-card-grid" id="checklistCardGrid"></div>
+          </div>
+        </div>
+      </main>
+
+      <!-- Agents Configuration view -->
+      <main class="content" id="agentsConfigView" style="display:none;">
+        <div class="table-group">
+          <div class="geomail-tab-panel geomail-tab-panel--padded" style="display:flex;">
+            <div class="gs-alert gs-alert--info gs-alert--sm" style="margin-bottom: 12px;">
+              <span class="gs-alert__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span>
+              <p class="gs-alert__desc">Disabling an agent stops it from picking up new tasks. In-flight work completes normally.</p>
+            </div>
+            <div class="agent-list">
+              <div class="agent-card">
+                <div class="agent-card__icon"><img src="Assets/digital-operator.svg" width="22" height="22" alt=""></div>
+                <div class="agent-card__body">
+                  <div class="agent-card__name">Tank Cleaning Agent</div>
+                  <div class="agent-card__desc">Tracks tank cleaning schedules and confirms readiness before loading operations.</div>
+                </div>
+                <button class="toggle toggle--on" type="button" aria-label="Toggle Tank Cleaning Agent" data-agent-toggle></button>
+              </div>
+              <div class="agent-card">
+                <div class="agent-card__icon"><img src="Assets/digital-operator.svg" width="22" height="22" alt=""></div>
+                <div class="agent-card__body">
+                  <div class="agent-card__name">CP & VO Agent</div>
+                  <div class="agent-card__desc">Reviews charter party and voyage orders to flag deviations from agreed terms.</div>
+                </div>
+                <button class="toggle toggle--on" type="button" aria-label="Toggle CP & VO Agent" data-agent-toggle></button>
+              </div>
+              <div class="agent-card">
+                <div class="agent-card__icon"><img src="Assets/digital-operator.svg" width="22" height="22" alt=""></div>
+                <div class="agent-card__body">
+                  <div class="agent-card__name">Voyage Monitoring Agent</div>
+                  <div class="agent-card__desc">Monitors vessel position, speed, and ETA against the voyage plan in real time.</div>
+                </div>
+                <button class="toggle toggle--on" type="button" aria-label="Toggle Voyage Monitoring Agent" data-agent-toggle></button>
+              </div>
+              <div class="agent-card">
+                <div class="agent-card__icon"><img src="Assets/digital-operator.svg" width="22" height="22" alt=""></div>
+                <div class="agent-card__body">
+                  <div class="agent-card__name">Vessel Intelligence Agent</div>
+                  <div class="agent-card__desc">Surfaces vessel performance, condition, and compliance insights from operational data.</div>
+                </div>
+                <button class="toggle toggle--on" type="button" aria-label="Toggle Vessel Intelligence Agent" data-agent-toggle></button>
+              </div>
+              <div class="agent-card">
+                <div class="agent-card__icon"><img src="Assets/digital-operator.svg" width="22" height="22" alt=""></div>
+                <div class="agent-card__body">
+                  <div class="agent-card__name">Claims & Rebill Agent</div>
+                  <div class="agent-card__desc">Tracks claims and rebilling items against voyage costs and flags unresolved balances.</div>
+                </div>
+                <button class="toggle toggle--on" type="button" aria-label="Toggle Claims & Rebill Agent" data-agent-toggle></button>
+              </div>
+              <div class="agent-card">
+                <div class="agent-card__icon"><img src="Assets/digital-operator.svg" width="22" height="22" alt=""></div>
+                <div class="agent-card__body">
+                  <div class="agent-card__name">Bunker Agent</div>
+                  <div class="agent-card__desc">Monitors bunker consumption and remaining quantity against the voyage plan.</div>
+                </div>
+                <button class="toggle toggle--on" type="button" aria-label="Toggle Bunker Agent" data-agent-toggle></button>
+              </div>
+              <div class="agent-card">
+                <div class="agent-card__icon"><img src="Assets/digital-operator.svg" width="22" height="22" alt=""></div>
+                <div class="agent-card__body">
+                  <div class="agent-card__name">Voyage Estimator Agent</div>
+                  <div class="agent-card__desc">Calculates voyage cost and profitability estimates for proposed fixtures.</div>
+                </div>
+                <button class="toggle toggle--on" type="button" aria-label="Toggle Voyage Estimator Agent" data-agent-toggle></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+  </div>
+</div>
+
+<!-- Connect Mailbox modal -->
+<div class="modal-overlay" id="connectMailboxOverlay">
+  <div class="modal modal--sm" role="dialog" aria-modal="true" aria-labelledby="connectMailboxTitle">
+    <div class="modal__header">
+      <h2 class="modal__title" id="connectMailboxTitle">Connect Mailbox</h2>
+      <button class="modal__close" type="button" id="closeConnectMailboxBtn" aria-label="Close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18" stroke-linecap="round"/><line x1="6" y1="6" x2="18" y2="18" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="modal__content">
+      <p class="modal__subtitle" style="margin-bottom: 4px;">Provide the following details to authenticate and connect a mailbox to GeoMail.</p>
+      <div class="form-row" style="flex-direction: column; align-items: stretch; gap: 16px; width: 100%;">
+        <div class="form-field">
+          <span class="form-field__label">Tenant ID <span class="form-field__required">*</span></span>
+          <input type="text" class="form-field__input" id="connectTenantId" placeholder="e.g. xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" autocomplete="off">
+          <p class="field-error" id="connectTenantIdErr" style="display:none;">Tenant ID is required.</p>
+        </div>
+        <div class="form-field">
+          <span class="form-field__label">Client ID <span class="form-field__required">*</span></span>
+          <input type="text" class="form-field__input" id="connectClientId" placeholder="e.g. xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" autocomplete="off">
+          <p class="field-error" id="connectClientIdErr" style="display:none;">Client ID is required.</p>
+        </div>
+        <div class="form-field">
+          <span class="form-field__label">Client Secret Code <span class="form-field__required">*</span></span>
+          <input type="password" class="form-field__input" id="connectClientSecret" placeholder="Enter client secret code" autocomplete="new-password">
+          <p class="field-error" id="connectClientSecretErr" style="display:none;">Client Secret Code is required.</p>
+        </div>
+      </div>
+    </div>
+    <div class="modal__footer" id="connectMailboxFooter">
+      <div class="modal__actions" style="width:100%;">
+        <button class="btn-cancel" type="button" id="cancelConnectMailboxBtn" data-modal-cancel style="flex:1;">Cancel</button>
+        <button class="btn-primary" type="button" id="connectManualSubmitBtn" style="flex:1;">Connect Mailbox</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Upload SOP modal -->
+<div class="modal-overlay" id="uploadSopOverlay">
+  <div class="modal modal--sm" role="dialog" aria-modal="true" aria-labelledby="uploadSopTitle">
+    <div class="modal__header">
+      <h2 class="modal__title" id="uploadSopTitle">Upload SOP</h2>
+      <button class="modal__close" type="button" id="closeUploadSopBtn" aria-label="Close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18" stroke-linecap="round"/><line x1="6" y1="6" x2="18" y2="18" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="modal__content">
+      <div class="field-group">
+        <div class="dropzone" id="sopDropzone" role="button" tabindex="0" aria-label="Upload SOP file">
+          <input type="file" class="dropzone__input" id="sopFileInput" accept=".pdf,.doc,.docx,.txt" tabindex="-1">
+          <div class="dropzone__icon" id="sopDropzoneIcon"><img src="Assets/img-folder-closed.svg" alt=""></div>
+          <div class="dropzone__content">
+            <div class="dropzone__row" id="sopDropzoneRow">
+              <button type="button" class="dropzone__browse" id="sopBrowseBtn">Browse</button>
+              <span class="dropzone__title" id="sopDropzoneFileName">or drag file to this area to upload</span>
+            </div>
+            <div class="dropzone__hint" id="sopDropzoneHint">PDF, DOCX or TXT — up to 10MB</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal__footer">
+      <div class="modal__actions">
+        <button class="btn-cancel" type="button" id="cancelUploadSopBtn" data-modal-cancel>Cancel</button>
+        <button class="btn-primary" type="button" id="confirmUploadSopBtn">Upload</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<input type="file" id="sopReplaceInput" accept=".pdf,.doc,.docx,.txt" style="display: none;">
+
+<!-- Checklist Template modal -->
+<div class="modal-overlay" id="checklistTemplateOverlay">
+  <div class="modal" style="width: 960px;" role="dialog" aria-modal="true" aria-labelledby="checklistTemplateTitle">
+    <div class="modal__header">
+      <h2 class="modal__title" id="checklistTemplateTitle">Edit Checklist Template</h2>
+      <button class="modal__close" type="button" id="closeChecklistTemplateBtn" aria-label="Close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18" stroke-linecap="round"/><line x1="6" y1="6" x2="18" y2="18" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="modal__content">
+      <div class="field-group">
+        <div class="field-label">
+          <span>Stages included in this template</span>
+        </div>
+        <div class="stage-chip-row" id="stageChipRow"></div>
+      </div>
+      <div class="field-group">
+        <div class="field-label">
+          <span id="checklistItemsLabel">Checklist items</span>
+        </div>
+        <div class="checklist-items" id="checklistItems"></div>
+        <button class="btn-add-item" type="button" id="addChecklistItemBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19" stroke-linecap="round"/><line x1="5" y1="12" x2="19" y2="12" stroke-linecap="round"/></svg>
+          <span>Add Item</span>
+        </button>
+      </div>
+    </div>
+    <div class="modal__footer">
+      <div class="modal__actions">
+        <button class="btn-cancel" type="button" id="cancelChecklistTemplateBtn" data-modal-cancel>Cancel</button>
+        <button class="btn-primary" type="button" id="saveChecklistTemplateBtn">Save Template</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Generic confirm modal (reused for Remove Mailbox / Delete SOP) -->
+<div class="modal-overlay" id="confirmDeleteOverlay">
+  <div class="modal modal--xs" role="alertdialog" aria-modal="true" aria-labelledby="confirmDeleteTitle">
+    <div class="delete-modal__header">
+      <button class="modal__close" type="button" id="closeConfirmDeleteBtn" aria-label="Close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18" stroke-linecap="round"/><line x1="6" y1="6" x2="18" y2="18" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="delete-modal__content">
+      <svg class="delete-modal__illustration" viewBox="0 0 150 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g opacity="0.2">
+          <ellipse cx="65.0716" cy="85.5793" rx="45.3849" ry="44.9492" transform="rotate(91.9832 65.0716 85.5793)" fill="#BEDBFE"/>
+          <circle cx="98.6002" cy="48.9576" r="29.4094" transform="rotate(91.9832 98.6002 48.9576)" fill="#BEDBFE"/>
+        </g>
+        <path d="M100.82 44.8883C101.068 44.0287 101.169 43.1691 101.084 42.294C100.34 34.7046 86.5457 29.8256 70.2718 31.4055C55.788 32.8149 44.2257 38.8555 42.3736 45.5234H42.2806L42.3116 45.748C42.1256 46.4992 42.0636 47.2581 42.1334 48.0248C42.2186 48.9309 42.5053 49.806 42.9471 50.6269L45.2409 68.1832C43.4818 69.7631 41.7536 71.7146 40.1263 73.976L42.1644 74.8976C43.3113 73.4881 44.4892 72.249 45.6361 71.219C45.9926 70.9015 46.3413 70.5995 46.6901 70.3207C49.1002 68.3846 51.2855 67.4785 52.6417 68.0361C56.0979 69.4533 54.8115 81.1317 50.4951 91.633C50.2471 92.2371 49.9913 92.8334 49.7201 93.4297C49.4256 94.0802 49.1157 94.723 48.7979 95.3503C44.3807 104.179 38.0494 111.064 35.0038 109.817C32.648 108.849 31.9583 102.669 33.1207 95.4975L31.1523 94.6069C29.0135 105.077 30.8269 113.867 36.2515 116.097C40.4595 117.817 45.8841 115.23 50.836 109.809L51.8512 109.77C55.3152 114.719 63.46 117.778 72.7283 117.778C74.0923 117.778 75.4794 117.716 76.8821 117.577C85.9877 116.694 97.7514 112.612 101.603 106.796L101.804 106.494L100.82 44.8961V44.8883Z" fill="#1852FE"/>
+      </svg>
+      <div class="delete-modal__text">
+        <h2 class="delete-modal__title" id="confirmDeleteTitle">Remove Mailbox</h2>
+        <p class="delete-modal__subtitle" id="confirmDeleteSubtitle">This cannot be undone. Are you sure?</p>
+      </div>
+    </div>
+    <div class="delete-modal__footer">
+      <button class="btn-cancel" type="button" id="cancelConfirmDeleteBtn">Cancel</button>
+      <button class="btn-delete-confirm" type="button" id="confirmConfirmDeleteBtn">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast">
+  <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" fill="#1B9E4B"/><path d="M8 12.5l2.5 2.5L16 9.5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  <span id="toastMessage"></span>
+</div>
+
+<!-- Row actions popover (Mailboxes tab) -->
+<div class="row-actions-popover" id="rowActionsPopover">
+  <div class="popover-toggle-row" id="mailboxEnabledRow">
+    <span>Mailbox Enabled</span>
+    <button class="toggle" type="button" id="mailboxEnabledToggle" aria-label="Toggle mailbox enabled"></button>
+  </div>
+  <div class="popover-list" id="reauthenticateRow" style="display: none;">
+    <button class="popover-item" type="button" id="popoverReauthBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4v6h6M20 20v-6h-6" stroke-linecap="round" stroke-linejoin="round"/><path d="M4.6 15a8 8 0 0014.3 2.3M19.4 9A8 8 0 005 6.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Re-authenticate</span>
+    </button>
+  </div>
+  <div class="popover-divider"></div>
+  <div class="popover-list">
+    <button class="popover-item" type="button" id="removeMailboxBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 7h16M9 7V5a2 2 0 012-2h2a2 2 0 012 2v2m3 0l-1 13a2 2 0 01-2 2H8a2 2 0 01-2-2L5 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Remove Mailbox</span>
+    </button>
+  </div>
+</div>
+
+<div class="row-actions-popover" id="sopActionsPopover">
+  <div class="popover-list">
+    <button class="popover-item" type="button" id="sopReplaceBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 12a9 9 0 11-3-6.7M21 4v5h-5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Replace</span>
+    </button>
+    <button class="popover-item" type="button" id="sopDeleteBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 7h16M9 7V5a2 2 0 012-2h2a2 2 0 012 2v2m3 0l-1 13a2 2 0 01-2 2H8a2 2 0 01-2-2L5 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Delete</span>
+    </button>
+  </div>
+</div>
+
+<script>
+  function runCheckNow(statusCell) {
+    /* 1 — Checking... */
+    statusCell.style.overflow = 'visible';
+    statusCell.style.whiteSpace = 'normal';
+    statusCell.style.flexWrap = 'wrap';
+    statusCell.style.gap = '6px';
+    statusCell.innerHTML =
+      '<span class="checking-label">Checking<span class="checking-dots"><span>.</span><span>.</span><span>.</span></span></span>';
+
+    setTimeout(function () {
+      var now = new Date();
+      var h = now.getHours();
+      var m = String(now.getMinutes()).padStart(2, '0');
+      var ampm = h >= 12 ? 'PM' : 'AM';
+      var h12 = h % 12 || 12;
+      var timeStr = h12 + ':' + m + ' ' + ampm;
+
+      /* Failure path — show no-response, then revert to pending after 3s */
+      statusCell.innerHTML =
+        '<span class="no-response-label">No response till ' + timeStr + '</span>' +
+        '<button class="check-now-link" type="button" onclick="runCheckNow(this.parentElement)">Check now</button>';
+
+      setTimeout(function () {
+        statusCell.style.overflow = '';
+        statusCell.style.whiteSpace = '';
+        statusCell.style.flexWrap = '';
+        statusCell.style.gap = '8px';
+        statusCell.innerHTML =
+          '<span class="status-chip status-chip--pending">Pending</span>' +
+          '<button class="check-now-link" type="button" onclick="runCheckNow(this.parentElement)">Check now</button>';
+      }, 3000);
+    }, 2500);
+  }
+
+  function toggleAlertSubmenu() {
+    var btn = document.getElementById('alertConfigToggle');
+    var menu = document.getElementById('alertSubmenu');
+    var open = menu.classList.toggle('sidebar-submenu--open');
+    btn.classList.toggle('sidebar-btn--expanded', open);
+  }
+
+  (function () {
+    var geoMailView = document.getElementById('geoMailConfigView');
+    var agentsView = document.getElementById('agentsConfigView');
+    var navGeoMail = document.getElementById('navGeoMailConfigBtn');
+    var navAgents = document.getElementById('navAgentsConfigBtn');
+
+    function showView(view, activeBtn) {
+      geoMailView.style.display = view === 'geomail' ? '' : 'none';
+      agentsView.style.display = view === 'agents' ? '' : 'none';
+      navGeoMail.classList.toggle('sidebar-btn--active', view === 'geomail');
+      navGeoMail.removeAttribute('aria-current');
+      navAgents.classList.toggle('sidebar-btn--active', view === 'agents');
+      if (view === 'geomail') navGeoMail.setAttribute('aria-current', 'page');
+      if (view === 'agents') navAgents.setAttribute('aria-current', 'page');
+    }
+
+    navGeoMail.addEventListener('click', function () { showView('geomail'); });
+    navAgents.addEventListener('click', function () { showView('agents'); });
+  })();
+</script>
+<script>
+  (function () {
+    /* ---------- Toast helper ---------- */
+    var toast = document.getElementById('toast');
+    var toastMessage = document.getElementById('toastMessage');
+    var toastTimer = null;
+    function showToast(message) {
+      toastMessage.textContent = message;
+      toast.classList.add('toast--visible');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(function () { toast.classList.remove('toast--visible'); }, 2600);
+    }
+    window.geoMailShowToast = showToast;
+
+    /* ---------- Generic modal open/close (Escape, overlay click, close button) ---------- */
+    function wireModal(overlay) {
+      if (!overlay) return;
+      overlay.addEventListener('click', function (e) {
+        if (e.target === overlay) closeModal(overlay);
+      });
+      overlay.querySelectorAll('.modal__close, [data-modal-cancel]').forEach(function (btn) {
+        btn.addEventListener('click', function () { closeModal(overlay); });
+      });
+    }
+    function openModal(overlay) { overlay.classList.add('modal-overlay--open'); }
+    function closeModal(overlay) { overlay.classList.remove('modal-overlay--open'); }
+
+    function animateModalHeight(overlay, mutate) {
+      var modalEl = overlay.querySelector('.modal');
+      var startHeight = modalEl.getBoundingClientRect().height;
+      mutate();
+      var endHeight = modalEl.scrollHeight;
+      if (Math.round(startHeight) === Math.round(endHeight)) return;
+      modalEl.style.height = startHeight + 'px';
+      modalEl.offsetHeight;
+      modalEl.style.height = endHeight + 'px';
+      var cleared = false;
+      function clear() {
+        if (cleared) return;
+        cleared = true;
+        modalEl.style.height = '';
+        modalEl.removeEventListener('transitionend', handler);
+      }
+      function handler(e) { if (e.propertyName === 'height') clear(); }
+      modalEl.addEventListener('transitionend', handler);
+      setTimeout(clear, 260);
+    }
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 'Escape') return;
+      document.querySelectorAll('.modal-overlay--open').forEach(closeModal);
+    });
+
+    document.querySelectorAll('.modal-overlay').forEach(wireModal);
+
+    /* ---------- Tab switching ---------- */
+    var tabs = document.querySelectorAll('#geoMailTabs .chip-tab');
+    var panels = {
+      mailboxes: document.getElementById('tabPanelMailboxes'),
+      sop: document.getElementById('tabPanelSop'),
+      checklists: document.getElementById('tabPanelChecklists')
+    };
+    var tabActions = document.querySelectorAll('#geoMailTabActions [data-for-tab]');
+
+    function activateTab(name) {
+      tabs.forEach(function (t) { t.classList.toggle('chip-tab--active', t.dataset.tab === name); });
+      Object.keys(panels).forEach(function (key) {
+        panels[key].style.display = key === name ? (key === 'agents' ? 'flex' : 'flex') : 'none';
+      });
+      tabActions.forEach(function (btn) { btn.style.display = btn.dataset.forTab === name ? 'flex' : 'none'; });
+    }
+
+    tabs.forEach(function (t) {
+      t.addEventListener('click', function () { activateTab(t.dataset.tab); });
+    });
+
+    /* ================= MAILBOXES TAB ================= */
+    var mailboxTableBody = document.getElementById('mailboxTableBody');
+    var rowActionsPopover = document.getElementById('rowActionsPopover');
+    var mailboxEnabledRow = document.getElementById('mailboxEnabledRow');
+    var mailboxEnabledToggle = document.getElementById('mailboxEnabledToggle');
+    var reauthenticateRow = document.getElementById('reauthenticateRow');
+    var popoverReauthBtn = document.getElementById('popoverReauthBtn');
+    var removeMailboxBtn = document.getElementById('removeMailboxBtn');
+    var activePopoverRow = null;
+
+    function closeRowPopover() {
+      rowActionsPopover.classList.remove('row-actions-popover--open');
+      activePopoverRow = null;
+    }
+
+    function openRowPopoverFor(btn, row) {
+      activePopoverRow = row;
+      var isDisconnected = row.dataset.status === 'disconnected';
+      mailboxEnabledRow.style.display = isDisconnected ? 'none' : 'flex';
+      reauthenticateRow.style.display = isDisconnected ? 'block' : 'none';
+      var rect = btn.getBoundingClientRect();
+      rowActionsPopover.classList.add('row-actions-popover--open');
+      var popRect = rowActionsPopover.getBoundingClientRect();
+      var left = rect.right - popRect.width;
+      var top = rect.bottom + 4;
+      if (left < 4) left = 4;
+      if (top + popRect.height > window.innerHeight - 4) top = rect.top - popRect.height - 4;
+      rowActionsPopover.style.left = left + 'px';
+      rowActionsPopover.style.top = top + 'px';
+      if (!isDisconnected) {
+        mailboxEnabledToggle.classList.toggle('toggle--on', row.dataset.status === 'connected');
+      }
+    }
+
+    document.addEventListener('click', function (e) {
+      var kebab = e.target.closest('#mailboxTableBody .row-action-btn');
+      if (kebab) {
+        var row = kebab.closest('.table-row');
+        if (activePopoverRow === row && rowActionsPopover.classList.contains('row-actions-popover--open')) {
+          closeRowPopover();
+        } else {
+          openRowPopoverFor(kebab, row);
+        }
+        return;
+      }
+      if (!rowActionsPopover.contains(e.target)) closeRowPopover();
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeRowPopover();
+    });
+
+    mailboxEnabledToggle.addEventListener('click', function () {
+      if (!activePopoverRow) return;
+      var statusCell = activePopoverRow.querySelector('[data-status-cell]');
+      var chip = statusCell.querySelector('.status-chip');
+      var makeEnabled = chip.classList.contains('status-chip--inactive');
+      if (makeEnabled) {
+        chip.className = 'status-chip status-chip--active';
+        chip.textContent = 'Connected';
+        activePopoverRow.dataset.status = 'connected';
+      } else {
+        chip.className = 'status-chip status-chip--inactive';
+        chip.textContent = 'Disabled';
+        activePopoverRow.dataset.status = 'disabled';
+      }
+      mailboxEnabledToggle.classList.toggle('toggle--on', makeEnabled);
+      showToast(makeEnabled ? 'Mailbox enabled.' : 'Mailbox disabled.');
+    });
+
+    function reauthenticateRowEl(row) {
+      var statusCell = row.querySelector('[data-status-cell]');
+      statusCell.innerHTML = '<span class="status-chip status-chip--active">Connected</span>';
+      row.dataset.status = 'connected';
+      showToast('Mailbox re-authenticated.');
+    }
+
+    /* Re-authenticate inline link (table row) */
+    document.addEventListener('click', function (e) {
+      var link = e.target.closest('[data-reauth]');
+      if (!link) return;
+      e.preventDefault();
+      reauthenticateRowEl(link.closest('.table-row'));
+    });
+
+    /* Re-authenticate (row actions popover, for Disconnected rows) */
+    popoverReauthBtn.addEventListener('click', function () {
+      var row = activePopoverRow;
+      closeRowPopover();
+      if (row) reauthenticateRowEl(row);
+    });
+
+    /* Remove Mailbox -> generic confirm modal */
+    var confirmDeleteOverlay = document.getElementById('confirmDeleteOverlay');
+    var confirmDeleteTitle = document.getElementById('confirmDeleteTitle');
+    var confirmDeleteSubtitle = document.getElementById('confirmDeleteSubtitle');
+    var confirmConfirmDeleteBtn = document.getElementById('confirmConfirmDeleteBtn');
+    var cancelConfirmDeleteBtn = document.getElementById('cancelConfirmDeleteBtn');
+    var pendingConfirmCallback = null;
+
+    function openConfirmAction(title, subtitle, confirmLabel, onConfirm) {
+      pendingConfirmCallback = onConfirm;
+      confirmDeleteTitle.textContent = title;
+      confirmDeleteSubtitle.textContent = subtitle;
+      confirmConfirmDeleteBtn.textContent = confirmLabel;
+      openModal(confirmDeleteOverlay);
+    }
+
+    function openConfirmDelete(row, title, subtitle) {
+      openConfirmAction(title, subtitle, 'Delete', function () {
+        row.remove();
+        showToast('Removed.');
+      });
+    }
+
+    removeMailboxBtn.addEventListener('click', function () {
+      var row = activePopoverRow;
+      closeRowPopover();
+      if (row) openConfirmDelete(row, 'Remove Mailbox', 'This cannot be undone. Are you sure?');
+    });
+
+    cancelConfirmDeleteBtn.addEventListener('click', function () { pendingConfirmCallback = null; closeModal(confirmDeleteOverlay); });
+
+    confirmConfirmDeleteBtn.addEventListener('click', function () {
+      if (pendingConfirmCallback) pendingConfirmCallback();
+      pendingConfirmCallback = null;
+      closeModal(confirmDeleteOverlay);
+    });
+
+    /* ---------- Connect Mailbox modal ---------- */
+    var connectMailboxOverlay = document.getElementById('connectMailboxOverlay');
+    var openConnectMailboxBtn = document.getElementById('openConnectMailboxBtn');
+    var connectManualSubmitBtn = document.getElementById('connectManualSubmitBtn');
+
+    var fTenantId     = document.getElementById('connectTenantId');
+    var fClientId     = document.getElementById('connectClientId');
+    var fClientSecret = document.getElementById('connectClientSecret');
+    var errTenantId     = document.getElementById('connectTenantIdErr');
+    var errClientId     = document.getElementById('connectClientIdErr');
+    var errClientSecret = document.getElementById('connectClientSecretErr');
+
+    function resetConnectForm() {
+      [fTenantId, fClientId, fClientSecret].forEach(function (f) {
+        f.value = '';
+        f.style.borderColor = '';
+        f.style.boxShadow = '';
+      });
+      [errTenantId, errClientId, errClientSecret].forEach(function (e) { e.style.display = 'none'; });
+    }
+
+    function markError(input, errEl) {
+      input.style.borderColor = 'var(--color-danger)';
+      input.style.boxShadow = '0 0 0 3px rgba(220,38,37,0.15)';
+      errEl.style.display = 'block';
+    }
+
+    function clearError(input, errEl) {
+      input.style.borderColor = '';
+      input.style.boxShadow = '';
+      errEl.style.display = 'none';
+    }
+
+    fTenantId.addEventListener('input',     function () { clearError(fTenantId,     errTenantId); });
+    fClientId.addEventListener('input',     function () { clearError(fClientId,     errClientId); });
+    fClientSecret.addEventListener('input', function () { clearError(fClientSecret, errClientSecret); });
+
+    openConnectMailboxBtn.addEventListener('click', function () {
+      resetConnectForm();
+      openModal(connectMailboxOverlay);
+    });
+
+    var PROVIDER_MARKUP = {
+      microsoft: '<img src="Assets/logo-microsoft.svg" width="16" height="16" alt="">Microsoft',
+      google: '<img src="Assets/logo-google.svg" width="16" height="16" alt="">Google',
+      imap: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="6" rx="1.5"/><rect x="3" y="14" width="18" height="6" rx="1.5"/><line x1="7" y1="7" x2="7.01" y2="7" stroke-linecap="round"/><line x1="7" y1="17" x2="7.01" y2="17" stroke-linecap="round"/></svg>IMAP / SMTP'
+    };
+
+    function addMailboxRow(email, providerKey) {
+      var row = document.createElement('div');
+      row.className = 'table-row';
+      row.dataset.status = 'connected';
+      var now = new Date();
+      var lastConnected = now.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) +
+        ', ' + now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+      row.innerHTML =
+        '<div class="table-cell table-cell--name">' + email + '</div>' +
+        '<div class="table-cell table-cell--provider">' + PROVIDER_MARKUP[providerKey] + '</div>' +
+        '<div class="table-cell" data-status-cell><span class="status-chip status-chip--active">Connected</span></div>' +
+        '<div class="table-cell">' + lastConnected + '</div>' +
+        '<div class="table-cell table-cell--actions"><button class="row-action-btn" type="button" aria-label="Row actions"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg></button></div>';
+      mailboxTableBody.appendChild(row);
+    }
+
+    connectManualSubmitBtn.addEventListener('click', function () {
+      var tenantVal  = fTenantId.value.trim();
+      var clientVal  = fClientId.value.trim();
+      var secretVal  = fClientSecret.value.trim();
+      var valid = true;
+
+      if (!tenantVal)  { markError(fTenantId,     errTenantId);     valid = false; }
+      if (!clientVal)  { markError(fClientId,     errClientId);     valid = false; }
+      if (!secretVal)  { markError(fClientSecret, errClientSecret); valid = false; }
+
+      if (!valid) return;
+
+      addMailboxRow('mailbox@geoserves.com', 'microsoft');
+      closeModal(connectMailboxOverlay);
+      resetConnectForm();
+      showToast('Mailbox connected.');
+    });
+
+    /* ================= SOP DOCUMENTS TAB ================= */
+    var sopTableBody = document.getElementById('sopTableBody');
+    var uploadSopOverlay = document.getElementById('uploadSopOverlay');
+    var openUploadSopBtn = document.getElementById('openUploadSopBtn');
+    var sopDropzone = document.getElementById('sopDropzone');
+    var sopFileInput = document.getElementById('sopFileInput');
+    var sopBrowseBtn = document.getElementById('sopBrowseBtn');
+    var sopDropzoneIcon = document.getElementById('sopDropzoneIcon');
+    var sopDropzoneRow = document.getElementById('sopDropzoneRow');
+    var sopDropzoneFileName = document.getElementById('sopDropzoneFileName');
+    var sopDropzoneHint = document.getElementById('sopDropzoneHint');
+    var confirmUploadSopBtn = document.getElementById('confirmUploadSopBtn');
+    var pendingSopFileName = null;
+
+    function setDropzoneIcon(opened) {
+      sopDropzoneIcon.innerHTML = '<img src="Assets/img-folder-' + (opened ? 'opened' : 'closed') + '.svg" alt="">';
+    }
+
+    function resetDropzone() {
+      pendingSopFileName = null;
+      sopFileInput.value = '';
+      sopDropzone.classList.remove('dropzone--filled', 'dropzone--active');
+      setDropzoneIcon(false);
+      sopDropzoneRow.innerHTML = '<button type="button" class="dropzone__browse" id="sopBrowseBtn">Browse</button><span class="dropzone__title" id="sopDropzoneFileName">or drag file to this area to upload</span>';
+      sopBrowseBtn = document.getElementById('sopBrowseBtn');
+      sopBrowseBtn.addEventListener('click', function (e) { e.stopPropagation(); sopFileInput.click(); });
+      sopDropzoneFileName = document.getElementById('sopDropzoneFileName');
+      sopDropzoneHint.style.display = '';
+    }
+
+    function selectSopFile(name) {
+      pendingSopFileName = name;
+      sopDropzone.classList.remove('dropzone--active');
+      sopDropzone.classList.add('dropzone--filled');
+      setDropzoneIcon(true);
+      sopDropzoneRow.innerHTML = '<span class="dropzone__title" id="sopDropzoneFileName">' + name + '</span>';
+      sopDropzoneFileName = document.getElementById('sopDropzoneFileName');
+      sopDropzoneHint.style.display = 'none';
+    }
+
+    openUploadSopBtn.addEventListener('click', function () {
+      resetDropzone();
+      openModal(uploadSopOverlay);
+    });
+
+    sopBrowseBtn.addEventListener('click', function (e) { e.stopPropagation(); sopFileInput.click(); });
+
+    sopFileInput.addEventListener('click', function (e) { e.stopPropagation(); });
+    sopFileInput.addEventListener('change', function () {
+      var file = sopFileInput.files && sopFileInput.files[0];
+      if (file) selectSopFile(file.name);
+    });
+
+    ['dragover', 'dragenter'].forEach(function (evt) {
+      sopDropzone.addEventListener(evt, function (e) {
+        e.preventDefault();
+        if (pendingSopFileName) return;
+        sopDropzone.classList.add('dropzone--active');
+        setDropzoneIcon(true);
+        sopDropzoneRow.innerHTML = '<span class="dropzone__title">Drop file(s) here..</span>';
+        sopDropzoneHint.style.display = 'none';
+      });
+    });
+    ['dragleave', 'drop'].forEach(function (evt) {
+      sopDropzone.addEventListener(evt, function (e) {
+        e.preventDefault();
+        if (evt === 'drop') {
+          var name = (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0] && e.dataTransfer.files[0].name) || 'New SOP Document.pdf';
+          selectSopFile(name);
+        } else if (!pendingSopFileName) {
+          sopDropzone.classList.remove('dropzone--active');
+          setDropzoneIcon(false);
+          sopDropzoneRow.innerHTML = '<button type="button" class="dropzone__browse" id="sopBrowseBtn">Browse</button><span class="dropzone__title" id="sopDropzoneFileName">or drag file to this area to upload</span>';
+          sopBrowseBtn = document.getElementById('sopBrowseBtn');
+          sopBrowseBtn.addEventListener('click', function (e2) { e2.stopPropagation(); sopFileInput.click(); });
+          sopDropzoneFileName = document.getElementById('sopDropzoneFileName');
+          sopDropzoneHint.style.display = '';
+        }
+      });
+    });
+
+    function sopFormatChip(name) {
+      var ext = (name.split('.').pop() || '').toLowerCase();
+      if (ext === 'pdf') return '<span class="status-chip status-chip--danger">PDF</span>';
+      if (ext === 'docx' || ext === 'doc') return '<span class="status-chip status-chip--blue">DOCX</span>';
+      return '<span class="status-chip status-chip--inactive">TXT</span>';
+    }
+
+    confirmUploadSopBtn.addEventListener('click', function () {
+      var name = pendingSopFileName || 'New SOP Document.pdf';
+      var row = document.createElement('div');
+      row.className = 'table-row';
+      row.innerHTML =
+        '<div class="table-cell table-cell--name">' + name + '</div>' +
+        '<div class="table-cell table-cell--status" style="width: 90px;">' + sopFormatChip(name) + '</div>' +
+        '<div class="table-cell">—</div>' +
+        '<div class="table-cell">John Samuel</div>' +
+        '<div class="table-cell">' + new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) + '</div>' +
+        '<div class="table-cell table-cell--actions" style="width: 64px;">' +
+          '<button class="row-action-btn" type="button" aria-label="Row actions" data-sop-menu><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="5" r="1" fill="currentColor"/><circle cx="12" cy="12" r="1" fill="currentColor"/><circle cx="12" cy="19" r="1" fill="currentColor"/></svg></button>' +
+        '</div>';
+      sopTableBody.appendChild(row);
+      closeModal(uploadSopOverlay);
+      showToast('SOP uploaded.');
+    });
+
+    var sopReplaceInput = document.getElementById('sopReplaceInput');
+    var pendingReplaceRow = null;
+
+    function fmtFileSize(bytes) {
+      if (bytes < 1024) return bytes + ' B';
+      if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+      return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+    }
+
+    /* ---- SOP 3-dots popover ---- */
+    var sopPopover = document.getElementById('sopActionsPopover');
+    var activeSopRow = null;
+
+    function closeSopPopover() {
+      sopPopover.classList.remove('row-actions-popover--open');
+      activeSopRow = null;
+    }
+
+    document.addEventListener('click', function (e) {
+      var menuBtn = e.target.closest('[data-sop-menu]');
+      if (menuBtn) {
+        var row = menuBtn.closest('.table-row');
+        if (activeSopRow === row && sopPopover.classList.contains('row-actions-popover--open')) {
+          closeSopPopover(); return;
+        }
+        activeSopRow = row;
+        sopPopover.classList.add('row-actions-popover--open');
+        var btnRect = menuBtn.getBoundingClientRect();
+        var left = btnRect.right - sopPopover.offsetWidth;
+        var top = btnRect.bottom + 4;
+        if (left < 8) left = 8;
+        sopPopover.style.left = left + 'px';
+        sopPopover.style.top = top + 'px';
+        return;
+      }
+      if (!sopPopover.contains(e.target)) closeSopPopover();
+    });
+
+    document.getElementById('sopReplaceBtn').addEventListener('click', function () {
+      if (!activeSopRow) return;
+      pendingReplaceRow = activeSopRow;
+      closeSopPopover();
+      sopReplaceInput.value = '';
+      sopReplaceInput.click();
+    });
+
+    document.getElementById('sopDeleteBtn').addEventListener('click', function () {
+      if (!activeSopRow) return;
+      var row = activeSopRow;
+      var docName = row.querySelector('.table-cell--name').textContent;
+      closeSopPopover();
+      openConfirmDelete(row, 'Delete SOP', 'Delete "' + docName + '"? This cannot be undone.');
+    });
+
+    sopReplaceInput.addEventListener('change', function () {
+      var file = sopReplaceInput.files && sopReplaceInput.files[0];
+      if (!file || !pendingReplaceRow) return;
+      var cells = pendingReplaceRow.querySelectorAll('.table-cell');
+      cells[0].textContent = file.name;
+      cells[1].innerHTML = sopFormatChip(file.name);
+      cells[2].textContent = fmtFileSize(file.size);
+      cells[4].textContent = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+      showToast('SOP replaced.');
+      pendingReplaceRow = null;
+    });
+
+    /* ================= AGENTS TAB ================= */
+    document.querySelectorAll('[data-agent-toggle]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var nowOn = btn.classList.toggle('toggle--on');
+        var name = btn.closest('.agent-card').querySelector('.agent-card__name').textContent;
+        showToast(name + (nowOn ? ' enabled.' : ' disabled.'));
+      });
+    });
+
+    /* ================= CHECKLIST TEMPLATES TAB ================= */
+    var STAGES = ['Pre-Fixture', 'Post-Fixture', 'Loading', 'Sailing', 'Discharge', 'Post-Voyage'];
+
+    var checklistData = {
+      'Oil Tanker': {
+        __existed: true,
+        templateName: 'Oil Tanker Standard v2',
+        included: ['Pre-Fixture', 'Post-Fixture', 'Loading', 'Sailing', 'Discharge', 'Post-Voyage'],
+        items: {
+          'Pre-Fixture': [
+            { name: 'Verify vessel eligibility', mandatory: true },
+            { name: 'Confirm P&I cover', mandatory: true },
+            { name: 'Check flag state restrictions', mandatory: false }
+          ],
+          'Post-Fixture': [{ name: 'Issue voyage instructions', mandatory: true }],
+          'Loading': [{ name: 'Confirm cargo quantity', mandatory: true }, { name: 'Record ullage readings', mandatory: true }],
+          'Sailing': [{ name: 'Confirm bunker ROB', mandatory: true }],
+          'Discharge': [{ name: 'Confirm discharge port readiness', mandatory: true }],
+          'Post-Voyage': [{ name: 'Close out voyage file', mandatory: false }]
+        }
+      },
+      'Chemical Tanker': {
+        __existed: false,
+        deactivated: true,
+        templateName: 'Chemical Tanker Standard',
+        included: ['Pre-Fixture', 'Loading', 'Sailing', 'Discharge', 'Post-Voyage'],
+        items: {
+          'Pre-Fixture': [{ name: 'Verify cargo compatibility', mandatory: true }],
+          'Loading': [{ name: 'Tank cleanliness certificate', mandatory: true }],
+          'Sailing': [{ name: 'Confirm routing plan', mandatory: false }],
+          'Discharge': [{ name: 'Confirm discharge sequence', mandatory: true }],
+          'Post-Voyage': [{ name: 'Close out voyage file', mandatory: false }]
+        }
+      }
+    };
+
+    function emptyTemplateData() {
+      var included = {};
+      var items = {};
+      STAGES.forEach(function (s) { items[s] = []; });
+      return { templateName: '', included: [], items: items };
+    }
+
+    var VESSEL_TYPES = ['Oil Tanker', 'Chemical Tanker', 'Dry Bulk', 'Container', 'LNG Carrier', 'LPG Carrier'];
+    var SHIP_ICON_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 17l1.5-6h13L20 17M4 17c0 1.5 1.5 3 4 3h8c2.5 0 4-1.5 4-3M9 11V7h6v4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    var CONFIGURE_ICON_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19" stroke-linecap="round"/><line x1="5" y1="12" x2="19" y2="12" stroke-linecap="round"/></svg>';
+    var EDIT_ICON_SVG = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 000-1.41l-2.34-2.34a1 1 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>';
+    var DEACTIVATE_ICON_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3v6" stroke-linecap="round"/><path d="M18.36 6.64a9 9 0 11-12.73 0" stroke-linecap="round"/></svg>';
+    var checklistCardGrid = document.getElementById('checklistCardGrid');
+
+    function renderChecklistCards() {
+      checklistCardGrid.innerHTML = '';
+      VESSEL_TYPES.forEach(function (vesselType) {
+        var data = checklistData[vesselType];
+        var configured = !!(data && data.__existed);
+        var deactivated = !!(data && !data.__existed && data.deactivated);
+        var card = document.createElement('div');
+        card.className = 'vessel-card';
+        card.dataset.vessel = vesselType;
+        card.innerHTML =
+          '<div class="vessel-card__icon">' + SHIP_ICON_SVG + '</div>' +
+          '<div class="vessel-card__body">' +
+            '<div class="vessel-card__name">' + vesselType + '</div>' +
+            (configured
+              ? '<div class="vessel-card__meta vessel-card__meta--configured">' +
+                  '<span>Template Added</span>' +
+                  '<span class="vessel-card__meta-divider"></span>' +
+                  '<span>' + data.included.length + ' stage' + (data.included.length === 1 ? '' : 's') + '</span>' +
+                '</div>'
+              : (deactivated
+                  ? '<div class="vessel-card__meta"><span class="status-chip status-chip--inactive">Deactivated</span></div>'
+                  : '<div class="vessel-card__meta">Not Configured</div>')) +
+          '</div>' +
+          '<div class="vessel-card__actions">' +
+            '<button type="button" class="vessel-card__action" data-edit-template aria-label="' + (configured ? 'Edit' : 'Configure') + ' ' + vesselType + ' template">' +
+              (configured ? EDIT_ICON_SVG : CONFIGURE_ICON_SVG) +
+              '<span>' + (configured ? 'Edit' : 'Configure') + '</span>' +
+            '</button>' +
+            (configured
+              ? '<button type="button" class="vessel-card__deactivate" data-deactivate-template aria-label="Deactivate ' + vesselType + ' template">' + DEACTIVATE_ICON_SVG + '</button>'
+              : '') +
+          '</div>';
+        checklistCardGrid.appendChild(card);
+      });
+    }
+    var checklistTemplateOverlay = document.getElementById('checklistTemplateOverlay');
+    var checklistTemplateTitle = document.getElementById('checklistTemplateTitle');
+    var stageChipRow = document.getElementById('stageChipRow');
+    var checklistItemsEl = document.getElementById('checklistItems');
+    var checklistItemsLabel = document.getElementById('checklistItemsLabel');
+    var addChecklistItemBtn = document.getElementById('addChecklistItemBtn');
+    var saveChecklistTemplateBtn = document.getElementById('saveChecklistTemplateBtn');
+
+    var editingVessel = null;
+    var editingSelectedStage = null;
+    var draggedItemIndex = null;
+
+    function getEditingData() {
+      if (!checklistData[editingVessel]) checklistData[editingVessel] = emptyTemplateData();
+      return checklistData[editingVessel];
+    }
+
+    function renderStageChips() {
+      var data = getEditingData();
+      stageChipRow.innerHTML = '';
+      STAGES.forEach(function (stage) {
+        var included = data.included.indexOf(stage) !== -1;
+        var chip = document.createElement('button');
+        chip.type = 'button';
+        chip.className = 'stage-chip' + (included ? ' stage-chip--included' : '') + (editingSelectedStage === stage ? ' stage-chip--selected' : '');
+        chip.innerHTML = '<span class="stage-chip__box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span>' + stage + '</span>';
+        chip.querySelector('.stage-chip__box').addEventListener('click', function (e) {
+          e.stopPropagation();
+          animateModalHeight(checklistTemplateOverlay, function () {
+            var idx = data.included.indexOf(stage);
+            if (idx === -1) data.included.push(stage); else data.included.splice(idx, 1);
+            renderStageChips();
+          });
+        });
+        chip.addEventListener('click', function () {
+          animateModalHeight(checklistTemplateOverlay, function () {
+            editingSelectedStage = stage;
+            renderStageChips();
+            renderChecklistItems();
+          });
+        });
+        stageChipRow.appendChild(chip);
+      });
+    }
+
+    function renderChecklistItems() {
+      var data = getEditingData();
+      checklistItemsLabel.textContent = editingSelectedStage ? ('Checklist items — ' + editingSelectedStage) : 'Select a stage above';
+      checklistItemsEl.innerHTML = '';
+      if (!editingSelectedStage) return;
+      var items = data.items[editingSelectedStage] || (data.items[editingSelectedStage] = []);
+      var RADIO_ON = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" fill="none" stroke="#1852FE" stroke-width="1.5"/><circle cx="12" cy="12" r="4" fill="#1852FE"/></svg>';
+      var RADIO_OFF = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" fill="none" stroke="#94A3B8" stroke-width="1.5"/></svg>';
+
+      items.forEach(function (item, idx) {
+        var row = document.createElement('div');
+        row.className = 'checklist-item-row';
+        row.innerHTML =
+          '<span class="drag-handle" draggable="false" aria-label="Drag to reorder"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"/><circle cx="15" cy="6" r="1.5"/><circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/><circle cx="9" cy="18" r="1.5"/><circle cx="15" cy="18" r="1.5"/></svg></span>' +
+          '<input type="text" class="form-field__input" style="flex: 1 0 0;" value="' + item.name.replace(/"/g, '&quot;') + '" placeholder="Enter item name" data-item-name>' +
+          '<div class="radio-group">' +
+            '<button type="button" class="radio-option" data-set-mandatory="false"><span class="radio-option__icon">' + (item.mandatory ? RADIO_OFF : RADIO_ON) + '</span><span>Optional</span></button>' +
+            '<button type="button" class="radio-option" data-set-mandatory="true"><span class="radio-option__icon">' + (item.mandatory ? RADIO_ON : RADIO_OFF) + '</span><span>Mandatory</span></button>' +
+          '</div>' +
+          '<button type="button" class="checklist-item-remove" aria-label="Remove item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 7h16M9 7V5a2 2 0 012-2h2a2 2 0 012 2v2m3 0l-1 13a2 2 0 01-2 2H8a2 2 0 01-2-2L5 7" stroke-linecap="round" stroke-linejoin="round"/></svg></button>';
+
+        row.querySelector('[data-item-name]').addEventListener('input', function (e) { item.name = e.target.value; });
+        row.querySelectorAll('[data-set-mandatory]').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            item.mandatory = btn.dataset.setMandatory === 'true';
+            renderChecklistItems();
+          });
+        });
+        row.querySelector('.checklist-item-remove').addEventListener('click', function () {
+          animateModalHeight(checklistTemplateOverlay, function () {
+            items.splice(idx, 1);
+            renderChecklistItems();
+          });
+        });
+
+        var handle = row.querySelector('.drag-handle');
+        handle.addEventListener('mousedown', function () { row.draggable = true; });
+        handle.addEventListener('mouseup', function () { row.draggable = false; });
+        row.addEventListener('dragstart', function (e) {
+          draggedItemIndex = idx;
+          row.classList.add('checklist-item-row--dragging');
+          e.dataTransfer.effectAllowed = 'move';
+          e.dataTransfer.setData('text/plain', String(idx));
+        });
+        row.addEventListener('dragend', function () {
+          row.draggable = false;
+          row.classList.remove('checklist-item-row--dragging');
+          draggedItemIndex = null;
+        });
+        row.addEventListener('dragover', function (e) { e.preventDefault(); });
+        row.addEventListener('drop', function (e) {
+          e.preventDefault();
+          if (draggedItemIndex === null || draggedItemIndex === idx) return;
+          var fromIdx = draggedItemIndex;
+          animateModalHeight(checklistTemplateOverlay, function () {
+            var moved = items.splice(fromIdx, 1)[0];
+            items.splice(idx, 0, moved);
+            draggedItemIndex = null;
+            renderChecklistItems();
+          });
+        });
+
+        checklistItemsEl.appendChild(row);
+      });
+    }
+
+    addChecklistItemBtn.addEventListener('click', function () {
+      if (!editingSelectedStage) { showToast('Select a stage first.'); return; }
+      animateModalHeight(checklistTemplateOverlay, function () {
+        var data = getEditingData();
+        var items = data.items[editingSelectedStage] || (data.items[editingSelectedStage] = []);
+        items.push({ name: '', mandatory: false });
+        renderChecklistItems();
+        var inputs = checklistItemsEl.querySelectorAll('[data-item-name]');
+        if (inputs.length) inputs[inputs.length - 1].focus();
+      });
+    });
+
+    function openChecklistTemplateFor(vesselType) {
+      editingVessel = vesselType;
+      var data = getEditingData();
+      if (!data.templateName) data.templateName = vesselType + ' Standard';
+      editingSelectedStage = data.included[0] || null;
+      checklistTemplateTitle.textContent = (checklistData[vesselType] && checklistData[vesselType].__existed ? 'Edit' : 'Create') + ' Checklist Template — ' + vesselType;
+      renderStageChips();
+      renderChecklistItems();
+      openModal(checklistTemplateOverlay);
+    }
+
+    checklistCardGrid.addEventListener('click', function (e) {
+      var deactivateBtn = e.target.closest('[data-deactivate-template]');
+      if (deactivateBtn) {
+        var deactivateCard = deactivateBtn.closest('.vessel-card');
+        var deactivateVessel = deactivateCard.dataset.vessel;
+        openConfirmAction(
+          'Deactivate Template',
+          'This vessel type will show as Not Configured until a new template is assigned. Are you sure?',
+          'Deactivate',
+          function () {
+            if (checklistData[deactivateVessel]) {
+              checklistData[deactivateVessel].__existed = false;
+              checklistData[deactivateVessel].deactivated = true;
+            }
+            renderChecklistCards();
+            showToast('Checklist template deactivated.');
+          }
+        );
+        return;
+      }
+      var btn = e.target.closest('[data-edit-template]');
+      if (!btn) return;
+      var card = btn.closest('.vessel-card');
+      var vesselType = card.dataset.vessel;
+      openChecklistTemplateFor(vesselType);
+    });
+
+    saveChecklistTemplateBtn.addEventListener('click', function () {
+      var data = getEditingData();
+      data.__existed = true;
+      data.deactivated = false;
+      renderChecklistCards();
+      closeModal(checklistTemplateOverlay);
+      showToast('Checklist template saved.');
+    });
+
+    /* Initial state */
+    renderChecklistCards();
+    activateTab('mailboxes');
+  })();
+</script>
+</body>
+</html>
