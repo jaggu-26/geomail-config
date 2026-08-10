@@ -1305,6 +1305,43 @@
   .vessel-card__deactivate:hover { background: var(--prim-red-10); color: var(--danger); }
   .vessel-card__deactivate svg { width: 20px; height: 20px; }
 
+  .vessel-card__toggle { width: 36px; height: 20px; border-radius: 10px; }
+  .vessel-card__toggle::after { width: 16px; height: 16px; }
+  .vessel-card__toggle.toggle--on::after { transform: translateX(16px); }
+
+  .vessel-card__meta span.stage-count-tip {
+    cursor: default;
+    text-decoration: underline dotted var(--prim-grey-400);
+    text-underline-offset: 2px;
+  }
+  #stageTooltip {
+    position: fixed;
+    background: var(--prim-grey-800, #1e293b);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.5;
+    white-space: nowrap;
+    padding: 4px 8px;
+    border-radius: 4px;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity .15s ease;
+  }
+  #stageTooltipArrow {
+    position: fixed;
+    width: 0;
+    height: 0;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-top: 8px solid var(--prim-grey-800, #1e293b);
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity .15s ease;
+  }
+
   /* Checklist template modal */
   .stage-chip-row {
     display: flex;
@@ -2751,7 +2788,7 @@
               ? '<div class="vessel-card__meta vessel-card__meta--configured">' +
                   '<span>Template Added</span>' +
                   '<span class="vessel-card__meta-divider"></span>' +
-                  '<span>' + data.included.length + ' stage' + (data.included.length === 1 ? '' : 's') + '</span>' +
+                  '<span class="stage-count-tip" data-tip="' + data.included.join(', ') + '">' + data.included.length + ' stage' + (data.included.length === 1 ? '' : 's') + '</span>' +
                 '</div>'
               : (deactivated
                   ? '<div class="vessel-card__meta"><span class="status-chip status-chip--inactive">Deactivated</span></div>'
@@ -2763,7 +2800,7 @@
               '<span>' + (configured ? 'Edit' : 'Configure') + '</span>' +
             '</button>' +
             (configured
-              ? '<button type="button" class="vessel-card__deactivate" data-deactivate-template aria-label="Deactivate ' + vesselType + ' template">' + DEACTIVATE_ICON_SVG + '</button>'
+              ? '<button type="button" class="toggle toggle--on vessel-card__toggle" aria-label="Toggle ' + vesselType + ' template" data-card-toggle></button>'
               : '') +
           '</div>';
         checklistCardGrid.appendChild(card);
@@ -2904,23 +2941,11 @@
     }
 
     checklistCardGrid.addEventListener('click', function (e) {
-      var deactivateBtn = e.target.closest('[data-deactivate-template]');
-      if (deactivateBtn) {
-        var deactivateCard = deactivateBtn.closest('.vessel-card');
-        var deactivateVessel = deactivateCard.dataset.vessel;
-        openConfirmAction(
-          'Deactivate Template',
-          'This vessel type will show as Not Configured until a new template is assigned. Are you sure?',
-          'Deactivate',
-          function () {
-            if (checklistData[deactivateVessel]) {
-              checklistData[deactivateVessel].__existed = false;
-              checklistData[deactivateVessel].deactivated = true;
-            }
-            renderChecklistCards();
-            showToast('Checklist template deactivated.');
-          }
-        );
+      var toggleBtn = e.target.closest('[data-card-toggle]');
+      if (toggleBtn) {
+        var nowOn = toggleBtn.classList.toggle('toggle--on');
+        var vesselName = toggleBtn.closest('.vessel-card').dataset.vessel;
+        showToast(vesselName + ' template ' + (nowOn ? 'enabled.' : 'disabled.'));
         return;
       }
       var btn = e.target.closest('[data-edit-template]');
@@ -2942,6 +2967,40 @@
     /* Initial state */
     renderChecklistCards();
     activateTab('mailboxes');
+  })();
+
+  /* Stage count tooltip */
+  (function () {
+    var tip = document.createElement('div');
+    tip.id = 'stageTooltip';
+    document.body.appendChild(tip);
+
+    var arrow = document.createElement('div');
+    arrow.id = 'stageTooltipArrow';
+    document.body.appendChild(arrow);
+
+    document.addEventListener('mouseover', function (e) {
+      var el = e.target.closest('.stage-count-tip');
+      if (!el) return;
+      tip.textContent = el.getAttribute('data-tip');
+      tip.style.display = 'block';
+      var rect = el.getBoundingClientRect();
+      var tw = tip.offsetWidth;
+      var th = tip.offsetHeight;
+      var cx = rect.left + rect.width / 2;
+      tip.style.left = (cx - tw / 2) + 'px';
+      tip.style.top = (rect.top - th - 10) + 'px';
+      arrow.style.left = (cx - 7) + 'px';
+      arrow.style.top = (rect.top - 10) + 'px';
+      tip.style.opacity = '1';
+      arrow.style.opacity = '1';
+    });
+
+    document.addEventListener('mouseout', function (e) {
+      if (!e.target.closest('.stage-count-tip')) return;
+      tip.style.opacity = '0';
+      arrow.style.opacity = '0';
+    });
   })();
 </script>
 </body>
