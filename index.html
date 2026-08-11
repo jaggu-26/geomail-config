@@ -1277,6 +1277,7 @@
 
   .vessel-card__meta--configured { color: var(--prim-grey-500); }
   .vessel-card__meta span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .vessel-card__meta .status-chip { padding: 1px 7px; font-size: 11px; line-height: 14px; flex-shrink: 0; }
   .vessel-card__meta-divider { flex-shrink: 0; width: 1.5px; height: 10px; background: #D9D9D9; }
 
   .vessel-card__action {
@@ -3188,12 +3189,37 @@
     checklistCardGrid.addEventListener('click', function (e) {
       var toggleBtn = e.target.closest('[data-card-toggle]');
       if (toggleBtn) {
-        var vesselName = toggleBtn.closest('.vessel-card').dataset.vessel;
+        var card = toggleBtn.closest('.vessel-card');
+        var vesselName = card.dataset.vessel;
         var nowOn = !toggleBtn.classList.contains('toggle--on');
-        if (checklistData[vesselName]) {
-          checklistData[vesselName].deactivated = !nowOn;
+        if (checklistData[vesselName]) checklistData[vesselName].deactivated = !nowOn;
+        toggleBtn.classList.toggle('toggle--on', nowOn);
+        card.querySelector('.vessel-card__icon').innerHTML = nowOn ? SHIP_ICON_SVG : LOCK_ICON_SVG;
+        var data = checklistData[vesselName];
+        var metaEl = card.querySelector('.vessel-card__meta');
+        if (nowOn) {
+          metaEl.className = 'vessel-card__meta vessel-card__meta--configured';
+          metaEl.innerHTML = '<span>Template Added</span>' +
+            '<span class="vessel-card__meta-divider"></span>' +
+            '<span class="stage-count-tip" data-tip="' + data.included.join(', ') + '">' + data.included.length + ' stage' + (data.included.length === 1 ? '' : 's') + '</span>';
+        } else {
+          metaEl.className = 'vessel-card__meta vessel-card__meta--configured';
+          metaEl.innerHTML = '<span>Template Added</span>' +
+            '<span class="vessel-card__meta-divider"></span>' +
+            '<span class="stage-count-tip" data-tip="' + data.included.join(', ') + '">' + data.included.length + ' stage' + (data.included.length === 1 ? '' : 's') + '</span>' +
+            '<span class="vessel-card__meta-divider"></span><span class="status-chip status-chip--inactive">Deactivated</span>';
         }
-        renderChecklistCards();
+        var actionsEl = card.querySelector('.vessel-card__actions');
+        var existingEdit = actionsEl.querySelector('[data-edit-template]');
+        if (nowOn && !existingEdit) {
+          var editBtn = document.createElement('button');
+          editBtn.type = 'button'; editBtn.className = 'vessel-card__action'; editBtn.dataset.editTemplate = '';
+          editBtn.setAttribute('aria-label', 'Edit ' + vesselName + ' template');
+          editBtn.innerHTML = EDIT_ICON_SVG + '<span>Edit</span>';
+          actionsEl.insertBefore(editBtn, actionsEl.firstChild);
+        } else if (!nowOn && existingEdit) {
+          existingEdit.remove();
+        }
         showToast(vesselName + ' template ' + (nowOn ? 'enabled.' : 'disabled.'));
         return;
       }
