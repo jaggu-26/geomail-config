@@ -807,6 +807,7 @@
     padding: 12px 24px;
     width: 100%;
     flex-shrink: 0;
+    border-bottom: 1px solid var(--grey-100);
   }
 
   .modal__title {
@@ -2916,7 +2917,7 @@
     var VESSEL_TYPES = ['Oil Tanker', 'Chemical Tanker', 'Dry Bulk', 'Container', 'LNG Carrier', 'LPG Carrier'];
     var SHIP_ICON_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M4.75 18.7496C6.151 18.7566 7.481 18.1366 8.375 17.0576C10.053 19.0596 13.036 19.3226 15.038 17.6446C15.25 17.4666 15.447 17.2706 15.625 17.0576C16.519 18.1356 17.849 18.7566 19.25 18.7496" stroke="#212121"/><path d="M6.20398 15.715L5.75098 14.13C5.60898 13.632 5.86998 13.108 6.35398 12.922L12 10.75L17.646 12.922C18.129 13.108 18.391 13.632 18.249 14.13L17.796 15.715" stroke="#212121"/><path d="M7.25 12.279V8.25C7.25 7.698 7.698 7.25 8.25 7.25H15.75C16.302 7.25 16.75 7.698 16.75 8.25V12.279" stroke="#212121"/><path d="M13.25 4.75H10.75V7.25H13.25V4.75Z" fill="#212121" stroke="#212121"/><path d="M12 10.75V15.715" stroke="#212121"/></svg>';
     var CONFIGURE_ICON_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19" stroke-linecap="round"/><line x1="5" y1="12" x2="19" y2="12" stroke-linecap="round"/></svg>';
-    var LOCK_ICON_SVG = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M9.05396 11.25V8C9.05396 6.205 10.509 4.75 12.304 4.75C14.099 4.75 15.554 6.205 15.554 8V11.25" stroke="#212121"/><path d="M12.304 14.75V15.75" stroke="#212121"/><path d="M16.054 11.25H8.55396C7.44939 11.25 6.55396 12.1454 6.55396 13.25V17.25C6.55396 18.3546 7.44939 19.25 8.55396 19.25H16.054C17.1585 19.25 18.054 18.3546 18.054 17.25V13.25C18.054 12.1454 17.1585 11.25 16.054 11.25Z" stroke="#212121"/></svg>';
+    var LOCK_ICON_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M9.05396 11.25V8C9.05396 6.205 10.509 4.75 12.304 4.75C14.099 4.75 15.554 6.205 15.554 8V11.25" stroke="#212121"/><path d="M12.304 14.75V15.75" stroke="#212121"/><path d="M16.054 11.25H8.55396C7.44939 11.25 6.55396 12.1454 6.55396 13.25V17.25C6.55396 18.3546 7.44939 19.25 8.55396 19.25H16.054C17.1585 19.25 18.054 18.3546 18.054 17.25V13.25C18.054 12.1454 17.1585 11.25 16.054 11.25Z" stroke="#212121"/></svg>';
     var EDIT_ICON_SVG = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 000-1.41l-2.34-2.34a1 1 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>';
     var DEACTIVATE_ICON_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3v6" stroke-linecap="round"/><path d="M18.36 6.64a9 9 0 11-12.73 0" stroke-linecap="round"/></svg>';
     var checklistCardGrid = document.getElementById('checklistCardGrid');
@@ -2946,10 +2947,12 @@
                   : '<div class="vessel-card__meta">Not Configured</div>')) +
           '</div>' +
           '<div class="vessel-card__actions">' +
-            '<button type="button" class="vessel-card__action" data-edit-template aria-label="' + (configured ? 'Edit' : 'Configure') + ' ' + vesselType + ' template">' +
-              (configured ? EDIT_ICON_SVG : CONFIGURE_ICON_SVG) +
-              '<span>' + (configured ? 'Edit' : 'Configure') + '</span>' +
-            '</button>' +
+            (!deactivated
+              ? '<button type="button" class="vessel-card__action" data-edit-template aria-label="' + (configured ? 'Edit' : 'Configure') + ' ' + vesselType + ' template">' +
+                  (configured ? EDIT_ICON_SVG : CONFIGURE_ICON_SVG) +
+                  '<span>' + (configured ? 'Edit' : 'Configure') + '</span>' +
+                '</button>'
+              : '') +
             (configured
               ? '<button type="button" class="toggle vessel-card__toggle' + (deactivated ? '' : ' toggle--on') + '" aria-label="Toggle ' + vesselType + ' template" data-card-toggle></button>'
               : '') +
@@ -3185,8 +3188,12 @@
     checklistCardGrid.addEventListener('click', function (e) {
       var toggleBtn = e.target.closest('[data-card-toggle]');
       if (toggleBtn) {
-        var nowOn = toggleBtn.classList.toggle('toggle--on');
         var vesselName = toggleBtn.closest('.vessel-card').dataset.vessel;
+        var nowOn = !toggleBtn.classList.contains('toggle--on');
+        if (checklistData[vesselName]) {
+          checklistData[vesselName].deactivated = !nowOn;
+        }
+        renderChecklistCards();
         showToast(vesselName + ' template ' + (nowOn ? 'enabled.' : 'disabled.'));
         return;
       }
