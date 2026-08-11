@@ -1320,14 +1320,32 @@
     color: #fff;
     font-size: 11px;
     font-weight: 500;
-    line-height: 1.5;
-    white-space: nowrap;
-    padding: 4px 8px;
+    line-height: 1.6;
+    padding: 6px 10px;
     border-radius: 4px;
     pointer-events: none;
     z-index: 9999;
     opacity: 0;
     transition: opacity .15s ease;
+  }
+  #stageTooltip ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  #stageTooltip ul li {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+  }
+  #stageTooltip ul li::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--prim-grey-400, #94a3b8);
+    flex-shrink: 0;
   }
   #stageTooltipArrow {
     position: fixed;
@@ -1343,6 +1361,118 @@
   }
 
   /* Checklist template modal */
+  /* Checklist modal two-panel layout */
+  .checklist-modal-body {
+    display: flex;
+    width: 100%;
+  }
+  .checklist-stage-nav {
+    width: 240px;
+    flex-shrink: 0;
+    border-right: 1px solid var(--prim-grey-100);
+    padding: 20px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .stage-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--prim-grey-600);
+    transition: background .12s, color .12s;
+  }
+  .stage-nav-item:hover { background: var(--grey-50); color: var(--prim-grey-800); }
+  .stage-nav-item--active {
+    background: var(--color-brand-subtle);
+    color: var(--brand);
+    font-weight: 600;
+  }
+  .stage-nav-item .drag-handle { flex-shrink: 0; }
+  .stage-nav-label { flex: 1; min-width: 0; white-space: nowrap; }
+  .stage-nav-item--dragging { opacity: 0.4; }
+
+  /* Custom stage keyword chips */
+  .stage-kw-list { display: flex; flex-wrap: nowrap; gap: 3px; flex: 1; min-width: 0; align-items: center; overflow: hidden; }
+  .stage-kw-chip {
+    font-size: 11px; font-weight: 500;
+    background: var(--prim-grey-100); color: var(--prim-grey-700);
+    border-radius: 4px; padding: 2px 5px; white-space: nowrap;
+  }
+  .stage-nav-item--active .stage-kw-chip { background: rgba(24,82,254,0.12); color: var(--brand); }
+  .stage-kw-input {
+    display: none; width: 72px; height: 22px; font-size: 11px; font-family: inherit;
+    border: 1px dashed var(--prim-grey-300); border-radius: 4px; padding: 0 6px;
+    outline: none; color: var(--color-text-default); background: var(--card); flex-shrink: 0;
+  }
+  .stage-nav-item--custom:hover .stage-kw-input,
+  .stage-nav-item--custom.stage-nav-item--active .stage-kw-input { display: block; }
+
+  .stage-edit-btn {
+    display: none; align-items: center; justify-content: center;
+    flex-shrink: 0; padding: 2px; border: none; background: none;
+    cursor: pointer; color: var(--prim-grey-400); border-radius: 4px;
+  }
+  .stage-nav-item:hover .stage-edit-btn,
+  .stage-nav-item--active .stage-edit-btn { display: flex; }
+  .stage-edit-btn:hover { color: var(--brand); background: rgba(24,82,254,0.08); }
+  .stage-inline-input {
+    flex: 1; min-width: 0; height: 22px; font-size: 13px; font-weight: 500;
+    font-family: inherit; border: 1px solid var(--brand); border-radius: 4px;
+    padding: 0 6px; outline: none; color: var(--color-text-default); background: var(--card);
+  }
+
+  /* Add Stage button + input */
+  .add-stage-btn {
+    display: flex; align-items: center; gap: 6px; padding: 7px 12px;
+    border: none; background: none; color: var(--brand); font-size: 12px; font-weight: 600;
+    cursor: pointer; font-family: inherit; width: 100%; text-align: left; border-radius: 6px; margin-top: 4px;
+  }
+  .add-stage-btn:hover { background: var(--grey-50); }
+  .add-stage-input-row { padding: 6px 12px; }
+  .add-stage-input {
+    width: 100%; height: 28px; font-size: 12px; font-family: inherit;
+    border: 1px solid var(--brand); border-radius: 4px; padding: 0 8px;
+    outline: none; color: var(--color-text-default); background: var(--card);
+    box-sizing: border-box;
+  }
+
+  /* Center modal title */
+  #checklistTemplateTitle { text-align: center; flex: 1; }
+  .stage-nav-item__check {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    border: 1.5px solid var(--prim-grey-300);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background .12s, border-color .12s;
+  }
+  .stage-nav-item--included .stage-nav-item__check {
+    background: var(--brand);
+    border-color: var(--brand);
+  }
+  .stage-nav-item__check svg { display: none; width: 10px; height: 10px; stroke: #fff; stroke-width: 3; }
+  .stage-nav-item--included .stage-nav-item__check svg { display: block; }
+  .checklist-panel {
+    flex: 1;
+    padding: 20px 24px;
+    display: flex;
+    flex-direction: column;
+  }
+
   .stage-chip-row {
     display: flex;
     flex-wrap: wrap;
@@ -2096,22 +2226,19 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18" stroke-linecap="round"/><line x1="6" y1="6" x2="18" y2="18" stroke-linecap="round"/></svg>
       </button>
     </div>
-    <div class="modal__content">
-      <div class="field-group">
-        <div class="field-label">
-          <span>Stages included in this template</span>
+    <div class="modal__content" style="padding:0;">
+      <div class="checklist-modal-body">
+        <div class="checklist-stage-nav" id="stageChipRow"></div>
+        <div class="checklist-panel">
+          <div class="field-label" style="margin-bottom:12px;">
+            <span id="checklistItemsLabel">Select a stage</span>
+          </div>
+          <div class="checklist-items" id="checklistItems"></div>
+          <button class="btn-add-item" type="button" id="addChecklistItemBtn" style="display:none;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19" stroke-linecap="round"/><line x1="5" y1="12" x2="19" y2="12" stroke-linecap="round"/></svg>
+            <span>Add Item</span>
+          </button>
         </div>
-        <div class="stage-chip-row" id="stageChipRow"></div>
-      </div>
-      <div class="field-group">
-        <div class="field-label">
-          <span id="checklistItemsLabel">Checklist items</span>
-        </div>
-        <div class="checklist-items" id="checklistItems"></div>
-        <button class="btn-add-item" type="button" id="addChecklistItemBtn">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19" stroke-linecap="round"/><line x1="5" y1="12" x2="19" y2="12" stroke-linecap="round"/></svg>
-          <span>Add Item</span>
-        </button>
       </div>
     </div>
     <div class="modal__footer">
@@ -2722,7 +2849,8 @@
     });
 
     /* ================= CHECKLIST TEMPLATES TAB ================= */
-    var STAGES = ['Pre-Fixture', 'Post-Fixture', 'Loading', 'Sailing', 'Discharge', 'Post-Voyage'];
+    var STAGES = ['Pre-Fixture', 'Post-Fixture', 'Loading', 'Sailing', 'Discharge', 'Post-Voyage', 'Port Ops Check'];
+    var customStageSet = new Set(['Port Ops Check']);
 
     var checklistData = {
       'Oil Tanker': {
@@ -2823,37 +2951,138 @@
       return checklistData[editingVessel];
     }
 
+    var draggedStageIndex = null;
+
     function renderStageChips() {
       var data = getEditingData();
       stageChipRow.innerHTML = '';
-      STAGES.forEach(function (stage) {
+      STAGES.forEach(function (stage, stageIdx) {
         var included = data.included.indexOf(stage) !== -1;
-        var chip = document.createElement('button');
-        chip.type = 'button';
-        chip.className = 'stage-chip' + (included ? ' stage-chip--included' : '') + (editingSelectedStage === stage ? ' stage-chip--selected' : '');
-        chip.innerHTML = '<span class="stage-chip__box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span>' + stage + '</span>';
-        chip.querySelector('.stage-chip__box').addEventListener('click', function (e) {
+        var active = editingSelectedStage === stage;
+        var isCustom = customStageSet.has(stage);
+        var item = document.createElement('div');
+        item.className = 'stage-nav-item' +
+          (included ? ' stage-nav-item--included' : '') +
+          (active ? ' stage-nav-item--active' : '') +
+          (isCustom ? ' stage-nav-item--custom' : '');
+
+        item.innerHTML =
+          '<span class="drag-handle" aria-label="Reorder stage">' +
+            '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"/><circle cx="15" cy="6" r="1.5"/><circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/><circle cx="9" cy="18" r="1.5"/><circle cx="15" cy="18" r="1.5"/></svg>' +
+          '</span>' +
+          '<span class="stage-nav-item__check" data-check>' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg>' +
+          '</span>' +
+          '<span class="stage-nav-label">' + stage + '</span>' +
+          '<button type="button" class="stage-edit-btn" aria-label="Rename stage" data-stage-edit>' +
+            '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><path d="M11.5 2.5a1.414 1.414 0 012 2L5 13H2v-3L11.5 2.5z"/></svg>' +
+          '</button>';
+
+        item.querySelector('[data-check]').addEventListener('click', function (e) {
           e.stopPropagation();
-          animateModalHeight(checklistTemplateOverlay, function () {
-            var idx = data.included.indexOf(stage);
-            if (idx === -1) data.included.push(stage); else data.included.splice(idx, 1);
-            renderStageChips();
-          });
+          var idx = data.included.indexOf(stage);
+          if (idx === -1) data.included.push(stage); else data.included.splice(idx, 1);
+          renderStageChips();
         });
-        chip.addEventListener('click', function () {
-          animateModalHeight(checklistTemplateOverlay, function () {
-            editingSelectedStage = stage;
+
+        item.querySelector('[data-stage-edit]').addEventListener('click', function (e) {
+          e.stopPropagation();
+          var label = item.querySelector('.stage-nav-label');
+          var inp = document.createElement('input');
+          inp.className = 'stage-inline-input';
+          inp.value = stage;
+          inp.maxLength = 30;
+          label.replaceWith(inp);
+          item.querySelector('[data-stage-edit]').style.display = 'none';
+          inp.focus(); inp.select();
+          function commit() {
+            var val = inp.value.trim();
+            if (val && val !== stage) {
+              var idx2 = STAGES.indexOf(stage);
+              if (idx2 !== -1) STAGES[idx2] = val;
+              if (isCustom) { customStageSet.delete(stage); customStageSet.add(val); }
+              Object.keys(checklistData).forEach(function (v) {
+                var d = checklistData[v]; if (!d) return;
+                var ii = d.included.indexOf(stage);
+                if (ii !== -1) d.included[ii] = val;
+                if (d.items[stage]) { d.items[val] = d.items[stage]; delete d.items[stage]; }
+              });
+              if (editingSelectedStage === stage) editingSelectedStage = val;
+            }
+            renderStageChips();
+          }
+          inp.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') { inp.blur(); }
+            else if (e.key === 'Escape') { inp.value = stage; inp.blur(); }
+          });
+          inp.addEventListener('blur', commit);
+        });
+
+        item.addEventListener('click', function (e) {
+          if (e.target.closest('[data-check]') || e.target.closest('.drag-handle') || e.target.closest('[data-stage-edit]')) return;
+          editingSelectedStage = stage;
+          renderStageChips();
+          renderChecklistItems();
+        });
+
+        var handle = item.querySelector('.drag-handle');
+        handle.addEventListener('mousedown', function () { item.draggable = true; });
+        handle.addEventListener('mouseup', function () { item.draggable = false; });
+        item.addEventListener('dragstart', function (e) {
+          draggedStageIndex = stageIdx;
+          item.classList.add('stage-nav-item--dragging');
+          e.dataTransfer.effectAllowed = 'move';
+        });
+        item.addEventListener('dragend', function () {
+          item.draggable = false;
+          item.classList.remove('stage-nav-item--dragging');
+          draggedStageIndex = null;
+        });
+        item.addEventListener('dragover', function (e) { e.preventDefault(); });
+        item.addEventListener('drop', function (e) {
+          e.preventDefault();
+          if (draggedStageIndex === null || draggedStageIndex === stageIdx) return;
+          var moved = STAGES.splice(draggedStageIndex, 1)[0];
+          STAGES.splice(stageIdx, 0, moved);
+          draggedStageIndex = null;
+          renderStageChips();
+        });
+        stageChipRow.appendChild(item);
+      });
+
+      /* + Add Stage */
+      var addBtn = document.createElement('button');
+      addBtn.type = 'button';
+      addBtn.className = 'add-stage-btn';
+      addBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><line x1="12" y1="5" x2="12" y2="19" stroke-linecap="round"/><line x1="5" y1="12" x2="19" y2="12" stroke-linecap="round"/></svg> Add Stage';
+      addBtn.addEventListener('click', function () {
+        addBtn.remove();
+        var inputRow = document.createElement('div');
+        inputRow.className = 'add-stage-input-row';
+        inputRow.innerHTML = '<input class="add-stage-input" maxlength="15" placeholder="Stage name…">';
+        stageChipRow.appendChild(inputRow);
+        var inp = inputRow.querySelector('.add-stage-input');
+        inp.focus();
+        inp.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' && inp.value.trim()) {
+            var name = inp.value.trim();
+            STAGES.push(name);
+            customStageSet.add(name);
+            stageKeywords[name] = [name];
+            editingSelectedStage = name;
             renderStageChips();
             renderChecklistItems();
-          });
+          } else if (e.key === 'Escape') { renderStageChips(); }
         });
-        stageChipRow.appendChild(chip);
+        inp.addEventListener('blur', function () { setTimeout(renderStageChips, 150); });
       });
+      stageChipRow.appendChild(addBtn);
     }
 
     function renderChecklistItems() {
       var data = getEditingData();
-      checklistItemsLabel.textContent = editingSelectedStage ? ('Checklist items — ' + editingSelectedStage) : 'Select a stage above';
+      checklistItemsLabel.textContent = editingSelectedStage ? ('Checklist items — ' + editingSelectedStage) : 'Select a stage';
+      addChecklistItemBtn.style.display = editingSelectedStage ? '' : 'none';
       checklistItemsEl.innerHTML = '';
       if (!editingSelectedStage) return;
       var items = data.items[editingSelectedStage] || (data.items[editingSelectedStage] = []);
@@ -2865,20 +3094,10 @@
         row.className = 'checklist-item-row';
         row.innerHTML =
           '<span class="drag-handle" draggable="false" aria-label="Drag to reorder"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"/><circle cx="15" cy="6" r="1.5"/><circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/><circle cx="9" cy="18" r="1.5"/><circle cx="15" cy="18" r="1.5"/></svg></span>' +
-          '<input type="text" class="form-field__input" style="flex: 1 0 0;" value="' + item.name.replace(/"/g, '&quot;') + '" placeholder="Enter item name" data-item-name>' +
-          '<div class="radio-group">' +
-            '<button type="button" class="radio-option" data-set-mandatory="false"><span class="radio-option__icon">' + (item.mandatory ? RADIO_OFF : RADIO_ON) + '</span><span>Optional</span></button>' +
-            '<button type="button" class="radio-option" data-set-mandatory="true"><span class="radio-option__icon">' + (item.mandatory ? RADIO_ON : RADIO_OFF) + '</span><span>Mandatory</span></button>' +
-          '</div>' +
+          '<input type="text" class="form-field__input" style="flex:1;min-width:0;" value="' + item.name.replace(/"/g, '&quot;') + '" placeholder="Enter item name" data-item-name>' +
           '<button type="button" class="checklist-item-remove" aria-label="Remove item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 7h16M9 7V5a2 2 0 012-2h2a2 2 0 012 2v2m3 0l-1 13a2 2 0 01-2 2H8a2 2 0 01-2-2L5 7" stroke-linecap="round" stroke-linejoin="round"/></svg></button>';
 
         row.querySelector('[data-item-name]').addEventListener('input', function (e) { item.name = e.target.value; });
-        row.querySelectorAll('[data-set-mandatory]').forEach(function (btn) {
-          btn.addEventListener('click', function () {
-            item.mandatory = btn.dataset.setMandatory === 'true';
-            renderChecklistItems();
-          });
-        });
         row.querySelector('.checklist-item-remove').addEventListener('click', function () {
           animateModalHeight(checklistTemplateOverlay, function () {
             items.splice(idx, 1);
@@ -2982,7 +3201,8 @@
     document.addEventListener('mouseover', function (e) {
       var el = e.target.closest('.stage-count-tip');
       if (!el) return;
-      tip.textContent = el.getAttribute('data-tip');
+      var stages = el.getAttribute('data-tip').split(', ');
+      tip.innerHTML = '<ul>' + stages.map(function(s) { return '<li>' + s + '</li>'; }).join('') + '</ul>';
       tip.style.display = 'block';
       var rect = el.getBoundingClientRect();
       var tw = tip.offsetWidth;
@@ -2991,7 +3211,7 @@
       tip.style.left = (cx - tw / 2) + 'px';
       tip.style.top = (rect.top - th - 10) + 'px';
       arrow.style.left = (cx - 7) + 'px';
-      arrow.style.top = (rect.top - 10) + 'px';
+      arrow.style.top = (rect.top - 11) + 'px';
       tip.style.opacity = '1';
       arrow.style.opacity = '1';
     });
