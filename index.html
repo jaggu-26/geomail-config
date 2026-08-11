@@ -910,6 +910,8 @@
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235A6B85' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
     background-repeat: no-repeat; background-position: right 10px center; background-size: 16px 16px; }
   .form-field__select:focus { border-color: var(--prim-blue-500); box-shadow: 0 0 0 3px rgba(36,99,235,0.18); }
+  .dropzone--disabled { opacity: 0.45; cursor: not-allowed; pointer-events: none; }
+  .btn-primary:disabled { opacity: 0.45; cursor: not-allowed; }
 
   .modal__subtitle {
     font-size: 16px;
@@ -2053,7 +2055,7 @@
               <div class="table-head-cell">Uploaded By</div>
               <div class="table-head-cell">Upload Date</div>
               <div class="table-head-cell">Vessel Type</div>
-              <div class="table-head-cell table-head-cell--actions" style="width: 96px;"></div>
+              <div class="table-head-cell table-head-cell--actions" style="width: 64px;"></div>
             </div>
             <div class="table-body" id="sopTableBody">
               <div class="table-row">
@@ -2227,20 +2229,7 @@
       </button>
     </div>
     <div class="modal__content">
-      <div class="field-group">
-        <div class="dropzone" id="sopDropzone" role="button" tabindex="0" aria-label="Upload SOP file">
-          <input type="file" class="dropzone__input" id="sopFileInput" accept=".pdf,.doc,.docx,.txt" tabindex="-1">
-          <div class="dropzone__icon" id="sopDropzoneIcon"><img src="Assets/img-folder-closed.svg" alt=""></div>
-          <div class="dropzone__content">
-            <div class="dropzone__row" id="sopDropzoneRow">
-              <button type="button" class="dropzone__browse" id="sopBrowseBtn">Browse</button>
-              <span class="dropzone__title" id="sopDropzoneFileName">or drag file to this area to upload</span>
-            </div>
-            <div class="dropzone__hint" id="sopDropzoneHint">PDF, DOCX or TXT — up to 10MB</div>
-          </div>
-        </div>
-      </div>
-      <div class="form-field" style="margin-top: 16px;">
+      <div class="form-field" style="margin-bottom: 16px;">
         <span class="form-field__label">Vessel Type</span>
         <select class="form-field__input form-field__select" id="sopVesselTypeSelect">
           <option value="">Select vessel type…</option>
@@ -2252,11 +2241,24 @@
           <option value="LPG Carrier">LPG Carrier</option>
         </select>
       </div>
+      <div class="field-group">
+        <div class="dropzone dropzone--disabled" id="sopDropzone" role="button" tabindex="0" aria-label="Upload SOP file" aria-disabled="true">
+          <input type="file" class="dropzone__input" id="sopFileInput" accept=".pdf,.doc,.docx,.txt" tabindex="-1" disabled>
+          <div class="dropzone__icon" id="sopDropzoneIcon"><img src="Assets/img-folder-closed.svg" alt=""></div>
+          <div class="dropzone__content">
+            <div class="dropzone__row" id="sopDropzoneRow">
+              <button type="button" class="dropzone__browse" id="sopBrowseBtn" disabled>Browse</button>
+              <span class="dropzone__title" id="sopDropzoneFileName">or drag file to this area to upload</span>
+            </div>
+            <div class="dropzone__hint" id="sopDropzoneHint">PDF, DOCX or TXT — up to 10MB</div>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="modal__footer">
       <div class="modal__actions">
         <button class="btn-cancel" type="button" id="cancelUploadSopBtn" data-modal-cancel>Cancel</button>
-        <button class="btn-primary" type="button" id="confirmUploadSopBtn">Upload</button>
+        <button class="btn-primary" type="button" id="confirmUploadSopBtn" disabled>Upload</button>
       </div>
     </div>
   </div>
@@ -2735,7 +2737,9 @@
     function resetDropzone() {
       pendingSopFileName = null;
       sopFileInput.value = '';
+      sopVesselTypeSelect.value = '';
       sopDropzone.classList.remove('dropzone--filled', 'dropzone--active');
+      syncSopUploadState();
       setDropzoneIcon(false);
       sopDropzoneRow.innerHTML = '<button type="button" class="dropzone__browse" id="sopBrowseBtn">Browse</button><span class="dropzone__title" id="sopDropzoneFileName">or drag file to this area to upload</span>';
       sopBrowseBtn = document.getElementById('sopBrowseBtn');
@@ -2803,6 +2807,16 @@
     }
 
     var sopVesselTypeSelect = document.getElementById('sopVesselTypeSelect');
+
+    function syncSopUploadState() {
+      var hasVessel = sopVesselTypeSelect.value !== '';
+      sopDropzone.classList.toggle('dropzone--disabled', !hasVessel);
+      sopDropzone.setAttribute('aria-disabled', !hasVessel);
+      sopFileInput.disabled = !hasVessel;
+      sopBrowseBtn.disabled = !hasVessel;
+      confirmUploadSopBtn.disabled = !hasVessel;
+    }
+    sopVesselTypeSelect.addEventListener('change', syncSopUploadState);
 
     confirmUploadSopBtn.addEventListener('click', function () {
       var name = pendingSopFileName || 'New SOP Document.pdf';
