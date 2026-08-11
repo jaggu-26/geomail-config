@@ -902,6 +902,10 @@
     color: var(--color-text-placeholder);
     cursor: not-allowed;
   }
+  .form-field__select { appearance: none; -webkit-appearance: none; padding-right: 36px; cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235A6B85' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 10px center; background-size: 16px 16px; }
+  .form-field__select:focus { border-color: var(--prim-blue-500); box-shadow: 0 0 0 3px rgba(36,99,235,0.18); }
 
   .modal__subtitle {
     font-size: 16px;
@@ -2044,6 +2048,7 @@
               <div class="table-head-cell">Size</div>
               <div class="table-head-cell">Uploaded By</div>
               <div class="table-head-cell">Upload Date</div>
+              <div class="table-head-cell">Vessel Type</div>
               <div class="table-head-cell table-head-cell--actions" style="width: 96px;"></div>
             </div>
             <div class="table-body" id="sopTableBody">
@@ -2053,6 +2058,7 @@
                 <div class="table-cell">1.2 MB</div>
                 <div class="table-cell">John Samuel</div>
                 <div class="table-cell">14 Jun 2026</div>
+                <div class="table-cell">Oil Tanker</div>
                 <div class="table-cell table-cell--actions" style="width: 64px;">
                   <button class="row-action-btn" type="button" aria-label="Row actions" data-sop-menu>
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="5" r="1" fill="currentColor"/><circle cx="12" cy="12" r="1" fill="currentColor"/><circle cx="12" cy="19" r="1" fill="currentColor"/></svg>
@@ -2065,6 +2071,7 @@
                 <div class="table-cell">480 KB</div>
                 <div class="table-cell">Aditi Rao</div>
                 <div class="table-cell">02 May 2026</div>
+                <div class="table-cell">Dry Bulk</div>
                 <div class="table-cell table-cell--actions" style="width: 64px;">
                   <button class="row-action-btn" type="button" aria-label="Row actions" data-sop-menu>
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="5" r="1" fill="currentColor"/><circle cx="12" cy="12" r="1" fill="currentColor"/><circle cx="12" cy="19" r="1" fill="currentColor"/></svg>
@@ -2077,6 +2084,7 @@
                 <div class="table-cell">12 KB</div>
                 <div class="table-cell">John Samuel</div>
                 <div class="table-cell">18 Mar 2026</div>
+                <div class="table-cell">LNG Carrier</div>
                 <div class="table-cell table-cell--actions" style="width: 64px;">
                   <button class="row-action-btn" type="button" aria-label="Row actions" data-sop-menu>
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="5" r="1" fill="currentColor"/><circle cx="12" cy="12" r="1" fill="currentColor"/><circle cx="12" cy="19" r="1" fill="currentColor"/></svg>
@@ -2227,6 +2235,18 @@
             <div class="dropzone__hint" id="sopDropzoneHint">PDF, DOCX or TXT — up to 10MB</div>
           </div>
         </div>
+      </div>
+      <div class="form-field" style="margin-top: 16px;">
+        <span class="form-field__label">Vessel Type</span>
+        <select class="form-field__input form-field__select" id="sopVesselTypeSelect">
+          <option value="">Select vessel type…</option>
+          <option value="Oil Tanker">Oil Tanker</option>
+          <option value="Chemical Tanker">Chemical Tanker</option>
+          <option value="Dry Bulk">Dry Bulk</option>
+          <option value="Container">Container</option>
+          <option value="LNG Carrier">LNG Carrier</option>
+          <option value="LPG Carrier">LPG Carrier</option>
+        </select>
       </div>
     </div>
     <div class="modal__footer">
@@ -2778,8 +2798,11 @@
       return '<span class="status-chip status-chip--inactive">TXT</span>';
     }
 
+    var sopVesselTypeSelect = document.getElementById('sopVesselTypeSelect');
+
     confirmUploadSopBtn.addEventListener('click', function () {
       var name = pendingSopFileName || 'New SOP Document.pdf';
+      var vesselType = sopVesselTypeSelect.value || '—';
       var row = document.createElement('div');
       row.className = 'table-row';
       row.innerHTML =
@@ -2788,10 +2811,12 @@
         '<div class="table-cell">—</div>' +
         '<div class="table-cell">John Samuel</div>' +
         '<div class="table-cell">' + new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) + '</div>' +
+        '<div class="table-cell">' + vesselType + '</div>' +
         '<div class="table-cell table-cell--actions" style="width: 64px;">' +
           '<button class="row-action-btn" type="button" aria-label="Row actions" data-sop-menu><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="5" r="1" fill="currentColor"/><circle cx="12" cy="12" r="1" fill="currentColor"/><circle cx="12" cy="19" r="1" fill="currentColor"/></svg></button>' +
         '</div>';
       sopTableBody.appendChild(row);
+      sopVesselTypeSelect.value = '';
       closeModal(uploadSopOverlay);
       showToast('SOP uploaded.');
     });
