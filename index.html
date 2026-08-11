@@ -123,6 +123,27 @@
     --color-overlay: rgba(14, 26, 51, 0.45);
   }
 
+  @font-face {
+    font-family: 'Gilroy';
+    src: url('Assets/Gilroy-Regular.woff2') format('woff2');
+    font-weight: 400; font-style: normal; font-display: swap;
+  }
+  @font-face {
+    font-family: 'Gilroy';
+    src: url('Assets/Gilroy-Medium.woff2') format('woff2');
+    font-weight: 500; font-style: normal; font-display: swap;
+  }
+  @font-face {
+    font-family: 'Gilroy';
+    src: url('Assets/Gilroy-SemiBold.woff2') format('woff2');
+    font-weight: 600; font-style: normal; font-display: swap;
+  }
+  @font-face {
+    font-family: 'Gilroy';
+    src: url('Assets/Gilroy-Bold.woff2') format('woff2');
+    font-weight: 700; font-style: normal; font-display: swap;
+  }
+
   * { box-sizing: border-box; }
 
   body {
@@ -1420,8 +1441,8 @@
 
   .stage-edit-btn {
     display: none; align-items: center; justify-content: center;
-    flex-shrink: 0; padding: 2px; border: none; background: none;
-    cursor: pointer; color: var(--prim-grey-400); border-radius: 4px;
+    flex-shrink: 0; padding: 5px 6px; border: none; background: none;
+    cursor: pointer; color: var(--prim-grey-400); border-radius: 5px;
   }
   .stage-nav-item:hover .stage-edit-btn,
   .stage-nav-item--active .stage-edit-btn { display: flex; }
@@ -1900,12 +1921,12 @@
     <div class="content-container">
       <aside class="sidepanel" aria-label="Settings navigation">
         <button class="sidebar-btn" type="button">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 17l1.5-6h13L20 17M4 17c0 1.5 1.5 3 4 3h8c2.5 0 4-1.5 4-3M9 11V7h6v4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M0.822876 19.5015C2.23998 19.5086 3.58527 18.8814 4.48955 17.79C6.18684 19.8151 8.22499 20.4483 10.25 18.751C10.4644 18.5709 11.07 17.9664 11.25 17.751C12.1543 18.8414 12.75 19.251 13.75 19.501" stroke="#212121"/><path d="M13 19.25C15.5 20.25 16.772 18.9277 17.2071 18C18.0238 19.7213 19.4756 19.9474 20.45 18.5047C20.5532 18.3517 20.6491 18.1831 20.7357 18C21.1708 18.9269 21.8181 19.4608 22.5 19.4548" stroke="#212121"/><path d="M2.80411 16.4313L2.3459 14.828C2.20227 14.3243 2.46627 13.7943 2.95583 13.6061L8.66674 11.4092L14.3776 13.6061C14.8662 13.7943 15.1312 14.3243 14.9876 14.828L14.5294 16.4313" stroke="#212121"/><path d="M15.5 11.5L19.9899 13.1873C20.374 13.3746 20.5823 13.9023 20.4694 14.4038L20.1092 16" stroke="#212121"/><path d="M3.86206 12.956V7.88064C3.86206 7.32229 4.31521 6.86914 4.87356 6.86914H12.4598C13.0181 6.86914 13.4713 7.32229 13.4713 7.88064V12.956" stroke="#212121"/><path d="M10 4H7V6H10V4Z" fill="#212121" stroke="#212121"/><path d="M15.5 7.5H17.5H18.8684C19.5 7.5 19.5 8 19.5 8.59366V12.5" stroke="#212121"/><path d="M17.5 6.5H16.5V7H17.5V6.5Z" fill="#212121" stroke="#212121"/><path d="M8.66663 11.7158V16.4305" stroke="#212121"/></svg>
           <span>My Vessels</span>
         </button>
         <div class="sidebar-group">
           <button class="sidebar-btn" type="button" id="alertConfigToggle" onclick="toggleAlertSubmenu()">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.73 21a2 2 0 01-3.46 0" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M18.75 16.25C17.645 16.25 16.75 15.355 16.75 14.25V9.5C16.75 6.877 14.623 4.75 12 4.75C9.377 4.75 7.25 6.877 7.25 9.5V14.25C7.25 15.355 6.355 16.25 5.25 16.25H18.75Z" stroke="black"/><path d="M13.588 18.185C13.493 18.068 13.351 18 13.2 18H10.801C10.65 18 10.508 18.068 10.413 18.185C10.318 18.302 10.281 18.456 10.312 18.603C10.485 19.425 11.18 20 12.001 20C12.822 20 13.517 19.425 13.69 18.603C13.721 18.456 13.683 18.302 13.588 18.185Z" fill="black"/></svg>
             <span>Alert Configuration</span>
             <svg class="sidebar-btn__chevron" viewBox="0 0 16 16" fill="none" stroke="var(--prim-grey-400)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left:auto;flex-shrink:0;width:14px;height:14px;"><path d="M4 6l4 4 4-4"/></svg>
           </button>
@@ -1915,11 +1936,11 @@
           </div>
         </div>
         <button class="sidebar-btn sidebar-btn--active" type="button" id="navGeoMailConfigBtn" aria-current="page">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="5" width="18" height="14" rx="2" stroke-linecap="round" stroke-linejoin="round"/><path d="m3 7 8.4 6.3a2.5 2.5 0 0 0 3.2 0L23 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M4.75 8.75L11.517 12.483C11.818 12.649 12.182 12.649 12.483 12.483L19.25 8.75" stroke="black"/><path d="M6.75 17.75H17.25C18.3546 17.75 19.25 16.8546 19.25 15.75V8.25C19.25 7.14543 18.3546 6.25 17.25 6.25L6.75 6.25C5.64543 6.25 4.75 7.14543 4.75 8.25L4.75 15.75C4.75 16.8546 5.64543 17.75 6.75 17.75Z" stroke="black"/></svg>
           <span>GeoMail Configuration</span>
         </button>
         <button class="sidebar-btn" type="button" id="navAgentsConfigBtn">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M8.25 10C9.35457 10 10.25 9.10457 10.25 8C10.25 6.89543 9.35457 6 8.25 6C7.14543 6 6.25 6.89543 6.25 8C6.25 9.10457 7.14543 10 8.25 10Z" stroke="black"/><path d="M5.05096 16.776C4.56196 16.628 4.23296 16.141 4.34196 15.641C4.73496 13.844 6.33496 12.499 8.24996 12.499C10.165 12.499 11.765 13.844 12.158 15.641C12.267 16.14 11.939 16.628 11.449 16.776C10.628 17.024 9.53796 17.25 8.24996 17.25C6.96196 17.25 5.87196 17.025 5.05096 16.776Z" stroke="black"/><path d="M15.75 10C16.8546 10 17.75 9.10457 17.75 8C17.75 6.89543 16.8546 6 15.75 6C14.6454 6 13.75 6.89543 13.75 8C13.75 9.10457 14.6454 10 15.75 10Z" stroke="black"/><path d="M13.967 12.918C14.504 12.65 15.109 12.5 15.75 12.5C17.665 12.5 19.265 13.845 19.658 15.642C19.767 16.141 19.439 16.629 18.949 16.777C18.128 17.025 17.038 17.251 15.75 17.251C15.304 17.251 14.881 17.224 14.486 17.178" stroke="black"/></svg>
           <span>Agents Configuration</span>
         </button>
       </aside>
@@ -2871,10 +2892,10 @@
         }
       },
       'Chemical Tanker': {
-        __existed: false,
+        __existed: true,
         deactivated: true,
         templateName: 'Chemical Tanker Standard',
-        included: ['Pre-Fixture', 'Loading', 'Sailing', 'Discharge', 'Post-Voyage'],
+        included: ['Pre-Fixture', 'Loading', 'Sailing', 'Discharge'],
         items: {
           'Pre-Fixture': [{ name: 'Verify cargo compatibility', mandatory: true }],
           'Loading': [{ name: 'Tank cleanliness certificate', mandatory: true }],
@@ -2893,8 +2914,9 @@
     }
 
     var VESSEL_TYPES = ['Oil Tanker', 'Chemical Tanker', 'Dry Bulk', 'Container', 'LNG Carrier', 'LPG Carrier'];
-    var SHIP_ICON_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 17l1.5-6h13L20 17M4 17c0 1.5 1.5 3 4 3h8c2.5 0 4-1.5 4-3M9 11V7h6v4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    var SHIP_ICON_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M4.75 18.7496C6.151 18.7566 7.481 18.1366 8.375 17.0576C10.053 19.0596 13.036 19.3226 15.038 17.6446C15.25 17.4666 15.447 17.2706 15.625 17.0576C16.519 18.1356 17.849 18.7566 19.25 18.7496" stroke="#212121"/><path d="M6.20398 15.715L5.75098 14.13C5.60898 13.632 5.86998 13.108 6.35398 12.922L12 10.75L17.646 12.922C18.129 13.108 18.391 13.632 18.249 14.13L17.796 15.715" stroke="#212121"/><path d="M7.25 12.279V8.25C7.25 7.698 7.698 7.25 8.25 7.25H15.75C16.302 7.25 16.75 7.698 16.75 8.25V12.279" stroke="#212121"/><path d="M13.25 4.75H10.75V7.25H13.25V4.75Z" fill="#212121" stroke="#212121"/><path d="M12 10.75V15.715" stroke="#212121"/></svg>';
     var CONFIGURE_ICON_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19" stroke-linecap="round"/><line x1="5" y1="12" x2="19" y2="12" stroke-linecap="round"/></svg>';
+    var LOCK_ICON_SVG = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M9.05396 11.25V8C9.05396 6.205 10.509 4.75 12.304 4.75C14.099 4.75 15.554 6.205 15.554 8V11.25" stroke="#212121"/><path d="M12.304 14.75V15.75" stroke="#212121"/><path d="M16.054 11.25H8.55396C7.44939 11.25 6.55396 12.1454 6.55396 13.25V17.25C6.55396 18.3546 7.44939 19.25 8.55396 19.25H16.054C17.1585 19.25 18.054 18.3546 18.054 17.25V13.25C18.054 12.1454 17.1585 11.25 16.054 11.25Z" stroke="#212121"/></svg>';
     var EDIT_ICON_SVG = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 000-1.41l-2.34-2.34a1 1 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>';
     var DEACTIVATE_ICON_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3v6" stroke-linecap="round"/><path d="M18.36 6.64a9 9 0 11-12.73 0" stroke-linecap="round"/></svg>';
     var checklistCardGrid = document.getElementById('checklistCardGrid');
@@ -2904,12 +2926,12 @@
       VESSEL_TYPES.forEach(function (vesselType) {
         var data = checklistData[vesselType];
         var configured = !!(data && data.__existed);
-        var deactivated = !!(data && !data.__existed && data.deactivated);
+        var deactivated = !!(data && data.deactivated);
         var card = document.createElement('div');
         card.className = 'vessel-card';
         card.dataset.vessel = vesselType;
         card.innerHTML =
-          '<div class="vessel-card__icon">' + SHIP_ICON_SVG + '</div>' +
+          '<div class="vessel-card__icon">' + (deactivated ? LOCK_ICON_SVG : SHIP_ICON_SVG) + '</div>' +
           '<div class="vessel-card__body">' +
             '<div class="vessel-card__name">' + vesselType + '</div>' +
             (configured
@@ -2917,6 +2939,7 @@
                   '<span>Template Added</span>' +
                   '<span class="vessel-card__meta-divider"></span>' +
                   '<span class="stage-count-tip" data-tip="' + data.included.join(', ') + '">' + data.included.length + ' stage' + (data.included.length === 1 ? '' : 's') + '</span>' +
+                  (deactivated ? '<span class="vessel-card__meta-divider"></span><span class="status-chip status-chip--inactive">Deactivated</span>' : '') +
                 '</div>'
               : (deactivated
                   ? '<div class="vessel-card__meta"><span class="status-chip status-chip--inactive">Deactivated</span></div>'
@@ -2928,7 +2951,7 @@
               '<span>' + (configured ? 'Edit' : 'Configure') + '</span>' +
             '</button>' +
             (configured
-              ? '<button type="button" class="toggle toggle--on vessel-card__toggle" aria-label="Toggle ' + vesselType + ' template" data-card-toggle></button>'
+              ? '<button type="button" class="toggle vessel-card__toggle' + (deactivated ? '' : ' toggle--on') + '" aria-label="Toggle ' + vesselType + ' template" data-card-toggle></button>'
               : '') +
           '</div>';
         checklistCardGrid.appendChild(card);
@@ -3059,7 +3082,7 @@
         addBtn.remove();
         var inputRow = document.createElement('div');
         inputRow.className = 'add-stage-input-row';
-        inputRow.innerHTML = '<input class="add-stage-input" maxlength="15" placeholder="Stage name…">';
+        inputRow.innerHTML = '<input class="add-stage-input" placeholder="Stage name…">';
         stageChipRow.appendChild(inputRow);
         var inp = inputRow.querySelector('.add-stage-input');
         inp.focus();
