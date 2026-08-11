@@ -918,35 +918,60 @@
     flex-direction: column;
     gap: 8px;
   }
-  .sop-vessel-select-wrap {
-    width: 100%;
+  /* GeoServe custom dropdown — per design spec: trigger 56px, items 40px */
+  .gs-dropdown { position: relative; width: 100%; }
+  .gs-dropdown__trigger {
+    width: 100%; height: 56px;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 16px;
     background: var(--card);
     border: 1px solid var(--prim-grey-200);
     border-radius: var(--radius-md);
-    padding: 10px 12px;
-    box-shadow: 0 1px 2px rgba(0,0,0,.05);
-    box-sizing: border-box;
+    cursor: pointer; font-family: inherit; font-size: 14px; font-weight: 400;
+    color: var(--prim-grey-300); text-align: left;
+    transition: border-color 120ms ease, box-shadow 120ms ease;
   }
-  .sop-vessel-select-wrap .form-field__select {
-    width: 100%;
-    border: none;
-    background: transparent;
-    box-shadow: none;
-    padding: 0 24px 0 0;
-    height: auto;
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--color-text-default);
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235A6B85' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 0 center;
-    background-size: 16px 16px;
-  }
-  .sop-vessel-select-wrap .form-field__select:focus { outline: none; box-shadow: none; }
-  .sop-vessel-select-wrap:focus-within {
+  .gs-dropdown__trigger--filled { color: var(--color-text-default); font-weight: 500; }
+  .gs-dropdown__trigger:hover:not(:disabled) { border-color: var(--prim-grey-300); }
+  .gs-dropdown--open .gs-dropdown__trigger,
+  .gs-dropdown__trigger:focus {
     border-color: var(--prim-blue-500);
     box-shadow: 0 0 0 3px rgba(36,99,235,0.18);
+    outline: none;
   }
+  .gs-dropdown__chevron {
+    width: 16px; height: 16px; flex-shrink: 0;
+    transition: transform 200ms cubic-bezier(0.4,0,0.2,1);
+    color: var(--prim-grey-400);
+  }
+  .gs-dropdown--open .gs-dropdown__chevron { transform: rotate(180deg); }
+  .gs-dropdown__panel {
+    display: none;
+    position: absolute; top: calc(100% + 4px); left: 0; right: 0;
+    background: var(--card);
+    border: 1px solid var(--prim-grey-100);
+    border-radius: var(--radius-md);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.16);
+    z-index: 300; list-style: none; margin: 0; padding: 4px 0;
+    overflow-y: auto; max-height: 280px;
+  }
+  .gs-dropdown--open .gs-dropdown__panel { display: block; }
+  .gs-dropdown__item {
+    display: flex; align-items: center; justify-content: space-between;
+    height: 40px; padding: 0 16px;
+    font-size: 14px; font-weight: 400; color: var(--color-text-default);
+    cursor: pointer; transition: background 100ms ease;
+  }
+  .gs-dropdown__item:hover { background: var(--grey-50); }
+  .gs-dropdown__item--selected { color: var(--brand); font-weight: 500; }
+  .gs-dropdown__item--selected:hover { background: rgba(24,82,254,0.06); }
+  .gs-dropdown__tick {
+    display: none; align-items: center; justify-content: center; flex-shrink: 0;
+    color: var(--brand);
+  }
+  .gs-dropdown__item--selected .gs-dropdown__tick { display: flex; }
+  /* Disabled trigger */
+  .gs-dropdown--disabled .gs-dropdown__trigger { opacity: 1; cursor: not-allowed; background: var(--grey-50); color: var(--prim-grey-200); pointer-events: none; }
 
   .modal__subtitle {
     font-size: 16px;
@@ -2266,16 +2291,28 @@
     <div class="modal__content">
       <div class="sop-vessel-field">
         <span class="form-field__label">Vessel Type</span>
-        <div class="sop-vessel-select-wrap">
-          <select class="form-field__input form-field__select" id="sopVesselTypeSelect">
-            <option value="">Select vessel type…</option>
-            <option value="Oil Tanker">Oil Tanker</option>
-            <option value="Chemical Tanker">Chemical Tanker</option>
-            <option value="Dry Bulk">Dry Bulk</option>
-            <option value="Container">Container</option>
-            <option value="LNG Carrier">LNG Carrier</option>
-            <option value="LPG Carrier">LPG Carrier</option>
-          </select>
+        <select id="sopVesselTypeSelect" style="display:none;" aria-hidden="true" tabindex="-1">
+          <option value=""></option>
+          <option value="Oil Tanker">Oil Tanker</option>
+          <option value="Chemical Tanker">Chemical Tanker</option>
+          <option value="Dry Bulk">Dry Bulk</option>
+          <option value="Container">Container</option>
+          <option value="LNG Carrier">LNG Carrier</option>
+          <option value="LPG Carrier">LPG Carrier</option>
+        </select>
+        <div class="gs-dropdown" id="sopVesselDropdown" role="combobox" aria-haspopup="listbox" aria-expanded="false">
+          <button type="button" class="gs-dropdown__trigger" id="sopVesselTrigger" aria-expanded="false">
+            <span class="gs-dropdown__value">Select vessel type…</span>
+            <svg class="gs-dropdown__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <ul class="gs-dropdown__panel" role="listbox" id="sopVesselPanel">
+            <li class="gs-dropdown__item" role="option" data-value="Oil Tanker">Oil Tanker<svg class="gs-dropdown__tick" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" aria-hidden="true"><polyline points="3 8 6.5 11.5 13 4.5"/></svg></li>
+            <li class="gs-dropdown__item" role="option" data-value="Chemical Tanker">Chemical Tanker<svg class="gs-dropdown__tick" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" aria-hidden="true"><polyline points="3 8 6.5 11.5 13 4.5"/></svg></li>
+            <li class="gs-dropdown__item" role="option" data-value="Dry Bulk">Dry Bulk<svg class="gs-dropdown__tick" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" aria-hidden="true"><polyline points="3 8 6.5 11.5 13 4.5"/></svg></li>
+            <li class="gs-dropdown__item" role="option" data-value="Container">Container<svg class="gs-dropdown__tick" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" aria-hidden="true"><polyline points="3 8 6.5 11.5 13 4.5"/></svg></li>
+            <li class="gs-dropdown__item" role="option" data-value="LNG Carrier">LNG Carrier<svg class="gs-dropdown__tick" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" aria-hidden="true"><polyline points="3 8 6.5 11.5 13 4.5"/></svg></li>
+            <li class="gs-dropdown__item" role="option" data-value="LPG Carrier">LPG Carrier<svg class="gs-dropdown__tick" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" aria-hidden="true"><polyline points="3 8 6.5 11.5 13 4.5"/></svg></li>
+          </ul>
         </div>
       </div>
       <div class="field-group">
@@ -2775,6 +2812,12 @@
       pendingSopFileName = null;
       sopFileInput.value = '';
       sopVesselTypeSelect.value = '';
+      if (sopVesselValueSpan) {
+        sopVesselValueSpan.textContent = 'Select vessel type…';
+        sopVesselTriggerBtn.classList.remove('gs-dropdown__trigger--filled');
+        sopVesselItems.forEach(function(i) { i.classList.remove('gs-dropdown__item--selected'); i.setAttribute('aria-selected','false'); });
+        closeVesselDropdown();
+      }
       sopDropzone.classList.remove('dropzone--filled', 'dropzone--active');
       syncSopUploadState();
       setDropzoneIcon(false);
@@ -2844,6 +2887,64 @@
     }
 
     var sopVesselTypeSelect = document.getElementById('sopVesselTypeSelect');
+    var sopVesselDropdown = document.getElementById('sopVesselDropdown');
+    var sopVesselTriggerBtn = document.getElementById('sopVesselTrigger');
+    var sopVesselValueSpan = sopVesselTriggerBtn.querySelector('.gs-dropdown__value');
+    var sopVesselItems = sopVesselDropdown.querySelectorAll('.gs-dropdown__item');
+
+    function openVesselDropdown() {
+      sopVesselDropdown.classList.add('gs-dropdown--open');
+      sopVesselTriggerBtn.setAttribute('aria-expanded', 'true');
+      sopVesselDropdown.setAttribute('aria-expanded', 'true');
+    }
+    function closeVesselDropdown() {
+      sopVesselDropdown.classList.remove('gs-dropdown--open');
+      sopVesselTriggerBtn.setAttribute('aria-expanded', 'false');
+      sopVesselDropdown.setAttribute('aria-expanded', 'false');
+    }
+
+    sopVesselTriggerBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      sopVesselDropdown.classList.contains('gs-dropdown--open') ? closeVesselDropdown() : openVesselDropdown();
+    });
+
+    sopVesselItems.forEach(function(item) {
+      item.addEventListener('click', function() {
+        var val = item.dataset.value;
+        sopVesselTypeSelect.value = val;
+        sopVesselValueSpan.textContent = val;
+        sopVesselTriggerBtn.classList.add('gs-dropdown__trigger--filled');
+        sopVesselItems.forEach(function(i) { i.classList.remove('gs-dropdown__item--selected'); i.setAttribute('aria-selected', 'false'); });
+        item.classList.add('gs-dropdown__item--selected');
+        item.setAttribute('aria-selected', 'true');
+        closeVesselDropdown();
+        sopVesselTypeSelect.dispatchEvent(new Event('change'));
+      });
+    });
+
+    sopVesselTriggerBtn.addEventListener('keydown', function(e) {
+      if (e.key === 'ArrowDown' || e.key === ' ' || e.key === 'Enter') {
+        e.preventDefault();
+        openVesselDropdown();
+        sopVesselItems[0] && sopVesselItems[0].focus();
+      } else if (e.key === 'Escape') { closeVesselDropdown(); }
+    });
+
+    sopVesselDropdown.addEventListener('keydown', function(e) {
+      var items = Array.from(sopVesselItems);
+      var focused = document.activeElement;
+      var idx = items.indexOf(focused);
+      if (e.key === 'ArrowDown') { e.preventDefault(); items[(idx + 1) % items.length].focus(); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); items[(idx - 1 + items.length) % items.length].focus(); }
+      else if (e.key === 'Escape') { closeVesselDropdown(); sopVesselTriggerBtn.focus(); }
+      else if (e.key === 'Enter' && focused && focused.classList.contains('gs-dropdown__item')) { focused.click(); }
+    });
+
+    sopVesselItems.forEach(function(item) { item.setAttribute('tabindex', '0'); });
+
+    document.addEventListener('click', function(e) {
+      if (!sopVesselDropdown.contains(e.target)) closeVesselDropdown();
+    });
 
     function syncSopUploadState() {
       var hasVessel = sopVesselTypeSelect.value !== '';
