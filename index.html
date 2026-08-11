@@ -912,6 +912,41 @@
   .form-field__select:focus { border-color: var(--prim-blue-500); box-shadow: 0 0 0 3px rgba(36,99,235,0.18); }
   .dropzone--disabled { opacity: 0.45; cursor: not-allowed; pointer-events: none; }
   .btn-primary:disabled { opacity: 0.45; cursor: not-allowed; }
+  .sop-vessel-field {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .sop-vessel-select-wrap {
+    width: 100%;
+    background: var(--card);
+    border: 1px solid var(--prim-grey-200);
+    border-radius: var(--radius-md);
+    padding: 10px 12px;
+    box-shadow: 0 1px 2px rgba(0,0,0,.05);
+    box-sizing: border-box;
+  }
+  .sop-vessel-select-wrap .form-field__select {
+    width: 100%;
+    border: none;
+    background: transparent;
+    box-shadow: none;
+    padding: 0 24px 0 0;
+    height: auto;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-text-default);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235A6B85' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0 center;
+    background-size: 16px 16px;
+  }
+  .sop-vessel-select-wrap .form-field__select:focus { outline: none; box-shadow: none; }
+  .sop-vessel-select-wrap:focus-within {
+    border-color: var(--prim-blue-500);
+    box-shadow: 0 0 0 3px rgba(36,99,235,0.18);
+  }
 
   .modal__subtitle {
     font-size: 16px;
@@ -2229,17 +2264,19 @@
       </button>
     </div>
     <div class="modal__content">
-      <div class="form-field" style="margin-bottom: 16px;">
+      <div class="sop-vessel-field">
         <span class="form-field__label">Vessel Type</span>
-        <select class="form-field__input form-field__select" id="sopVesselTypeSelect">
-          <option value="">Select vessel type…</option>
-          <option value="Oil Tanker">Oil Tanker</option>
-          <option value="Chemical Tanker">Chemical Tanker</option>
-          <option value="Dry Bulk">Dry Bulk</option>
-          <option value="Container">Container</option>
-          <option value="LNG Carrier">LNG Carrier</option>
-          <option value="LPG Carrier">LPG Carrier</option>
-        </select>
+        <div class="sop-vessel-select-wrap">
+          <select class="form-field__input form-field__select" id="sopVesselTypeSelect">
+            <option value="">Select vessel type…</option>
+            <option value="Oil Tanker">Oil Tanker</option>
+            <option value="Chemical Tanker">Chemical Tanker</option>
+            <option value="Dry Bulk">Dry Bulk</option>
+            <option value="Container">Container</option>
+            <option value="LNG Carrier">LNG Carrier</option>
+            <option value="LPG Carrier">LPG Carrier</option>
+          </select>
+        </div>
       </div>
       <div class="field-group">
         <div class="dropzone dropzone--disabled" id="sopDropzone" role="button" tabindex="0" aria-label="Upload SOP file" aria-disabled="true">
