@@ -921,7 +921,7 @@
   /* GeoServe custom dropdown — per design spec: trigger 56px, items 40px */
   .gs-dropdown { position: relative; width: 100%; }
   .gs-dropdown__trigger {
-    width: 100%; height: 56px;
+    width: 100%; height: 44px;
     display: flex; align-items: center; justify-content: space-between;
     padding: 0 16px;
     background: var(--card);
@@ -947,12 +947,12 @@
   .gs-dropdown--open .gs-dropdown__chevron { transform: rotate(180deg); }
   .gs-dropdown__panel {
     display: none;
-    position: absolute; top: calc(100% + 4px); left: 0; right: 0;
+    position: fixed;
     background: var(--card);
     border: 1px solid var(--prim-grey-100);
     border-radius: var(--radius-md);
     box-shadow: 0 12px 30px rgba(0,0,0,0.16);
-    z-index: 300; list-style: none; margin: 0; padding: 4px 0;
+    z-index: 1000; list-style: none; margin: 0; padding: 4px 0;
     overflow-y: auto; max-height: 280px;
   }
   .gs-dropdown--open .gs-dropdown__panel { display: block; }
@@ -2893,6 +2893,11 @@
     var sopVesselItems = sopVesselDropdown.querySelectorAll('.gs-dropdown__item');
 
     function openVesselDropdown() {
+      var rect = sopVesselTriggerBtn.getBoundingClientRect();
+      var panel = sopVesselDropdown.querySelector('.gs-dropdown__panel');
+      panel.style.top = (rect.bottom + 4) + 'px';
+      panel.style.left = rect.left + 'px';
+      panel.style.width = rect.width + 'px';
       sopVesselDropdown.classList.add('gs-dropdown--open');
       sopVesselTriggerBtn.setAttribute('aria-expanded', 'true');
       sopVesselDropdown.setAttribute('aria-expanded', 'true');
