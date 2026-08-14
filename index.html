@@ -953,27 +953,12 @@
     font-size: 13px; font-weight: 400; color: var(--color-text-default);
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0;
   }
-  .email-more-wrap { position: relative; flex-shrink: 0; }
   .email-more-btn {
     display: inline-flex; align-items: center;
     background: none; border: none; padding: 0;
     color: var(--brand); font-size: 13px; font-weight: 500;
     cursor: default; white-space: nowrap; font-family: inherit;
     text-decoration: underline; text-underline-offset: 2px; text-decoration-color: rgba(24,82,254,.35);
-  }
-  .email-more-tooltip {
-    display: none; position: absolute; bottom: calc(100% + 6px); left: 0; z-index: 300;
-    background: #1E293B; border-radius: var(--radius-md); padding: 8px 10px;
-    box-shadow: 0 8px 24px rgba(0,0,0,.2); min-width: 190px; pointer-events: none;
-  }
-  .email-more-tooltip::after {
-    content: ''; position: absolute; top: 100%; left: 14px;
-    border: 5px solid transparent; border-top-color: #1E293B;
-  }
-  .email-more-wrap:hover .email-more-tooltip { display: flex; flex-direction: column; gap: 4px; }
-  .email-more-tooltip__item {
-    font-size: 12px; font-weight: 400; color: #E2E8F0;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
   .email-cell--empty { color: var(--prim-grey-300); font-size: 13px; }
   .sop-vessel-field {
@@ -2890,14 +2875,10 @@
       var first = '<span class="email-cell__text" title="' + emails[0] + '">' + emails[0] + '</span>';
       if (emails.length === 1) return '<div class="email-cell">' + first + '</div>';
       var hidden = emails.slice(1);
-      var tooltipItems = hidden.map(function(e) {
-        return '<span class="email-more-tooltip__item">' + e + '</span>';
-      }).join('');
+      var tip = hidden.join(', ');
       return '<div class="email-cell">' + first +
-        '<span class="email-more-wrap">' +
-          '<span class="email-more-btn">+' + hidden.length + ' email' + (hidden.length > 1 ? 's' : '') + '</span>' +
-          '<div class="email-more-tooltip">' + tooltipItems + '</div>' +
-        '</span></div>';
+        '<span class="email-more-btn stage-count-tip" data-tip="' + tip + '">+' + hidden.length + ' email' + (hidden.length > 1 ? 's' : '') + '</span>' +
+        '</div>';
     }
 
     document.querySelectorAll('.email-cell[data-emails]').forEach(function(cell) {
