@@ -587,6 +587,7 @@
 
   .table-head-cell--status { flex: none; width: 100px; }
   .table-head-cell--actions { flex: none; width: 64px; }
+  .table-head-cell--emails { flex: 2 0 180px; }
 
   .table-body {
     flex: 1 0 0;
@@ -676,6 +677,7 @@
     justify-content: center;
     padding: 12px 16px;
   }
+  .table-cell--emails { flex: 2 0 180px; }
 
   .status-chip {
     display: flex;
@@ -953,7 +955,7 @@
     border: 1px solid rgba(24,82,254,.15);
     border-radius: 9999px; padding: 2px 9px;
     font-size: 11px; font-weight: 500; white-space: nowrap; flex-shrink: 0;
-    max-width: 150px; overflow: hidden; text-overflow: ellipsis;
+    max-width: 200px; overflow: hidden; text-overflow: ellipsis;
   }
   .email-more-wrap { position: relative; flex-shrink: 0; }
   .email-more-btn {
@@ -961,17 +963,22 @@
     background: var(--grey-50); color: var(--prim-grey-400);
     border: 1px solid var(--prim-grey-100); border-radius: 9999px;
     padding: 2px 8px; font-size: 11px; font-weight: 600;
-    cursor: pointer; white-space: nowrap; font-family: inherit;
+    cursor: default; white-space: nowrap; font-family: inherit;
   }
-  .email-more-btn:hover { background: var(--prim-grey-100); color: var(--prim-grey-500); }
-  .email-more-popover {
-    display: none; position: absolute; top: calc(100% + 6px); left: 0; z-index: 250;
-    background: var(--card); border: 1px solid var(--prim-grey-100);
-    border-radius: var(--radius-md); padding: 8px;
-    box-shadow: 0 8px 24px rgba(0,0,0,.12); min-width: 200px;
+  .email-more-tooltip {
+    display: none; position: absolute; bottom: calc(100% + 6px); left: 0; z-index: 300;
+    background: #1E293B; border-radius: var(--radius-md); padding: 8px 10px;
+    box-shadow: 0 8px 24px rgba(0,0,0,.2); min-width: 190px; pointer-events: none;
   }
-  .email-more-wrap.open .email-more-popover { display: flex; flex-direction: column; gap: 5px; }
-  .email-more-popover .email-pill { max-width: 100%; display: block; }
+  .email-more-tooltip::after {
+    content: ''; position: absolute; top: 100%; left: 14px;
+    border: 5px solid transparent; border-top-color: #1E293B;
+  }
+  .email-more-wrap:hover .email-more-tooltip { display: flex; flex-direction: column; gap: 4px; }
+  .email-more-tooltip__item {
+    font-size: 12px; font-weight: 400; color: #E2E8F0;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
   .email-cell--empty { color: var(--prim-grey-300); font-size: 13px; }
   .sop-vessel-field {
     width: 100%;
@@ -2105,7 +2112,7 @@
               <div class="table-head-cell">Provider</div>
               <div class="table-head-cell">Status</div>
               <div class="table-head-cell">Last Connected</div>
-              <div class="table-head-cell">Emails Associated</div>
+              <div class="table-head-cell table-head-cell--emails">Emails Associated</div>
               <div class="table-head-cell table-head-cell--actions"></div>
             </div>
             <div class="table-body" id="mailboxTableBody">
@@ -2116,7 +2123,7 @@
                   <span class="status-chip status-chip--active">Connected</span>
                 </div>
                 <div class="table-cell">12 Jun 2026, 09:41 AM</div>
-                <div class="table-cell"><div class="email-cell" data-emails='["captain@fleet.com","ops-team@geoserves.com","charterer@cargo.io"]'></div></div>
+                <div class="table-cell table-cell--emails"><div class="email-cell" data-emails='["captain@fleet.com","ops-team@geoserves.com","charterer@cargo.io"]'></div></div>
                 <div class="table-cell table-cell--actions">
                   <button class="row-action-btn" type="button" aria-label="Row actions">
                     <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
@@ -2130,7 +2137,7 @@
                   <span class="status-chip status-chip--danger">Disconnected</span>
                 </div>
                 <div class="table-cell">03 May 2026, 02:15 PM</div>
-                <div class="table-cell"><div class="email-cell" data-emails='["voyage-crew@geoserves.com"]'></div></div>
+                <div class="table-cell table-cell--emails"><div class="email-cell" data-emails='["voyage-crew@geoserves.com"]'></div></div>
                 <div class="table-cell table-cell--actions">
                   <button class="row-action-btn" type="button" aria-label="Row actions">
                     <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
@@ -2147,7 +2154,7 @@
                   <span class="status-chip status-chip--inactive">Disabled</span>
                 </div>
                 <div class="table-cell">20 Apr 2026, 11:02 AM</div>
-                <div class="table-cell"><div class="email-cell email-cell--empty">—</div></div>
+                <div class="table-cell table-cell--emails"><div class="email-cell email-cell--empty">—</div></div>
                 <div class="table-cell table-cell--actions">
                   <button class="row-action-btn" type="button" aria-label="Row actions">
                     <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
@@ -2162,7 +2169,7 @@
                   <button class="check-now-link" type="button" onclick="runCheckNow(this.parentElement)">Check now</button>
                 </div>
                 <div class="table-cell">—</div>
-                <div class="table-cell"><div class="email-cell" data-emails='["notify-ops@geoserves.com","alerts@fleet.io","crew@vessel.com"]'></div></div>
+                <div class="table-cell table-cell--emails"><div class="email-cell" data-emails='["notify-ops@geoserves.com","alerts@fleet.io","crew@vessel.com"]'></div></div>
                 <div class="table-cell table-cell--actions">
                   <button class="row-action-btn" type="button" aria-label="Row actions">
                     <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
@@ -2786,30 +2793,15 @@
       if (!emails || !emails.length) return '<div class="email-cell email-cell--empty">—</div>';
       var first = '<span class="email-pill" title="' + emails[0] + '">' + emails[0] + '</span>';
       if (emails.length === 1) return '<div class="email-cell">' + first + '</div>';
-      var rest = emails.slice(1).map(function(e) {
-        return '<span class="email-pill" title="' + e + '">' + e + '</span>';
+      var tooltipItems = emails.slice(1).map(function(e) {
+        return '<span class="email-more-tooltip__item">' + e + '</span>';
       }).join('');
       return '<div class="email-cell">' + first +
         '<span class="email-more-wrap">' +
-          '<button type="button" class="email-more-btn" aria-label="Show all emails">+' + (emails.length - 1) + ' more</button>' +
-          '<div class="email-more-popover">' + rest + '</div>' +
+          '<span class="email-more-btn">+' + (emails.length - 1) + ' more</span>' +
+          '<div class="email-more-tooltip">' + tooltipItems + '</div>' +
         '</span></div>';
     }
-
-    document.addEventListener('click', function(e) {
-      var btn = e.target.closest('.email-more-btn');
-      if (btn) {
-        e.stopPropagation();
-        var wrap = btn.closest('.email-more-wrap');
-        var isOpen = wrap.classList.contains('open');
-        document.querySelectorAll('.email-more-wrap.open').forEach(function(w) { w.classList.remove('open'); });
-        if (!isOpen) wrap.classList.add('open');
-        return;
-      }
-      if (!e.target.closest('.email-more-wrap')) {
-        document.querySelectorAll('.email-more-wrap.open').forEach(function(w) { w.classList.remove('open'); });
-      }
-    });
 
     document.querySelectorAll('.email-cell[data-emails]').forEach(function(cell) {
       var emails = JSON.parse(cell.getAttribute('data-emails'));
