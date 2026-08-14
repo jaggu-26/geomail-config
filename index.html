@@ -948,19 +948,15 @@
   .email-tag__remove:hover { background: rgba(24,82,254,.22); }
 
   /* ── Emails Associated table cell ── */
-  .email-cell { display: flex; align-items: center; gap: 5px; overflow: hidden; }
-  .email-pill {
-    display: inline-flex; align-items: center;
-    background: #EEF2FF; color: var(--brand);
-    border: 1px solid rgba(24,82,254,.15);
-    border-radius: 9999px; padding: 2px 9px;
-    font-size: 11px; font-weight: 500; white-space: nowrap; flex-shrink: 0;
-    max-width: 200px; overflow: hidden; text-overflow: ellipsis;
+  .email-cell { display: flex; align-items: center; gap: 6px; overflow: hidden; min-width: 0; }
+  .email-cell__text {
+    font-size: 13px; font-weight: 400; color: var(--color-text-default);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0;
   }
   .email-more-wrap { position: relative; flex-shrink: 0; }
   .email-more-btn {
     display: inline-flex; align-items: center;
-    background: var(--grey-50); color: var(--prim-grey-400);
+    background: var(--grey-50); color: var(--prim-grey-500);
     border: 1px solid var(--prim-grey-100); border-radius: 9999px;
     padding: 2px 8px; font-size: 11px; font-weight: 600;
     cursor: default; white-space: nowrap; font-family: inherit;
@@ -2791,14 +2787,18 @@
     /* ---------- Email cell renderer ---------- */
     function buildEmailCell(emails) {
       if (!emails || !emails.length) return '<div class="email-cell email-cell--empty">—</div>';
-      var first = '<span class="email-pill" title="' + emails[0] + '">' + emails[0] + '</span>';
-      if (emails.length === 1) return '<div class="email-cell">' + first + '</div>';
-      var tooltipItems = emails.slice(1).map(function(e) {
+      var visible = emails.slice(0, 2);
+      var hidden  = emails.slice(2);
+      var visibleText = visible.join(', ');
+      var label = hidden.length ? visibleText + ',' : visibleText;
+      var textSpan = '<span class="email-cell__text" title="' + visible.join(', ') + '">' + label + '</span>';
+      if (!hidden.length) return '<div class="email-cell">' + textSpan + '</div>';
+      var tooltipItems = hidden.map(function(e) {
         return '<span class="email-more-tooltip__item">' + e + '</span>';
       }).join('');
-      return '<div class="email-cell">' + first +
+      return '<div class="email-cell">' + textSpan +
         '<span class="email-more-wrap">' +
-          '<span class="email-more-btn">+' + (emails.length - 1) + ' more</span>' +
+          '<span class="email-more-btn">+' + hidden.length + ' more</span>' +
           '<div class="email-more-tooltip">' + tooltipItems + '</div>' +
         '</span></div>';
     }
