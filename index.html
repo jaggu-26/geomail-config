@@ -929,19 +929,21 @@
   }
   .email-tag-input__field::placeholder { color: var(--color-text-placeholder); }
   .email-tag {
-    display: inline-flex; align-items: center; gap: 4px;
-    background: #DBEAFE; color: var(--brand);
-    border-radius: 9999px; padding: 3px 6px 3px 10px;
-    font-size: 12px; font-weight: 500; line-height: 16px; white-space: nowrap; max-width: 220px;
+    display: inline-flex; align-items: center; gap: 5px;
+    background: #EEF2FF; color: var(--brand);
+    border: 1px solid rgba(24,82,254,.18);
+    border-radius: 9999px; padding: 3px 4px 3px 10px;
+    font-size: 12px; font-weight: 500; line-height: 16px; white-space: nowrap; max-width: 240px;
   }
   .email-tag span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .email-tag__remove {
     display: flex; align-items: center; justify-content: center;
-    width: 16px; height: 16px; flex-shrink: 0;
-    border: none; background: none; cursor: pointer;
+    width: 18px; height: 18px; flex-shrink: 0;
+    border: none; background: rgba(24,82,254,.10); cursor: pointer;
     color: var(--brand); padding: 0; border-radius: 9999px;
+    transition: background 120ms ease;
   }
-  .email-tag__remove:hover { background: rgba(24,82,254,.18); }
+  .email-tag__remove:hover { background: rgba(24,82,254,.22); }
 
   /* ── Emails Associated table cell ── */
   .email-cell { display: flex; align-items: center; gap: 5px; overflow: hidden; }
@@ -2841,7 +2843,7 @@
       tag.className = 'email-tag';
       tag.innerHTML = '<span title="' + val + '">' + val + '</span>' +
         '<button type="button" class="email-tag__remove" aria-label="Remove ' + val + '">' +
-          '<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="10" height="10"><line x1="2" y1="2" x2="10" y2="10"/><line x1="10" y1="2" x2="2" y2="10"/></svg>' +
+          '<svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" width="9" height="9"><line x1="2" y1="2" x2="8" y2="8"/><line x1="8" y1="2" x2="2" y2="8"/></svg>' +
         '</button>';
       tag.querySelector('.email-tag__remove').addEventListener('click', function() {
         emailTags.splice(emailTags.indexOf(val), 1);
