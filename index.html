@@ -2187,9 +2187,9 @@
               <div class="table-row" data-status="disconnected">
                 <div class="table-cell table-cell--mailbox">voyage@geoserves.com</div>
                 <div class="table-cell table-cell--provider"><img src="Assets/logo-google.svg" width="16" height="16" alt="">Google</div>
-                <div class="table-cell table-cell--status" data-status-cell style="flex-direction:column;align-items:flex-start;gap:4px;">
+                <div class="table-cell table-cell--status" data-status-cell style="gap:8px;">
                   <span class="status-chip status-chip--danger">Disconnected</span>
-                  <button class="reauth-link" type="button" data-reauth style="background:none;border:none;padding:0;cursor:pointer;font-family:inherit;">Re-authenticate</button>
+                  <button class="check-now-link" type="button" data-reauth>Re-authenticate</button>
                 </div>
                 <div class="table-cell table-cell--last-connected">03 May 2026</div>
                 <div class="table-cell table-cell--emails"><div class="email-cell" data-emails='["voyage-crew@geoserves.com","captain@vessel.io","ops@charter.com"]'></div></div>
@@ -2935,9 +2935,7 @@
 
     function reauthenticateRowEl(row) {
       var statusCell = row.querySelector('[data-status-cell]');
-      statusCell.style.flexDirection = '';
-      statusCell.style.alignItems = '';
-      statusCell.style.gap = '';
+      statusCell.removeAttribute('style');
       statusCell.innerHTML = '<span class="status-chip status-chip--active">Connected</span>';
       row.dataset.status = 'connected';
       showToast('Mailbox re-authenticated.');
