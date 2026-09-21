@@ -1233,6 +1233,48 @@
     border-color: var(--brand);
   }
 
+  /* Provider selection cards */
+  .provider-card-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    width: 100%;
+    padding: 4px 0;
+  }
+  .provider-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 24px 12px 20px;
+    border: 1.5px solid var(--prim-grey-200);
+    border-radius: var(--radius-lg);
+    background: var(--card);
+    cursor: pointer;
+    transition: border-color 150ms ease, background 150ms ease;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-text-default);
+    text-align: center;
+    min-width: 0;
+  }
+  .provider-card:hover { border-color: var(--prim-grey-400); background: var(--grey-50); }
+  .provider-card--selected {
+    border: 2px solid var(--brand);
+    background: #EEF2FF;
+  }
+  .provider-card__logo {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .provider-card__logo img { width: 40px; height: 40px; object-fit: contain; }
+  .provider-card__logo svg { width: 36px; height: 36px; color: var(--prim-grey-500); }
+
   /* Manual Setup — accordion (button + fields share one growing box) */
   .oauth-accordion {
     width: 100%;
@@ -2299,35 +2341,71 @@
 <div class="modal-overlay" id="connectMailboxOverlay">
   <div class="modal modal--sm" role="dialog" aria-modal="true" aria-labelledby="connectMailboxTitle">
     <div class="modal__header">
-      <h2 class="modal__title" id="connectMailboxTitle">Connect Mailbox</h2>
+      <h2 class="modal__title" id="connectMailboxTitle">Select your email provider and connect the mailbox</h2>
       <button class="modal__close" type="button" id="closeConnectMailboxBtn" aria-label="Close">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18" stroke-linecap="round"/><line x1="6" y1="6" x2="18" y2="18" stroke-linecap="round"/></svg>
       </button>
     </div>
-    <div class="modal__content">
-      <p class="modal__subtitle" style="margin-bottom: 4px;">Provide the following details to authenticate and connect a mailbox to GeoMail.</p>
-      <div class="form-row" style="flex-direction: column; align-items: stretch; gap: 16px; width: 100%;">
-        <div class="form-field">
-          <span class="form-field__label">Tenant ID <span class="form-field__required">*</span></span>
-          <input type="text" class="form-field__input" id="connectTenantId" placeholder="e.g. xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" autocomplete="off">
-          <p class="field-error" id="connectTenantIdErr" style="display:none;">Tenant ID is required.</p>
+
+    <!-- Step 1: Provider selection -->
+    <div id="connectStep1">
+      <div class="modal__content">
+        <div class="provider-card-grid">
+          <button class="provider-card provider-card--selected" type="button" data-provider="microsoft">
+            <div class="provider-card__logo">
+              <img src="Assets/logo-microsoft.svg" alt="Microsoft">
+            </div>
+            <span>Microsoft 365</span>
+          </button>
+          <button class="provider-card" type="button" data-provider="google">
+            <div class="provider-card__logo">
+              <img src="Assets/logo-google.svg" alt="Google">
+            </div>
+            <span>Google Workspace</span>
+          </button>
+          <button class="provider-card" type="button" data-provider="imap">
+            <div class="provider-card__logo">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/></svg>
+            </div>
+            <span>IMAP / SMTP</span>
+          </button>
         </div>
-        <div class="form-field">
-          <span class="form-field__label">Client ID <span class="form-field__required">*</span></span>
-          <input type="text" class="form-field__input" id="connectClientId" placeholder="e.g. xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" autocomplete="off">
-          <p class="field-error" id="connectClientIdErr" style="display:none;">Client ID is required.</p>
-        </div>
-        <div class="form-field">
-          <span class="form-field__label">Client Secret Code <span class="form-field__required">*</span></span>
-          <input type="password" class="form-field__input" id="connectClientSecret" placeholder="Enter client secret code" autocomplete="new-password">
-          <p class="field-error" id="connectClientSecretErr" style="display:none;">Client Secret Code is required.</p>
+      </div>
+      <div class="modal__footer">
+        <div class="modal__actions" style="width:100%;">
+          <button class="btn-cancel" type="button" id="cancelConnectMailboxBtn" style="flex:1;">Cancel</button>
+          <button class="btn-primary" type="button" id="connectNextBtn" style="flex:1;">Next</button>
         </div>
       </div>
     </div>
-    <div class="modal__footer" id="connectMailboxFooter">
-      <div class="modal__actions" style="width:100%;">
-        <button class="btn-cancel" type="button" id="cancelConnectMailboxBtn" data-modal-cancel style="flex:1;">Cancel</button>
-        <button class="btn-primary" type="button" id="connectManualSubmitBtn" style="flex:1;">Connect Mailbox</button>
+
+    <!-- Step 2: Credentials form -->
+    <div id="connectStep2" style="display:none;">
+      <div class="modal__content">
+        <p class="modal__subtitle" style="margin-bottom: 4px;">Provide the following details to authenticate and connect a mailbox to GeoMail.</p>
+        <div class="form-row" style="flex-direction: column; align-items: stretch; gap: 16px; width: 100%;">
+          <div class="form-field">
+            <span class="form-field__label">Tenant ID <span class="form-field__required">*</span></span>
+            <input type="text" class="form-field__input" id="connectTenantId" placeholder="e.g. xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" autocomplete="off">
+            <p class="field-error" id="connectTenantIdErr" style="display:none;">Tenant ID is required.</p>
+          </div>
+          <div class="form-field">
+            <span class="form-field__label">Client ID <span class="form-field__required">*</span></span>
+            <input type="text" class="form-field__input" id="connectClientId" placeholder="e.g. xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" autocomplete="off">
+            <p class="field-error" id="connectClientIdErr" style="display:none;">Client ID is required.</p>
+          </div>
+          <div class="form-field">
+            <span class="form-field__label">Client Secret Code <span class="form-field__required">*</span></span>
+            <input type="password" class="form-field__input" id="connectClientSecret" placeholder="Enter client secret code" autocomplete="new-password">
+            <p class="field-error" id="connectClientSecretErr" style="display:none;">Client Secret Code is required.</p>
+          </div>
+        </div>
+      </div>
+      <div class="modal__footer" id="connectMailboxFooter">
+        <div class="modal__actions" style="width:100%;">
+          <button class="btn-cancel" type="button" id="connectBackBtn" style="flex:1;">Back</button>
+          <button class="btn-primary" type="button" id="connectManualSubmitBtn" style="flex:1;">Connect Mailbox</button>
+        </div>
       </div>
     </div>
   </div>
@@ -2887,6 +2965,10 @@
     var connectMailboxOverlay = document.getElementById('connectMailboxOverlay');
     var openConnectMailboxBtn = document.getElementById('openConnectMailboxBtn');
     var connectManualSubmitBtn = document.getElementById('connectManualSubmitBtn');
+    var connectNextBtn = document.getElementById('connectNextBtn');
+    var connectBackBtn = document.getElementById('connectBackBtn');
+    var connectStep1 = document.getElementById('connectStep1');
+    var connectStep2 = document.getElementById('connectStep2');
 
     var fTenantId     = document.getElementById('connectTenantId');
     var fClientId     = document.getElementById('connectClientId');
@@ -2894,6 +2976,8 @@
     var errTenantId     = document.getElementById('connectTenantIdErr');
     var errClientId     = document.getElementById('connectClientIdErr');
     var errClientSecret = document.getElementById('connectClientSecretErr');
+
+    var selectedProvider = 'microsoft';
 
     function isValidEmail(val) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val); }
 
@@ -2904,6 +2988,12 @@
         f.style.boxShadow = '';
       });
       [errTenantId, errClientId, errClientSecret].forEach(function (e) { e.style.display = 'none'; });
+      selectedProvider = 'microsoft';
+      connectStep1.style.display = '';
+      connectStep2.style.display = 'none';
+      document.querySelectorAll('.provider-card').forEach(function(c) {
+        c.classList.toggle('provider-card--selected', c.dataset.provider === 'microsoft');
+      });
     }
 
     function markError(input, errEl) {
@@ -2917,6 +3007,27 @@
       input.style.boxShadow = '';
       errEl.style.display = 'none';
     }
+
+    document.querySelectorAll('.provider-card').forEach(function(card) {
+      card.addEventListener('click', function() {
+        selectedProvider = card.dataset.provider;
+        document.querySelectorAll('.provider-card').forEach(function(c) {
+          c.classList.toggle('provider-card--selected', c === card);
+        });
+      });
+    });
+
+    connectNextBtn.addEventListener('click', function() {
+      connectStep1.style.display = 'none';
+      connectStep2.style.display = '';
+    });
+
+    connectBackBtn.addEventListener('click', function() {
+      connectStep2.style.display = 'none';
+      connectStep1.style.display = '';
+      [fTenantId, fClientId, fClientSecret].forEach(function(f) { f.value = ''; f.style.borderColor = ''; f.style.boxShadow = ''; });
+      [errTenantId, errClientId, errClientSecret].forEach(function(e) { e.style.display = 'none'; });
+    });
 
     fTenantId.addEventListener('input',     function () { clearError(fTenantId,     errTenantId); });
     fClientId.addEventListener('input',     function () { clearError(fClientId,     errClientId); });
@@ -2962,7 +3073,7 @@
 
       if (!valid) return;
 
-      addMailboxRow('mailbox@geoserves.com', 'microsoft', []);
+      addMailboxRow('mailbox@geoserves.com', selectedProvider, []);
       closeModal(connectMailboxOverlay);
       resetConnectForm();
       showToast('Mailbox connected.');
