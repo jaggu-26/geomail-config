@@ -2187,8 +2187,9 @@
               <div class="table-row" data-status="disconnected">
                 <div class="table-cell table-cell--mailbox">voyage@geoserves.com</div>
                 <div class="table-cell table-cell--provider"><img src="Assets/logo-google.svg" width="16" height="16" alt="">Google</div>
-                <div class="table-cell table-cell--status" data-status-cell>
+                <div class="table-cell table-cell--status" data-status-cell style="flex-direction:column;align-items:flex-start;gap:4px;">
                   <span class="status-chip status-chip--danger">Disconnected</span>
+                  <button class="reauth-link" type="button" data-reauth style="background:none;border:none;padding:0;cursor:pointer;font-family:inherit;">Re-authenticate</button>
                 </div>
                 <div class="table-cell table-cell--last-connected">03 May 2026</div>
                 <div class="table-cell table-cell--emails"><div class="email-cell" data-emails='["voyage-crew@geoserves.com","captain@vessel.io","ops@charter.com"]'></div></div>
@@ -2601,6 +2602,39 @@
 </div>
 
 <!-- Generic confirm modal (reused for Remove Mailbox / Delete SOP) -->
+<!-- Re-authenticate modal -->
+<div class="modal-overlay" id="reauthModalOverlay">
+  <div class="modal modal--sm" role="dialog" aria-modal="true" aria-labelledby="reauthModalTitle">
+    <div class="modal__header">
+      <h2 class="modal__title" id="reauthModalTitle">Re-authenticate Mailbox</h2>
+      <button class="modal__close" type="button" id="closeReauthModalBtn" aria-label="Close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18" stroke-linecap="round"/><line x1="6" y1="6" x2="18" y2="18" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="modal__content" style="align-items:stretch;">
+      <p id="reauthModalDesc" style="font-size:14px;color:var(--prim-grey-500);margin:0;line-height:1.6;"></p>
+      <div class="form-row" style="flex-direction:column;align-items:stretch;gap:16px;width:100%;">
+        <div class="form-field">
+          <span class="form-field__label">Client ID <span class="form-field__required">*</span></span>
+          <input type="text" class="form-field__input" id="reauthClientId" placeholder="Enter client ID" autocomplete="off">
+          <p class="field-error" id="reauthClientIdErr" style="display:none;">Client ID is required.</p>
+        </div>
+        <div class="form-field">
+          <span class="form-field__label">Client Secret <span class="form-field__required">*</span></span>
+          <input type="password" class="form-field__input" id="reauthClientSecret" placeholder="Enter client secret" autocomplete="new-password">
+          <p class="field-error" id="reauthClientSecretErr" style="display:none;">Client Secret is required.</p>
+        </div>
+      </div>
+    </div>
+    <div class="modal__footer">
+      <div class="modal__actions" style="width:100%;">
+        <button class="btn-cancel" type="button" id="cancelReauthBtn" style="flex:1;">Cancel</button>
+        <button class="btn-primary" type="button" id="confirmReauthBtn" style="flex:1;">Re-authenticate</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="modal-overlay" id="confirmDeleteOverlay">
   <div class="modal modal--xs" role="alertdialog" aria-modal="true" aria-labelledby="confirmDeleteTitle">
     <div class="delete-modal__header">
@@ -2880,26 +2914,63 @@
       showToast(makeEnabled ? 'Mailbox enabled.' : 'Mailbox disabled.');
     });
 
+    var reauthModalOverlay  = document.getElementById('reauthModalOverlay');
+    var reauthModalDesc     = document.getElementById('reauthModalDesc');
+    var reauthClientIdInput = document.getElementById('reauthClientId');
+    var reauthClientSecretInput = document.getElementById('reauthClientSecret');
+    var reauthClientIdErr   = document.getElementById('reauthClientIdErr');
+    var reauthClientSecretErr = document.getElementById('reauthClientSecretErr');
+    var reauthTargetRow     = null;
+
+    function openReauthModal(row) {
+      reauthTargetRow = row;
+      var email = row.querySelector('.table-cell--mailbox').textContent.trim();
+      reauthModalDesc.textContent = 'The token for ' + email + ' has expired or was revoked. Re-authenticate to resume syncing.';
+      reauthClientIdInput.value = '';
+      reauthClientSecretInput.value = '';
+      [reauthClientIdErr, reauthClientSecretErr].forEach(function(e) { e.style.display = 'none'; });
+      [reauthClientIdInput, reauthClientSecretInput].forEach(function(f) { f.style.borderColor = ''; f.style.boxShadow = ''; });
+      openModal(reauthModalOverlay);
+    }
+
     function reauthenticateRowEl(row) {
       var statusCell = row.querySelector('[data-status-cell]');
+      statusCell.style.flexDirection = '';
+      statusCell.style.alignItems = '';
+      statusCell.style.gap = '';
       statusCell.innerHTML = '<span class="status-chip status-chip--active">Connected</span>';
       row.dataset.status = 'connected';
       showToast('Mailbox re-authenticated.');
     }
+
+    document.getElementById('closeReauthModalBtn').addEventListener('click', function() { closeModal(reauthModalOverlay); });
+    document.getElementById('cancelReauthBtn').addEventListener('click', function() { closeModal(reauthModalOverlay); });
+
+    document.getElementById('confirmReauthBtn').addEventListener('click', function() {
+      var cid = reauthClientIdInput.value.trim();
+      var csec = reauthClientSecretInput.value.trim();
+      var valid = true;
+      if (!cid)  { markError(reauthClientIdInput,     reauthClientIdErr);     valid = false; }
+      if (!csec) { markError(reauthClientSecretInput, reauthClientSecretErr); valid = false; }
+      if (!valid) return;
+      closeModal(reauthModalOverlay);
+      if (reauthTargetRow) reauthenticateRowEl(reauthTargetRow);
+      reauthTargetRow = null;
+    });
 
     /* Re-authenticate inline link (table row) */
     document.addEventListener('click', function (e) {
       var link = e.target.closest('[data-reauth]');
       if (!link) return;
       e.preventDefault();
-      reauthenticateRowEl(link.closest('.table-row'));
+      openReauthModal(link.closest('.table-row'));
     });
 
     /* Re-authenticate (row actions popover, for Disconnected rows) */
     popoverReauthBtn.addEventListener('click', function () {
       var row = activePopoverRow;
       closeRowPopover();
-      if (row) reauthenticateRowEl(row);
+      if (row) openReauthModal(row);
     });
 
     /* Remove Mailbox -> generic confirm modal */
