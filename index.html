@@ -694,8 +694,6 @@
   .status-chip--inactive { background: var(--grey-100); color: var(--color-text-placeholder); }
   .status-chip--danger { background: var(--prim-red-100); color: var(--prim-red-600); }
   .status-chip--blue { background: var(--prim-blue-50); color: var(--prim-blue-700); }
-  .status-chip--pending { background: var(--prim-yellow-100); color: var(--prim-yellow-700); }
-
   .check-now-link {
     font-size: 12px;
     font-weight: 600;
@@ -710,36 +708,6 @@
     flex-shrink: 0;
   }
   .check-now-link:hover { color: var(--brand-hover); }
-
-  .checking-label {
-    display: inline-flex;
-    align-items: center;
-    gap: 2px;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--prim-grey-500);
-  }
-
-  .checking-dots span {
-    display: inline-block;
-    animation: dotBounce 1.2s infinite ease-in-out;
-    font-weight: 700;
-  }
-  .checking-dots span:nth-child(1) { animation-delay: 0s; }
-  .checking-dots span:nth-child(2) { animation-delay: 0.2s; }
-  .checking-dots span:nth-child(3) { animation-delay: 0.4s; }
-
-  @keyframes dotBounce {
-    0%, 80%, 100% { opacity: 0.2; transform: translateY(0); }
-    40%            { opacity: 1;   transform: translateY(-3px); }
-  }
-
-  .no-response-label {
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--prim-grey-400);
-    white-space: nowrap;
-  }
 
   .reauth-link {
     font-size: 12px;
@@ -2231,12 +2199,11 @@
                   </button>
                 </div>
               </div>
-              <div class="table-row" data-status="pending">
+              <div class="table-row" data-status="inactive">
                 <div class="table-cell table-cell--mailbox">notify@geoserves.com</div>
                 <div class="table-cell table-cell--provider"><img src="Assets/logo-microsoft.svg" width="16" height="16" alt="">Microsoft</div>
-                <div class="table-cell table-cell--status" data-status-cell style="gap: 8px;">
-                  <span class="status-chip status-chip--pending">Pending</span>
-                  <button class="check-now-link" type="button" onclick="runCheckNow(this.parentElement)">Check now</button>
+                <div class="table-cell table-cell--status" data-status-cell>
+                  <span class="status-chip status-chip--inactive">Inactive</span>
                 </div>
                 <div class="table-cell table-cell--last-connected">—</div>
                 <div class="table-cell table-cell--emails"><div class="email-cell" data-emails='["notify-ops@geoserves.com"]'></div></div>
@@ -2744,40 +2711,6 @@
 </div>
 
 <script>
-  function runCheckNow(statusCell) {
-    /* 1 — Checking... */
-    statusCell.style.overflow = 'visible';
-    statusCell.style.whiteSpace = 'normal';
-    statusCell.style.flexWrap = 'wrap';
-    statusCell.style.gap = '6px';
-    statusCell.innerHTML =
-      '<span class="checking-label">Checking<span class="checking-dots"><span>.</span><span>.</span><span>.</span></span></span>';
-
-    setTimeout(function () {
-      var now = new Date();
-      var h = now.getHours();
-      var m = String(now.getMinutes()).padStart(2, '0');
-      var ampm = h >= 12 ? 'PM' : 'AM';
-      var h12 = h % 12 || 12;
-      var timeStr = h12 + ':' + m + ' ' + ampm;
-
-      /* Failure path — show no-response, then revert to pending after 3s */
-      statusCell.innerHTML =
-        '<span class="no-response-label">No response till ' + timeStr + '</span>' +
-        '<button class="check-now-link" type="button" onclick="runCheckNow(this.parentElement)">Check now</button>';
-
-      setTimeout(function () {
-        statusCell.style.overflow = '';
-        statusCell.style.whiteSpace = '';
-        statusCell.style.flexWrap = '';
-        statusCell.style.gap = '8px';
-        statusCell.innerHTML =
-          '<span class="status-chip status-chip--pending">Pending</span>' +
-          '<button class="check-now-link" type="button" onclick="runCheckNow(this.parentElement)">Check now</button>';
-      }, 3000);
-    }, 2500);
-  }
-
   function toggleAlertSubmenu() {
     var btn = document.getElementById('alertConfigToggle');
     var menu = document.getElementById('alertSubmenu');
