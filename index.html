@@ -3019,12 +3019,20 @@
       });
     });
 
+    var providerTitles = {
+      microsoft: 'Connect Microsoft 365 Mailbox',
+      google: 'Connect Google Workspace Mailbox',
+      imap: 'Connect IMAP / SMTP Mailbox'
+    };
+
     connectNextBtn.addEventListener('click', function() {
+      document.getElementById('connectMailboxTitle').textContent = providerTitles[selectedProvider] || 'Connect Mailbox';
       connectStep1.style.display = 'none';
       connectStep2.style.display = '';
     });
 
     connectBackBtn.addEventListener('click', function() {
+      document.getElementById('connectMailboxTitle').textContent = 'Connect Mailbox';
       connectStep2.style.display = 'none';
       connectStep1.style.display = '';
       [fTenantId, fClientId, fClientSecret].forEach(function(f) { f.value = ''; f.style.borderColor = ''; f.style.boxShadow = ''; });
