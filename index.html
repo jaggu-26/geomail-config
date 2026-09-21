@@ -1503,12 +1503,13 @@
     font-size: 11px;
     font-weight: 500;
     line-height: 1.6;
-    padding: 6px 10px;
+    padding: 12px 32px 12px 14px;
     border-radius: 4px;
-    pointer-events: none;
+    pointer-events: auto;
     z-index: 9999;
     opacity: 0;
     transition: opacity .15s ease;
+    isolation: isolate;
   }
   #stageTooltip ul {
     list-style: none;
@@ -1529,6 +1530,24 @@
     background: var(--prim-grey-400, #94a3b8);
     flex-shrink: 0;
   }
+  #stageTooltipClose {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.55);
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+    border-radius: 2px;
+  }
+  #stageTooltipClose:hover { color: #fff; }
   #stageTooltipArrow {
     position: fixed;
     width: 0;
@@ -3873,22 +3892,42 @@
     activateTab('mailboxes');
   })();
 
-  /* Stage count tooltip */
+  /* Stage count tooltip — click to open, close button or outside click to dismiss */
   (function () {
     var tip = document.createElement('div');
     tip.id = 'stageTooltip';
+    tip.style.display = 'none';
     document.body.appendChild(tip);
 
     var arrow = document.createElement('div');
     arrow.id = 'stageTooltipArrow';
+    arrow.style.display = 'none';
     document.body.appendChild(arrow);
 
-    document.addEventListener('mouseover', function (e) {
-      var el = e.target.closest('.stage-count-tip');
-      if (!el) return;
+    var closeBtn = document.createElement('button');
+    closeBtn.id = 'stageTooltipClose';
+    closeBtn.setAttribute('aria-label', 'Close');
+    closeBtn.innerHTML = '<svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="1" y1="1" x2="9" y2="9"/><line x1="9" y1="1" x2="1" y2="9"/></svg>';
+    tip.appendChild(closeBtn);
+
+    var activeTrigger = null;
+
+    function hideTip() {
+      tip.style.opacity = '0';
+      arrow.style.opacity = '0';
+      setTimeout(function () {
+        tip.style.display = 'none';
+        arrow.style.display = 'none';
+      }, 150);
+      activeTrigger = null;
+    }
+
+    function showTip(el) {
       var stages = el.getAttribute('data-tip').split(', ');
       tip.innerHTML = '<ul>' + stages.map(function(s) { return '<li>' + s + '</li>'; }).join('') + '</ul>';
+      tip.appendChild(closeBtn);
       tip.style.display = 'block';
+      arrow.style.display = 'block';
       var rect = el.getBoundingClientRect();
       var tw = tip.offsetWidth;
       var th = tip.offsetHeight;
@@ -3899,12 +3938,23 @@
       arrow.style.top = (rect.top - 11) + 'px';
       tip.style.opacity = '1';
       arrow.style.opacity = '1';
+    }
+
+    closeBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      hideTip();
     });
 
-    document.addEventListener('mouseout', function (e) {
-      if (!e.target.closest('.stage-count-tip')) return;
-      tip.style.opacity = '0';
-      arrow.style.opacity = '0';
+    document.addEventListener('click', function (e) {
+      var el = e.target.closest('.stage-count-tip');
+      if (el) {
+        e.stopPropagation();
+        if (activeTrigger === el) { hideTip(); return; }
+        activeTrigger = el;
+        showTip(el);
+        return;
+      }
+      if (!tip.contains(e.target)) hideTip();
     });
   })();
 </script>
