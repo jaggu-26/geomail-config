@@ -1275,6 +1275,36 @@
   .provider-card__logo img { width: 24px; height: 24px; object-fit: contain; }
   .provider-card__logo svg { width: 24px; height: 24px; color: var(--prim-grey-500); }
 
+  /* Connect mailbox — verifying / result states */
+  .connect-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 48px 24px 40px;
+    text-align: center;
+  }
+  .connect-spinner {
+    width: 44px; height: 44px;
+    border: 3px solid var(--prim-grey-200);
+    border-top-color: var(--brand);
+    border-radius: 50%;
+    animation: connect-spin 0.75s linear infinite;
+  }
+  @keyframes connect-spin { to { transform: rotate(360deg); } }
+  .connect-result-icon {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .connect-result-icon--success { background: #D3F3DF; }
+  .connect-result-icon--error   { background: #FDE2E2; }
+  .connect-result-icon svg { width: 28px; height: 28px; }
+  .connect-state__title { font-size: 16px; font-weight: 700; color: var(--color-text-default); margin: 0; }
+  .connect-state__msg   { font-size: 13px; color: var(--prim-grey-400); margin: 0; line-height: 1.6; max-width: 340px; }
+
   /* Manual Setup — accordion (button + fields share one growing box) */
   .oauth-accordion {
     width: 100%;
@@ -2383,37 +2413,66 @@
 
     <!-- Step 2: Credentials form -->
     <div id="connectStep2" style="display:none;">
-      <div class="modal__content">
-        <p class="modal__subtitle" style="margin-bottom: 4px;">Provide the following details to authenticate and connect a mailbox to GeoMail.</p>
-        <div class="form-row" style="flex-direction: column; align-items: stretch; gap: 16px; width: 100%;">
-          <div class="form-field">
-            <span class="form-field__label">Email Address <span class="form-field__required">*</span></span>
-            <input type="email" class="form-field__input" id="connectEmailAddress" placeholder="e.g. name@domain.com" autocomplete="off">
-            <p class="field-error" id="connectEmailAddressErr" style="display:none;">Email Address is required.</p>
+
+      <!-- 2a: Form -->
+      <div id="connectStep2Form">
+        <div class="modal__content">
+          <p class="modal__subtitle" style="margin-bottom: 4px;">Provide the following details to authenticate and connect a mailbox to GeoMail.</p>
+          <div class="form-row" style="flex-direction: column; align-items: stretch; gap: 16px; width: 100%;">
+            <div class="form-field">
+              <span class="form-field__label">Email Address <span class="form-field__required">*</span></span>
+              <input type="email" class="form-field__input" id="connectEmailAddress" placeholder="e.g. name@domain.com" autocomplete="off">
+              <p class="field-error" id="connectEmailAddressErr" style="display:none;">Email Address is required.</p>
+            </div>
+            <div class="form-field">
+              <span class="form-field__label">Tenant ID <span class="form-field__required">*</span></span>
+              <input type="text" class="form-field__input" id="connectTenantId" placeholder="e.g. xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" autocomplete="off">
+              <p class="field-error" id="connectTenantIdErr" style="display:none;">Tenant ID is required.</p>
+            </div>
+            <div class="form-field">
+              <span class="form-field__label">Client ID <span class="form-field__required">*</span></span>
+              <input type="text" class="form-field__input" id="connectClientId" placeholder="e.g. xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" autocomplete="off">
+              <p class="field-error" id="connectClientIdErr" style="display:none;">Client ID is required.</p>
+            </div>
+            <div class="form-field">
+              <span class="form-field__label">Client Secret Code <span class="form-field__required">*</span></span>
+              <input type="password" class="form-field__input" id="connectClientSecret" placeholder="Enter client secret code" autocomplete="new-password">
+              <p class="field-error" id="connectClientSecretErr" style="display:none;">Client Secret Code is required.</p>
+            </div>
           </div>
-          <div class="form-field">
-            <span class="form-field__label">Tenant ID <span class="form-field__required">*</span></span>
-            <input type="text" class="form-field__input" id="connectTenantId" placeholder="e.g. xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" autocomplete="off">
-            <p class="field-error" id="connectTenantIdErr" style="display:none;">Tenant ID is required.</p>
-          </div>
-          <div class="form-field">
-            <span class="form-field__label">Client ID <span class="form-field__required">*</span></span>
-            <input type="text" class="form-field__input" id="connectClientId" placeholder="e.g. xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" autocomplete="off">
-            <p class="field-error" id="connectClientIdErr" style="display:none;">Client ID is required.</p>
-          </div>
-          <div class="form-field">
-            <span class="form-field__label">Client Secret Code <span class="form-field__required">*</span></span>
-            <input type="password" class="form-field__input" id="connectClientSecret" placeholder="Enter client secret code" autocomplete="new-password">
-            <p class="field-error" id="connectClientSecretErr" style="display:none;">Client Secret Code is required.</p>
+        </div>
+        <div class="modal__footer">
+          <div class="modal__actions" style="width:100%;">
+            <button class="btn-cancel" type="button" id="connectBackBtn" style="flex:1;">Back</button>
+            <button class="btn-primary" type="button" id="connectManualSubmitBtn" style="flex:1;">Connect Mailbox</button>
           </div>
         </div>
       </div>
-      <div class="modal__footer" id="connectMailboxFooter">
-        <div class="modal__actions" style="width:100%;">
-          <button class="btn-cancel" type="button" id="connectBackBtn" style="flex:1;">Back</button>
-          <button class="btn-primary" type="button" id="connectManualSubmitBtn" style="flex:1;">Connect Mailbox</button>
+
+      <!-- 2b: Verifying -->
+      <div id="connectVerifying" style="display:none;">
+        <div class="connect-state">
+          <div class="connect-spinner"></div>
+          <p class="connect-state__title">Verifying details...</p>
+          <p class="connect-state__msg">Please wait while we authenticate your mailbox.</p>
         </div>
       </div>
+
+      <!-- 2c: Result -->
+      <div id="connectResult" style="display:none;">
+        <div class="connect-state">
+          <div class="connect-result-icon" id="connectResultIcon"></div>
+          <p class="connect-state__title" id="connectResultTitle"></p>
+          <p class="connect-state__msg" id="connectResultMsg"></p>
+        </div>
+        <div class="modal__footer">
+          <div class="modal__actions" style="width:100%;">
+            <button class="btn-cancel" type="button" id="connectResultRetryBtn" style="flex:1; display:none;">Try Again</button>
+            <button class="btn-primary" type="button" id="connectResultDoneBtn" style="flex:1;">Done</button>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
@@ -2976,6 +3035,14 @@
     var connectBackBtn = document.getElementById('connectBackBtn');
     var connectStep1 = document.getElementById('connectStep1');
     var connectStep2 = document.getElementById('connectStep2');
+    var connectStep2Form = document.getElementById('connectStep2Form');
+    var connectVerifying = document.getElementById('connectVerifying');
+    var connectResult = document.getElementById('connectResult');
+    var connectResultIcon = document.getElementById('connectResultIcon');
+    var connectResultTitle = document.getElementById('connectResultTitle');
+    var connectResultMsg = document.getElementById('connectResultMsg');
+    var connectResultRetryBtn = document.getElementById('connectResultRetryBtn');
+    var connectResultDoneBtn = document.getElementById('connectResultDoneBtn');
 
     var fEmailAddress = document.getElementById('connectEmailAddress');
     var fTenantId     = document.getElementById('connectTenantId');
@@ -3000,6 +3067,9 @@
       selectedProvider = 'microsoft';
       connectStep1.style.display = '';
       connectStep2.style.display = 'none';
+      connectStep2Form.style.display = '';
+      connectVerifying.style.display = 'none';
+      connectResult.style.display = 'none';
       document.querySelectorAll('.provider-card').forEach(function(c) {
         c.classList.toggle('provider-card--selected', c.dataset.provider === 'microsoft');
       });
@@ -3044,6 +3114,9 @@
       connectStep1.style.display = '';
       [fEmailAddress, fTenantId, fClientId, fClientSecret].forEach(function(f) { f.value = ''; f.style.borderColor = ''; f.style.boxShadow = ''; });
       [errEmailAddress, errTenantId, errClientId, errClientSecret].forEach(function(e) { e.style.display = 'none'; });
+      connectStep2Form.style.display = '';
+      connectVerifying.style.display = 'none';
+      connectResult.style.display = 'none';
     });
 
     fEmailAddress.addEventListener('input', function () { clearError(fEmailAddress, errEmailAddress); });
@@ -3079,6 +3152,40 @@
       mailboxTableBody.appendChild(row);
     }
 
+    function showConnectResult(success, emailVal) {
+      connectVerifying.style.display = 'none';
+      connectResult.style.display = '';
+      if (success) {
+        connectResultIcon.className = 'connect-result-icon connect-result-icon--success';
+        connectResultIcon.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+        connectResultTitle.textContent = 'Mailbox Connected!';
+        connectResultMsg.textContent = emailVal + ' has been successfully connected to GeoMail.';
+        connectResultRetryBtn.style.display = 'none';
+        connectResultDoneBtn.textContent = 'Done';
+        connectResultDoneBtn.onclick = function() {
+          addMailboxRow(emailVal, selectedProvider, []);
+          closeModal(connectMailboxOverlay);
+          resetConnectForm();
+          showToast('Mailbox connected.');
+        };
+      } else {
+        connectResultIcon.className = 'connect-result-icon connect-result-icon--error';
+        connectResultIcon.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
+        connectResultTitle.textContent = 'Connection Failed';
+        connectResultMsg.textContent = 'We couldn\'t authenticate your mailbox. Please check your credentials and try again.';
+        connectResultRetryBtn.style.display = '';
+        connectResultRetryBtn.onclick = function() {
+          connectResult.style.display = 'none';
+          connectStep2Form.style.display = '';
+        };
+        connectResultDoneBtn.textContent = 'Close';
+        connectResultDoneBtn.onclick = function() {
+          closeModal(connectMailboxOverlay);
+          resetConnectForm();
+        };
+      }
+    }
+
     connectManualSubmitBtn.addEventListener('click', function () {
       var emailVal   = fEmailAddress.value.trim();
       var tenantVal  = fTenantId.value.trim();
@@ -3093,10 +3200,15 @@
 
       if (!valid) return;
 
-      addMailboxRow('mailbox@geoserves.com', selectedProvider, []);
-      closeModal(connectMailboxOverlay);
-      resetConnectForm();
-      showToast('Mailbox connected.');
+      /* Show verifying state */
+      connectStep2Form.style.display = 'none';
+      connectVerifying.style.display = '';
+
+      /* Simulate async verification — succeed 70%, fail 30% */
+      setTimeout(function() {
+        var success = Math.random() < 0.7;
+        showConnectResult(success, emailVal);
+      }, 2000);
     });
 
     /* ================= SOP DOCUMENTS TAB ================= */
