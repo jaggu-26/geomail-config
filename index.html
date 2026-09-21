@@ -1237,7 +1237,7 @@
   .provider-card-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
+    gap: 14px;
     width: 100%;
     padding: 4px 0;
   }
@@ -1246,8 +1246,8 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 10px;
-    padding: 24px 12px 20px;
+    gap: 14px;
+    padding: 32px 10px 26px;
     border: 1.5px solid var(--prim-grey-200);
     border-radius: var(--radius-lg);
     background: var(--card);
@@ -1266,14 +1266,14 @@
     background: #EEF2FF;
   }
   .provider-card__logo {
-    width: 40px;
-    height: 40px;
+    width: 52px;
+    height: 52px;
     display: flex;
     align-items: center;
     justify-content: center;
   }
-  .provider-card__logo img { width: 40px; height: 40px; object-fit: contain; }
-  .provider-card__logo svg { width: 36px; height: 36px; color: var(--prim-grey-500); }
+  .provider-card__logo img { width: 52px; height: 52px; object-fit: contain; }
+  .provider-card__logo svg { width: 48px; height: 48px; color: var(--prim-grey-500); }
 
   /* Manual Setup — accordion (button + fields share one growing box) */
   .oauth-accordion {
@@ -2350,6 +2350,7 @@
     <!-- Step 1: Provider selection -->
     <div id="connectStep1">
       <div class="modal__content">
+        <p style="font-size:13px;font-weight:500;color:var(--prim-grey-400);margin:0;align-self:flex-start;">Select your email provider</p>
         <div class="provider-card-grid">
           <button class="provider-card provider-card--selected" type="button" data-provider="microsoft">
             <div class="provider-card__logo">
