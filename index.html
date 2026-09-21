@@ -2185,11 +2185,11 @@
               <div class="table-head-cell table-head-cell--actions" style="width:48px;"></div>
             </div>
             <div class="table-body" id="mailboxTableBody">
-              <div class="table-row" data-status="connected">
+              <div class="table-row" data-status="active">
                 <div class="table-cell table-cell--mailbox">ops@geoserves.com</div>
                 <div class="table-cell table-cell--provider"><img src="Assets/logo-microsoft.svg" width="16" height="16" alt="">Microsoft</div>
                 <div class="table-cell table-cell--status" data-status-cell>
-                  <span class="status-chip status-chip--active">Connected</span>
+                  <span class="status-chip status-chip--active">Active</span>
                 </div>
                 <div class="table-cell table-cell--last-connected">12 Jun 2026</div>
                 <div class="table-cell table-cell--emails"><div class="email-cell" data-emails='["captain@fleet.com","ops-team@geoserves.com","charterer@cargo.io","dispatch@fleet.io"]'></div></div>
@@ -2214,14 +2214,14 @@
                   </button>
                 </div>
               </div>
-              <div class="table-row" data-status="disabled">
+              <div class="table-row" data-status="inactive">
                 <div class="table-cell table-cell--mailbox">archive@geoserves.com</div>
                 <div class="table-cell table-cell--provider">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="6" rx="1.5"/><rect x="3" y="14" width="18" height="6" rx="1.5"/><line x1="7" y1="7" x2="7.01" y2="7" stroke-linecap="round"/><line x1="7" y1="17" x2="7.01" y2="17" stroke-linecap="round"/></svg>
                   IMAP / SMTP
                 </div>
                 <div class="table-cell table-cell--status" data-status-cell>
-                  <span class="status-chip status-chip--inactive">Disabled</span>
+                  <span class="status-chip status-chip--inactive">Inactive</span>
                 </div>
                 <div class="table-cell table-cell--last-connected">20 Apr 2026</div>
                 <div class="table-cell table-cell--emails"><div class="email-cell" data-emails='["archive-ops@geoserves.com","backup@fleet.io"]'></div></div>
@@ -2910,7 +2910,7 @@
       simulateDisconnectRow.style.display = isDisconnected ? 'none' : 'block';
       simulateDivider.style.display = isDisconnected ? 'none' : 'block';
       if (!isDisconnected) {
-        mailboxEnabledToggle.classList.toggle('toggle--on', status === 'connected');
+        mailboxEnabledToggle.classList.toggle('toggle--on', status === 'active');
       }
       var rect = btn.getBoundingClientRect();
       rowActionsPopover.classList.add('row-actions-popover--open');
@@ -2944,16 +2944,16 @@
     mailboxEnabledToggle.addEventListener('click', function () {
       if (!activePopoverRow) return;
       var currentStatus = activePopoverRow.dataset.status;
-      // Only allow toggle between connected <-> disabled (not disconnected)
+      // Only allow toggle between active <-> inactive (not disconnected)
       if (currentStatus === 'disconnected') return;
-      var makeEnabled = currentStatus === 'disabled';
+      var makeEnabled = currentStatus === 'inactive';
       var statusCell = activePopoverRow.querySelector('[data-status-cell]');
       if (makeEnabled) {
-        statusCell.innerHTML = '<span class="status-chip status-chip--active">Connected</span>';
-        activePopoverRow.dataset.status = 'connected';
+        statusCell.innerHTML = '<span class="status-chip status-chip--active">Active</span>';
+        activePopoverRow.dataset.status = 'active';
       } else {
-        statusCell.innerHTML = '<span class="status-chip status-chip--inactive">Disabled</span>';
-        activePopoverRow.dataset.status = 'disabled';
+        statusCell.innerHTML = '<span class="status-chip status-chip--inactive">Inactive</span>';
+        activePopoverRow.dataset.status = 'inactive';
       }
       mailboxEnabledToggle.classList.toggle('toggle--on', makeEnabled);
       showToast(makeEnabled ? 'Mailbox enabled.' : 'Mailbox disabled.');
@@ -2982,8 +2982,8 @@
       var statusCell = row.querySelector('[data-status-cell]');
       // Clear any inline styles from the disconnected state layout
       statusCell.style.gap = '';
-      statusCell.innerHTML = '<span class="status-chip status-chip--active">Connected</span>';
-      row.dataset.status = 'connected';
+      statusCell.innerHTML = '<span class="status-chip status-chip--active">Active</span>';
+      row.dataset.status = 'active';
       showToast('Mailbox re-authenticated.');
     }
 
@@ -3267,14 +3267,14 @@
     function addMailboxRow(email, providerKey, emails) {
       var row = document.createElement('div');
       row.className = 'table-row';
-      row.dataset.status = 'connected';
+      row.dataset.status = 'active';
       var now = new Date();
       var lastConnected = now.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) +
         ', ' + now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
       row.innerHTML =
         '<div class="table-cell table-cell--mailbox">' + email + '</div>' +
         '<div class="table-cell table-cell--provider">' + PROVIDER_MARKUP[providerKey] + '</div>' +
-        '<div class="table-cell" data-status-cell><span class="status-chip status-chip--active">Connected</span></div>' +
+        '<div class="table-cell" data-status-cell><span class="status-chip status-chip--active">Active</span></div>' +
         '<div class="table-cell">' + lastConnected + '</div>' +
         '<div class="table-cell">' + buildEmailCell(emails || []) + '</div>' +
         '<div class="table-cell table-cell--actions"><button class="row-action-btn" type="button" aria-label="Row actions"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg></button></div>';
