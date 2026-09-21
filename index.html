@@ -2000,6 +2000,21 @@
     color: var(--color-text-placeholder);
   }
 
+  .popover-disconnected-notice {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    background: #FEF2F2;
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-size: 12px;
+    color: var(--prim-red-600, #DC2626);
+    line-height: 1.5;
+  }
+  .popover-disconnected-notice svg { width: 14px; height: 14px; flex-shrink: 0; margin-top: 1px; }
+  .popover-item--muted span { color: var(--prim-grey-400); }
+  .popover-item--muted svg { color: var(--prim-grey-300); }
+
   /* ---------- Toast ---------- */
   .toast {
     position: fixed;
@@ -2670,17 +2685,39 @@
 
 <!-- Row actions popover (Mailboxes tab) -->
 <div class="row-actions-popover" id="rowActionsPopover">
+
+  <!-- Active / Inactive: toggle -->
   <div class="popover-toggle-row" id="mailboxEnabledRow">
     <span>Mailbox Enabled</span>
     <button class="toggle" type="button" id="mailboxEnabledToggle" aria-label="Toggle mailbox enabled"></button>
   </div>
-  <div class="popover-list" id="reauthenticateRow" style="display: none;">
-    <button class="popover-item" type="button" id="popoverReauthBtn">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4v6h6M20 20v-6h-6" stroke-linecap="round" stroke-linejoin="round"/><path d="M4.6 15a8 8 0 0014.3 2.3M19.4 9A8 8 0 005 6.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      <span>Re-authenticate</span>
+
+  <!-- Disconnected: notice + re-auth -->
+  <div id="popoverDisconnectedSection" style="display:none;">
+    <div class="popover-disconnected-notice">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <span>Re-authenticate to enable or disable this mailbox.</span>
+    </div>
+    <div class="popover-list" style="margin-top:4px;">
+      <button class="popover-item" type="button" id="popoverReauthBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4v6h6M20 20v-6h-6" stroke-linecap="round" stroke-linejoin="round"/><path d="M4.6 15a8 8 0 0014.3 2.3M19.4 9A8 8 0 005 6.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>Re-authenticate</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="popover-divider"></div>
+
+  <!-- Simulate Disconnect (demo only — visible for Active/Inactive) -->
+  <div class="popover-list" id="simulateDisconnectRow">
+    <button class="popover-item popover-item--muted" type="button" id="simulateDisconnectBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18.36 6.64A9 9 0 1 1 5.64 5.64"/><line x1="12" y1="2" x2="12" y2="12"/></svg>
+      <span>Simulate Disconnect</span>
     </button>
   </div>
-  <div class="popover-divider"></div>
+
+  <div class="popover-divider" id="simulateDivider"></div>
+
   <div class="popover-list">
     <button class="popover-item" type="button" id="addUsersBtn">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 10.25C13.5188 10.25 14.75 9.01878 14.75 7.5C14.75 5.98122 13.5188 4.75 12 4.75C10.4812 4.75 9.25 5.98122 9.25 7.5C9.25 9.01878 10.4812 10.25 12 10.25Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M16.0001 14.0002C15.0001 13 14.0401 12.75 12.0001 12.75C9.44911 12.75 7.26111 14.28 6.29111 16.47C5.92611 17.295 6.37811 18.244 7.23811 18.515C8.46311 18.901 10.0841 19.249 12.0001 19.249C12.4221 19.249 12.8241 19.226 13.2171 19.196" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M20.25 17.75H15.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M17.75 20.25L17.75 15.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -2849,7 +2886,10 @@
     var rowActionsPopover = document.getElementById('rowActionsPopover');
     var mailboxEnabledRow = document.getElementById('mailboxEnabledRow');
     var mailboxEnabledToggle = document.getElementById('mailboxEnabledToggle');
-    var reauthenticateRow = document.getElementById('reauthenticateRow');
+    var popoverDisconnectedSection = document.getElementById('popoverDisconnectedSection');
+    var simulateDisconnectRow = document.getElementById('simulateDisconnectRow');
+    var simulateDivider = document.getElementById('simulateDivider');
+    var simulateDisconnectBtn = document.getElementById('simulateDisconnectBtn');
     var popoverReauthBtn = document.getElementById('popoverReauthBtn');
     var removeMailboxBtn = document.getElementById('removeMailboxBtn');
     var activePopoverRow = null;
@@ -2861,9 +2901,17 @@
 
     function openRowPopoverFor(btn, row) {
       activePopoverRow = row;
-      var isDisconnected = row.dataset.status === 'disconnected';
+      var status = row.dataset.status;
+      var isDisconnected = status === 'disconnected';
+      // Show/hide sections based on status
       mailboxEnabledRow.style.display = isDisconnected ? 'none' : 'flex';
-      reauthenticateRow.style.display = isDisconnected ? 'block' : 'none';
+      popoverDisconnectedSection.style.display = isDisconnected ? 'block' : 'none';
+      // Simulate disconnect only for active/inactive rows
+      simulateDisconnectRow.style.display = isDisconnected ? 'none' : 'block';
+      simulateDivider.style.display = isDisconnected ? 'none' : 'block';
+      if (!isDisconnected) {
+        mailboxEnabledToggle.classList.toggle('toggle--on', status === 'connected');
+      }
       var rect = btn.getBoundingClientRect();
       rowActionsPopover.classList.add('row-actions-popover--open');
       var popRect = rowActionsPopover.getBoundingClientRect();
@@ -2873,9 +2921,6 @@
       if (top + popRect.height > window.innerHeight - 4) top = rect.top - popRect.height - 4;
       rowActionsPopover.style.left = left + 'px';
       rowActionsPopover.style.top = top + 'px';
-      if (!isDisconnected) {
-        mailboxEnabledToggle.classList.toggle('toggle--on', row.dataset.status === 'connected');
-      }
     }
 
     document.addEventListener('click', function (e) {
@@ -2898,16 +2943,16 @@
 
     mailboxEnabledToggle.addEventListener('click', function () {
       if (!activePopoverRow) return;
+      var currentStatus = activePopoverRow.dataset.status;
+      // Only allow toggle between connected <-> disabled (not disconnected)
+      if (currentStatus === 'disconnected') return;
+      var makeEnabled = currentStatus === 'disabled';
       var statusCell = activePopoverRow.querySelector('[data-status-cell]');
-      var chip = statusCell.querySelector('.status-chip');
-      var makeEnabled = chip.classList.contains('status-chip--inactive');
       if (makeEnabled) {
-        chip.className = 'status-chip status-chip--active';
-        chip.textContent = 'Connected';
+        statusCell.innerHTML = '<span class="status-chip status-chip--active">Connected</span>';
         activePopoverRow.dataset.status = 'connected';
       } else {
-        chip.className = 'status-chip status-chip--inactive';
-        chip.textContent = 'Disabled';
+        statusCell.innerHTML = '<span class="status-chip status-chip--inactive">Disabled</span>';
         activePopoverRow.dataset.status = 'disabled';
       }
       mailboxEnabledToggle.classList.toggle('toggle--on', makeEnabled);
@@ -2935,7 +2980,8 @@
 
     function reauthenticateRowEl(row) {
       var statusCell = row.querySelector('[data-status-cell]');
-      statusCell.removeAttribute('style');
+      // Clear any inline styles from the disconnected state layout
+      statusCell.style.gap = '';
       statusCell.innerHTML = '<span class="status-chip status-chip--active">Connected</span>';
       row.dataset.status = 'connected';
       showToast('Mailbox re-authenticated.');
@@ -2969,6 +3015,19 @@
       var row = activePopoverRow;
       closeRowPopover();
       if (row) openReauthModal(row);
+    });
+
+    /* Simulate Disconnect (demo — transitions Active/Inactive → Disconnected) */
+    simulateDisconnectBtn.addEventListener('click', function () {
+      if (!activePopoverRow) return;
+      var row = activePopoverRow;
+      var statusCell = row.querySelector('[data-status-cell]');
+      statusCell.innerHTML =
+        '<span class="status-chip status-chip--danger">Disconnected</span>' +
+        '<button class="check-now-link" type="button" data-reauth>Re-authenticate</button>';
+      row.dataset.status = 'disconnected';
+      closeRowPopover();
+      showToast('Mailbox disconnected (simulated).');
     });
 
     /* Remove Mailbox -> generic confirm modal */
