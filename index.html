@@ -1246,15 +1246,15 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 14px;
-    padding: 32px 10px 26px;
+    gap: 10px;
+    padding: 16px 10px 14px;
     border: 1.5px solid var(--prim-grey-200);
     border-radius: var(--radius-lg);
     background: var(--card);
     cursor: pointer;
     transition: border-color 150ms ease, background 150ms ease;
     font-family: inherit;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 600;
     color: var(--color-text-default);
     text-align: center;
@@ -1266,14 +1266,14 @@
     background: #EEF2FF;
   }
   .provider-card__logo {
-    width: 52px;
-    height: 52px;
+    width: 24px;
+    height: 24px;
     display: flex;
     align-items: center;
     justify-content: center;
   }
-  .provider-card__logo img { width: 52px; height: 52px; object-fit: contain; }
-  .provider-card__logo svg { width: 48px; height: 48px; color: var(--prim-grey-500); }
+  .provider-card__logo img { width: 24px; height: 24px; object-fit: contain; }
+  .provider-card__logo svg { width: 24px; height: 24px; color: var(--prim-grey-500); }
 
   /* Manual Setup — accordion (button + fields share one growing box) */
   .oauth-accordion {
@@ -1822,6 +1822,7 @@
   .toggle--on::after { transform: translateX(20px); }
 
   .modal--sm { width: 500px; }
+  .modal--md { width: 620px; }
   .modal--xs { width: 400px; }
 
   .delete-modal__header {
@@ -2339,7 +2340,7 @@
 
 <!-- Connect Mailbox modal -->
 <div class="modal-overlay" id="connectMailboxOverlay">
-  <div class="modal modal--sm" role="dialog" aria-modal="true" aria-labelledby="connectMailboxTitle">
+  <div class="modal modal--md" role="dialog" aria-modal="true" aria-labelledby="connectMailboxTitle">
     <div class="modal__header">
       <h2 class="modal__title" id="connectMailboxTitle">Select your email provider and connect the mailbox</h2>
       <button class="modal__close" type="button" id="closeConnectMailboxBtn" aria-label="Close">
