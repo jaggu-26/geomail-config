@@ -2168,9 +2168,8 @@
               <div class="table-row" data-status="disconnected">
                 <div class="table-cell table-cell--mailbox">voyage@geoserves.com</div>
                 <div class="table-cell table-cell--provider"><img src="Assets/logo-google.svg" width="16" height="16" alt="">Google</div>
-                <div class="table-cell table-cell--status" data-status-cell style="gap:8px;">
+                <div class="table-cell table-cell--status" data-status-cell>
                   <span class="status-chip status-chip--danger">Disconnected</span>
-                  <button class="check-now-link" type="button" data-reauth>Re-authenticate</button>
                 </div>
                 <div class="table-cell table-cell--last-connected">03 May 2026</div>
                 <div class="table-cell table-cell--emails"><div class="email-cell" data-emails='["voyage-crew@geoserves.com","captain@vessel.io","ops@charter.com"]'></div></div>
@@ -2915,14 +2914,6 @@
       closeModal(reauthModalOverlay);
       if (reauthTargetRow) reauthenticateRowEl(reauthTargetRow);
       reauthTargetRow = null;
-    });
-
-    /* Re-authenticate inline link (table row) */
-    document.addEventListener('click', function (e) {
-      var link = e.target.closest('[data-reauth]');
-      if (!link) return;
-      e.preventDefault();
-      openReauthModal(link.closest('.table-row'));
     });
 
     /* Re-authenticate (row actions popover, for Disconnected rows) */
