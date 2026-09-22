@@ -2097,7 +2097,7 @@
     display: none;
     flex-direction: column;
     gap: 10px;
-    min-width: 160px;
+    min-width: 140px;
   }
   .colour-dropdown--open { display: flex; }
   .colour-dropdown__label {
@@ -2113,58 +2113,38 @@
     grid-template-columns: repeat(3, 1fr);
     gap: 8px;
   }
-  .colour-swatch {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    border: 2.5px solid transparent;
-    cursor: pointer;
-    transition: transform 150ms, border-color 150ms;
-    position: relative;
-  }
-  .colour-swatch:hover { transform: scale(1.12); }
-  .colour-swatch--active { border-color: var(--prim-grey-700, #334155); }
-  .colour-swatch--active::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: 50%;
-    border: 2px solid #fff;
-  }
-
-  /* ===== Option Switcher ===== */
-  .option-switcher {
-    position: fixed;
-    top: 16px;
-    right: 60px;
+  .colour-option-btn {
     display: flex;
     align-items: center;
-    gap: 4px;
-    background: var(--prim-grey-100, #F1F5F9);
-    border: 1px solid var(--prim-grey-200, #E2E8F0);
-    border-radius: var(--radius-full, 9999px);
-    padding: 3px;
-    z-index: 10000;
-    box-shadow: 0 2px 8px rgba(0,0,0,.08);
-  }
-  .option-switcher__btn {
-    padding: 5px 14px;
-    border-radius: 9999px;
+    gap: 10px;
+    width: 100%;
+    padding: 8px 10px;
+    border-radius: 8px;
     border: none;
     background: none;
     font-family: inherit;
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--prim-grey-400, #94A3B8);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--prim-grey-600, #475569);
     cursor: pointer;
-    transition: background 150ms ease, color 150ms ease;
-    white-space: nowrap;
+    text-align: left;
+    transition: background 120ms;
   }
-  .option-switcher__btn--active {
-    background: var(--card, #fff);
-    color: var(--prim-grey-800, #1E293B);
-    box-shadow: 0 1px 3px rgba(0,0,0,.10);
+  .colour-option-btn:hover { background: var(--prim-grey-50, #F8FAFC); }
+  .colour-option-btn--active {
+    background: var(--prim-blue-50, #EEF2FF);
+    color: var(--brand, #1852FE);
+    font-weight: 600;
   }
+  .colour-option-btn__check {
+    width: 16px;
+    height: 16px;
+    margin-left: auto;
+    flex-shrink: 0;
+    color: var(--brand, #1852FE);
+    opacity: 0;
+  }
+  .colour-option-btn--active .colour-option-btn__check { opacity: 1; }
 
   /* ===== Mailbox empty state (Option 2) ===== */
   .mailbox-empty-state {
@@ -2211,23 +2191,17 @@
       <circle cx="17.5" cy="11.5" r="1.5" fill="#3B81F6"/>
     </svg>
   </button>
-  <div class="colour-dropdown" id="colourDropdown" role="listbox" aria-label="Accent colours">
-    <p class="colour-dropdown__label">Accent Colour</p>
-    <div class="colour-swatches">
-      <button class="colour-swatch colour-swatch--active" type="button" data-colour="#1852FE" data-hover="#1340CC" style="background:#1852FE;" title="Blue (default)" aria-label="Blue"></button>
-      <button class="colour-swatch" type="button" data-colour="#6366F1" data-hover="#4F46E5" style="background:#6366F1;" title="Indigo" aria-label="Indigo"></button>
-      <button class="colour-swatch" type="button" data-colour="#8B5CF6" data-hover="#7C3AED" style="background:#8B5CF6;" title="Purple" aria-label="Purple"></button>
-      <button class="colour-swatch" type="button" data-colour="#10B981" data-hover="#059669" style="background:#10B981;" title="Green" aria-label="Green"></button>
-      <button class="colour-swatch" type="button" data-colour="#F59E0B" data-hover="#D97706" style="background:#F59E0B;" title="Amber" aria-label="Amber"></button>
-      <button class="colour-swatch" type="button" data-colour="#F43F5E" data-hover="#E11D48" style="background:#F43F5E;" title="Rose" aria-label="Rose"></button>
-    </div>
+  <div class="colour-dropdown" id="colourDropdown" role="listbox" aria-label="Design options">
+    <p class="colour-dropdown__label">Design Option</p>
+    <button class="colour-option-btn colour-option-btn--active" type="button" data-option-btn="1">
+      Option 1
+      <svg class="colour-option-btn__check" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 8 6 12 14 4"/></svg>
+    </button>
+    <button class="colour-option-btn" type="button" data-option-btn="2">
+      Option 2
+      <svg class="colour-option-btn__check" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 8 6 12 14 4"/></svg>
+    </button>
   </div>
-</div>
-
-<!-- Option Switcher -->
-<div class="option-switcher" role="group" aria-label="Design option">
-  <button class="option-switcher__btn option-switcher__btn--active" type="button" data-option-btn="1">Option 1</button>
-  <button class="option-switcher__btn" type="button" data-option-btn="2">Option 2</button>
 </div>
 
 <div class="app">
@@ -4066,53 +4040,35 @@
     activateTab('mailboxes');
   })();
 
-  /* Colour Picker */
+  /* Colour Wheel Dropdown — Option Switcher */
   (function () {
-    var btn = document.getElementById('colourPickerBtn');
+    var triggerBtn = document.getElementById('colourPickerBtn');
     var dropdown = document.getElementById('colourDropdown');
-    var swatches = document.querySelectorAll('.colour-swatch');
+    var optionBtns = document.querySelectorAll('[data-option-btn]');
 
-    function applyColour(colour, hover) {
-      document.documentElement.style.setProperty('--brand', colour);
-      document.documentElement.style.setProperty('--brand-hover', hover);
-      document.documentElement.style.setProperty('--prim-marine', colour);
-    }
-
-    btn.addEventListener('click', function (e) {
+    triggerBtn.addEventListener('click', function (e) {
       e.stopPropagation();
       var open = dropdown.classList.toggle('colour-dropdown--open');
-      btn.setAttribute('aria-expanded', open);
+      triggerBtn.setAttribute('aria-expanded', open);
     });
 
-    swatches.forEach(function (swatch) {
-      swatch.addEventListener('click', function () {
-        swatches.forEach(function (s) { s.classList.remove('colour-swatch--active'); });
-        swatch.classList.add('colour-swatch--active');
-        applyColour(swatch.dataset.colour, swatch.dataset.hover);
+    optionBtns.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var opt = btn.getAttribute('data-option-btn');
+        document.body.setAttribute('data-option', opt);
+        optionBtns.forEach(function (b) {
+          b.classList.toggle('colour-option-btn--active', b.getAttribute('data-option-btn') === opt);
+        });
         dropdown.classList.remove('colour-dropdown--open');
-        btn.setAttribute('aria-expanded', 'false');
+        triggerBtn.setAttribute('aria-expanded', 'false');
       });
     });
 
     document.addEventListener('click', function (e) {
       if (!document.getElementById('colourPickerWrap').contains(e.target)) {
         dropdown.classList.remove('colour-dropdown--open');
-        btn.setAttribute('aria-expanded', 'false');
+        triggerBtn.setAttribute('aria-expanded', 'false');
       }
-    });
-  })();
-
-  /* Option Switcher */
-  (function () {
-    var btns = document.querySelectorAll('[data-option-btn]');
-    btns.forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        var opt = btn.getAttribute('data-option-btn');
-        document.body.setAttribute('data-option', opt);
-        btns.forEach(function (b) {
-          b.classList.toggle('option-switcher__btn--active', b.getAttribute('data-option-btn') === opt);
-        });
-      });
     });
 
     /* Empty state CTA triggers the same Connect Mailbox modal */
