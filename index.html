@@ -732,6 +732,129 @@
   .row-action-btn svg { width: 24px; height: 24px; color: var(--color-text-placeholder); }
   .row-action-btn:hover { background: var(--grey-50); }
 
+  /* ---------- Add Users permission rows ---------- */
+  .add-users-perm-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 0 0 4px;
+    border-bottom: 1px solid var(--grey-100);
+  }
+  .add-users-perm-header__email {
+    flex: 1 1 0;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .add-users-perm-header__perms {
+    width: 228px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  #addUsersRowList {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+  }
+  .add-users-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+  }
+  .add-users-row__email {
+    flex: 1 1 0;
+    min-width: 0;
+    height: 36px;
+    box-sizing: border-box;
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--color-text-default);
+    background: var(--card);
+    border: 1px solid var(--prim-grey-200);
+    border-radius: var(--radius-sm);
+    outline: none;
+    padding: 0 10px;
+    transition: border-color 120ms ease, box-shadow 120ms ease;
+  }
+  .add-users-row__email::placeholder { color: var(--color-text-placeholder); }
+  .add-users-row__email:hover:not(:disabled) { border-color: var(--prim-grey-300); }
+  .add-users-row__email:focus { border-color: var(--prim-blue-500); box-shadow: 0 0 0 3px rgba(36,99,235,0.18); }
+  .add-users-row__email--error { border-color: var(--color-danger); }
+  .add-users-row__perms {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    width: 228px;
+    flex-shrink: 0;
+  }
+  .add-users-perm-radio {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex: 1;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-text-default);
+    user-select: none;
+  }
+  .add-users-perm-radio input[type="radio"] {
+    appearance: none;
+    width: 15px;
+    height: 15px;
+    border: 1.5px solid var(--prim-grey-300);
+    border-radius: 50%;
+    flex-shrink: 0;
+    cursor: pointer;
+    transition: border-color 120ms ease;
+    position: relative;
+  }
+  .add-users-perm-radio input[type="radio"]:checked {
+    border-color: var(--brand);
+    background: var(--brand);
+    box-shadow: inset 0 0 0 3px #fff;
+  }
+  .add-users-row__remove {
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    border-radius: var(--radius-sm);
+    color: var(--prim-grey-300);
+    cursor: pointer;
+    transition: color 120ms ease, background 120ms ease;
+  }
+  .add-users-row__remove:hover { color: var(--color-danger); background: #fef2f2; }
+  .add-users-add-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: none;
+    border: 1px dashed var(--prim-grey-200);
+    border-radius: var(--radius-sm);
+    padding: 7px 14px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--brand);
+    cursor: pointer;
+    transition: background 120ms ease, border-color 120ms ease;
+    margin-top: 2px;
+  }
+  .add-users-add-btn:hover { background: rgba(24,82,254,0.04); border-color: var(--brand); }
+
   /* ---------- Add Users modal ---------- */
   .modal-overlay {
     display: flex;
@@ -2360,37 +2483,6 @@
                   </button>
                 </div>
               </div>
-              <div class="table-row" data-status="disconnected">
-                <div class="table-cell table-cell--mailbox">voyage@geoserves.com</div>
-                <div class="table-cell table-cell--provider"><img src="Assets/logo-google.svg" width="16" height="16" alt="">Google</div>
-                <div class="table-cell table-cell--status" data-status-cell>
-                  <span class="status-chip status-chip--danger">Disconnected</span>
-                </div>
-                <div class="table-cell table-cell--last-connected">03 May 2026</div>
-                <div class="table-cell table-cell--emails"><div class="email-cell" data-emails='["voyage-crew@geoserves.com","captain@vessel.io","ops@charter.com"]'></div></div>
-                <div class="table-cell table-cell--actions">
-                  <button class="row-action-btn" type="button" aria-label="Row actions">
-                    <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
-                  </button>
-                </div>
-              </div>
-              <div class="table-row" data-status="inactive">
-                <div class="table-cell table-cell--mailbox">archive@geoserves.com</div>
-                <div class="table-cell table-cell--provider">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="6" rx="1.5"/><rect x="3" y="14" width="18" height="6" rx="1.5"/><line x1="7" y1="7" x2="7.01" y2="7" stroke-linecap="round"/><line x1="7" y1="17" x2="7.01" y2="17" stroke-linecap="round"/></svg>
-                  IMAP / SMTP
-                </div>
-                <div class="table-cell table-cell--status" data-status-cell>
-                  <span class="status-chip status-chip--inactive">Inactive</span>
-                </div>
-                <div class="table-cell table-cell--last-connected">20 Apr 2026</div>
-                <div class="table-cell table-cell--emails"><div class="email-cell" data-emails='["archive-ops@geoserves.com","backup@fleet.io"]'></div></div>
-                <div class="table-cell table-cell--actions">
-                  <button class="row-action-btn" type="button" aria-label="Row actions">
-                    <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
-                  </button>
-                </div>
-              </div>
               <div class="table-row" data-status="inactive">
                 <div class="table-cell table-cell--mailbox">notify@geoserves.com</div>
                 <div class="table-cell table-cell--provider"><img src="Assets/logo-microsoft.svg" width="16" height="16" alt="">Microsoft</div>
@@ -2659,14 +2751,18 @@
       </button>
     </div>
     <div class="modal__content" style="align-items:stretch;">
-      <p style="font-size:14px;color:var(--prim-grey-400);margin:0;">Add email addresses to associate with this mailbox.</p>
-      <div class="form-field" style="width:100%;">
-        <span class="form-field__label">Enter Email(s)</span>
-        <div class="email-tag-input" id="addUsersEmailTagInput">
-          <input type="text" class="email-tag-input__field" id="addUsersEmailInput" placeholder="Type an email and press Enter or comma…" autocomplete="off">
-        </div>
-        <p style="font-size:11px;color:var(--prim-grey-300);margin:0;">Press Enter or , after each email address</p>
+      <p style="font-size:14px;color:var(--prim-grey-400);margin:0;">Add email addresses and set permissions for this mailbox.</p>
+      <div class="add-users-perm-header">
+        <span class="add-users-perm-header__email">Email Address</span>
+        <span class="add-users-perm-header__perms">Permissions</span>
       </div>
+      <div id="addUsersRowList">
+        <!-- rows injected by JS -->
+      </div>
+      <button class="add-users-add-btn" type="button" id="addUsersAddRowBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Add
+      </button>
     </div>
     <div class="modal__footer">
       <div class="modal__actions" style="width:100%;">
@@ -3133,46 +3229,48 @@
     }
 
     /* Add Users modal */
-    var addUsersOverlay      = document.getElementById('addUsersOverlay');
-    var addUsersEmailTagInput = document.getElementById('addUsersEmailTagInput');
-    var addUsersEmailInput   = document.getElementById('addUsersEmailInput');
-    var addUsersTags         = [];
-    var addUsersTargetRow    = null;
+    var addUsersOverlay   = document.getElementById('addUsersOverlay');
+    var addUsersRowList   = document.getElementById('addUsersRowList');
+    var addUsersTargetRow = null;
+    var addUsersRowCount  = 0;
 
-    function addUserTag(val) {
-      val = val.trim().replace(/,+$/, '');
-      if (!val || !isValidEmail(val) || addUsersTags.indexOf(val) !== -1) return;
-      addUsersTags.push(val);
-      var tag = document.createElement('span');
-      tag.className = 'email-tag';
-      tag.innerHTML = '<span title="' + val + '">' + val + '</span>' +
-        '<button type="button" class="email-tag__remove" aria-label="Remove ' + val + '">' +
-          '<svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" width="9" height="9"><line x1="2" y1="2" x2="8" y2="8"/><line x1="8" y1="2" x2="2" y2="8"/></svg>' +
+    function createAddUserRow(focusInput) {
+      var id = ++addUsersRowCount;
+      var row = document.createElement('div');
+      row.className = 'add-users-row';
+      var perms = ['Read', 'Write', 'Send'];
+      var radioName = 'perm_' + id;
+      row.innerHTML =
+        '<input type="email" class="add-users-row__email" placeholder="email@example.com" autocomplete="off">' +
+        '<div class="add-users-row__perms">' +
+          perms.map(function(p, i) {
+            return '<label class="add-users-perm-radio">' +
+              '<input type="radio" name="' + radioName + '" value="' + p.toLowerCase() + '"' + (i === 0 ? ' checked' : '') + '>' +
+              p + '</label>';
+          }).join('') +
+        '</div>' +
+        '<button type="button" class="add-users-row__remove" aria-label="Remove row">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="14" height="14"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' +
         '</button>';
-      tag.querySelector('.email-tag__remove').addEventListener('click', function() {
-        addUsersTags.splice(addUsersTags.indexOf(val), 1);
-        tag.remove();
+      row.querySelector('.add-users-row__remove').addEventListener('click', function() {
+        row.remove();
+        if (!addUsersRowList.children.length) createAddUserRow(false);
       });
-      addUsersEmailTagInput.insertBefore(tag, addUsersEmailInput);
-      addUsersEmailInput.value = '';
+      addUsersRowList.appendChild(row);
+      if (focusInput !== false) row.querySelector('.add-users-row__email').focus();
+      return row;
     }
-
-    addUsersEmailInput.addEventListener('keydown', function(e) {
-      if (e.key === 'Enter' || e.key === ',') { e.preventDefault(); addUserTag(addUsersEmailInput.value); }
-      else if (e.key === 'Backspace' && !addUsersEmailInput.value && addUsersTags.length) {
-        var last = addUsersEmailTagInput.querySelectorAll('.email-tag');
-        if (last.length) last[last.length - 1].querySelector('.email-tag__remove').click();
-      }
-    });
-    addUsersEmailInput.addEventListener('blur', function() { if (addUsersEmailInput.value.trim()) addUserTag(addUsersEmailInput.value); });
-    addUsersEmailTagInput.addEventListener('click', function() { addUsersEmailInput.focus(); });
 
     function resetAddUsersForm() {
-      addUsersEmailTagInput.querySelectorAll('.email-tag').forEach(function(t) { t.remove(); });
-      addUsersEmailInput.value = '';
-      addUsersTags = [];
+      addUsersRowList.innerHTML = '';
+      addUsersRowCount = 0;
       addUsersTargetRow = null;
+      createAddUserRow(false);
     }
+
+    document.getElementById('addUsersAddRowBtn').addEventListener('click', function() {
+      createAddUserRow(true);
+    });
 
     document.getElementById('addUsersBtn').addEventListener('click', function() {
       addUsersTargetRow = activePopoverRow;
@@ -3185,8 +3283,19 @@
     document.getElementById('cancelAddUsersBtn').addEventListener('click', function() { closeModal(addUsersOverlay); resetAddUsersForm(); });
 
     document.getElementById('confirmAddUsersBtn').addEventListener('click', function() {
-      if (addUsersEmailInput.value.trim()) addUserTag(addUsersEmailInput.value);
-      if (!addUsersTags.length) return;
+      var rows = addUsersRowList.querySelectorAll('.add-users-row');
+      var newEmails = [];
+      var hasError = false;
+      rows.forEach(function(r) {
+        var inp = r.querySelector('.add-users-row__email');
+        var val = inp.value.trim();
+        inp.classList.remove('add-users-row__email--error');
+        if (!val) return;
+        if (!isValidEmail(val)) { inp.classList.add('add-users-row__email--error'); hasError = true; return; }
+        newEmails.push(val);
+      });
+      if (hasError) return;
+      if (!newEmails.length) return;
       if (addUsersTargetRow) {
         var cell = addUsersTargetRow.querySelector('.table-cell--emails');
         if (cell) {
@@ -3195,7 +3304,7 @@
           if (existing && existing.dataset.emails) {
             try { currentEmails = JSON.parse(existing.dataset.emails); } catch(e) {}
           }
-          var merged = currentEmails.concat(addUsersTags.filter(function(e) { return currentEmails.indexOf(e) === -1; }));
+          var merged = currentEmails.concat(newEmails.filter(function(e) { return currentEmails.indexOf(e) === -1; }));
           cell.innerHTML = buildEmailCell(merged);
         }
       }
