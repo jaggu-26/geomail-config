@@ -2054,9 +2054,80 @@
     .agent-list { grid-template-columns: 1fr; }
     .vessel-card-grid { grid-template-columns: 1fr; }
   }
+
+  /* ===== Option Switcher ===== */
+  .option-switcher {
+    position: fixed;
+    top: 16px;
+    right: 20px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--prim-grey-100, #F1F5F9);
+    border: 1px solid var(--prim-grey-200, #E2E8F0);
+    border-radius: var(--radius-full, 9999px);
+    padding: 3px;
+    z-index: 10000;
+    box-shadow: 0 2px 8px rgba(0,0,0,.08);
+  }
+  .option-switcher__btn {
+    padding: 5px 14px;
+    border-radius: 9999px;
+    border: none;
+    background: none;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--prim-grey-400, #94A3B8);
+    cursor: pointer;
+    transition: background 150ms ease, color 150ms ease;
+    white-space: nowrap;
+  }
+  .option-switcher__btn--active {
+    background: var(--card, #fff);
+    color: var(--prim-grey-800, #1E293B);
+    box-shadow: 0 1px 3px rgba(0,0,0,.10);
+  }
+
+  /* ===== Mailbox empty state (Option 2) ===== */
+  .mailbox-empty-state {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    padding: 64px 32px;
+    text-align: center;
+  }
+  .mailbox-empty-state__illustration { color: var(--prim-grey-200, #E2E8F0); }
+  .mailbox-empty-state__illustration svg { width: 88px; height: 88px; }
+  .mailbox-empty-state__title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--prim-grey-700, #334155);
+    margin: 0;
+  }
+  .mailbox-empty-state__sub {
+    font-size: 13px;
+    color: var(--prim-grey-400, #94A3B8);
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  /* Show/hide based on active option */
+  body[data-option="2"] .mailbox-table-section { display: none; }
+  body[data-option="2"] .mailbox-empty-state   { display: flex; }
+  body[data-option="1"] .mailbox-table-section { display: contents; }
+  body[data-option="1"] .mailbox-empty-state   { display: none; }
 </style>
 </head>
-<body>
+<body data-option="1">
+<!-- Option Switcher -->
+<div class="option-switcher" role="group" aria-label="Design option">
+  <button class="option-switcher__btn option-switcher__btn--active" type="button" data-option-btn="1">Option 1</button>
+  <button class="option-switcher__btn" type="button" data-option-btn="2">Option 2</button>
+</div>
+
 <div class="app">
 
   <!-- Outer collapsed nav rail -->
@@ -2163,6 +2234,31 @@
 
           <!-- Tab: Mailboxes -->
           <div class="geomail-tab-panel" id="tabPanelMailboxes">
+
+            <!-- Empty state (Option 2, no mailboxes) -->
+            <div class="mailbox-empty-state">
+              <div class="mailbox-empty-state__illustration">
+                <svg viewBox="0 0 88 88" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="8" y="20" width="72" height="52" rx="6" stroke="currentColor" stroke-width="3.5"/>
+                  <path d="M8 32l33.5 22a5 5 0 0 0 5 0L80 32" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/>
+                  <path d="M28 20V16a4 4 0 0 1 4-4h24a4 4 0 0 1 4 4v4" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/>
+                  <circle cx="66" cy="62" r="12" fill="var(--bg,#F7FAFC)" stroke="currentColor" stroke-width="3"/>
+                  <line x1="66" y1="57" x2="66" y2="67" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                  <line x1="61" y1="62" x2="71" y2="62" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div>
+                <p class="mailbox-empty-state__title">No mailboxes connected yet</p>
+                <p class="mailbox-empty-state__sub" style="margin-top:6px;">Connect a mailbox to start syncing emails with GeoMail.</p>
+              </div>
+              <button class="btn-primary" type="button" id="emptyStateConnectBtn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;flex-shrink:0;"><line x1="12" y1="5" x2="12" y2="19" stroke-linecap="round"/><line x1="5" y1="12" x2="19" y2="12" stroke-linecap="round"/></svg>
+                Start Connecting your Mailbox
+              </button>
+            </div>
+
+            <!-- Table (Option 1) -->
+            <div class="mailbox-table-section">
             <div class="table-head-row">
               <div class="table-head-cell table-head-cell--mailbox">Mailbox</div>
               <div class="table-head-cell table-head-cell--provider">Provider</div>
@@ -2232,6 +2328,7 @@
                 </div>
               </div>
             </div>
+            </div><!-- /.mailbox-table-section -->
           </div>
 
           <!-- Tab: SOP Documents -->
@@ -3881,6 +3978,29 @@
     /* Initial state */
     renderChecklistCards();
     activateTab('mailboxes');
+  })();
+
+  /* Option Switcher */
+  (function () {
+    var btns = document.querySelectorAll('[data-option-btn]');
+    btns.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var opt = btn.getAttribute('data-option-btn');
+        document.body.setAttribute('data-option', opt);
+        btns.forEach(function (b) {
+          b.classList.toggle('option-switcher__btn--active', b.getAttribute('data-option-btn') === opt);
+        });
+      });
+    });
+
+    /* Empty state CTA triggers the same Connect Mailbox modal */
+    var emptyBtn = document.getElementById('emptyStateConnectBtn');
+    if (emptyBtn) {
+      emptyBtn.addEventListener('click', function () {
+        var connectBtn = document.getElementById('openConnectMailboxBtn');
+        if (connectBtn) connectBtn.click();
+      });
+    }
   })();
 
   /* Stage count tooltip — click to open, close button or outside click to dismiss */
