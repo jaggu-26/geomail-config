@@ -2115,10 +2115,11 @@
   }
 
   /* Show/hide based on active option */
-  body[data-option="2"] .mailbox-table-section { display: none; }
-  body[data-option="2"] .mailbox-empty-state   { display: flex; }
-  body[data-option="1"] .mailbox-table-section { display: contents; }
-  body[data-option="1"] .mailbox-empty-state   { display: none; }
+  body[data-option="2"] .mailbox-table-section  { display: none; }
+  body[data-option="2"] .mailbox-empty-state    { display: flex; }
+  body[data-option="2"] #openConnectMailboxBtn  { display: none !important; }
+  body[data-option="1"] .mailbox-table-section  { display: contents; }
+  body[data-option="1"] .mailbox-empty-state    { display: none; }
 </style>
 </head>
 <body data-option="1">
