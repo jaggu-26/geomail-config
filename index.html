@@ -1228,7 +1228,12 @@
     text-align: center;
     min-width: 0;
   }
-  .provider-card:hover { border-color: var(--prim-grey-400); background: var(--grey-50); }
+  .provider-card:hover:not(:disabled) { border-color: var(--prim-grey-400); background: var(--grey-50); }
+  .provider-card--disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
   .provider-card--selected {
     border: 2px solid var(--brand);
     background: #EEF2FF;
@@ -2488,13 +2493,13 @@
             </div>
             <span>Microsoft 365</span>
           </button>
-          <button class="provider-card" type="button" data-provider="google">
+          <button class="provider-card provider-card--disabled" type="button" data-provider="google" disabled>
             <div class="provider-card__logo">
               <img src="Assets/logo-google.svg" alt="Google">
             </div>
             <span>Google Workspace</span>
           </button>
-          <button class="provider-card" type="button" data-provider="imap">
+          <button class="provider-card provider-card--disabled" type="button" data-provider="imap" disabled>
             <div class="provider-card__logo">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/></svg>
             </div>
@@ -2519,11 +2524,6 @@
           <p class="modal__subtitle" style="margin-bottom: 4px;">Provide the following details to authenticate and connect a mailbox to GeoMail.</p>
           <div class="form-row" style="flex-direction: column; align-items: stretch; gap: 16px; width: 100%;">
             <div class="form-field">
-              <span class="form-field__label">Email Address <span class="form-field__required">*</span></span>
-              <input type="email" class="form-field__input" id="connectEmailAddress" placeholder="e.g. name@domain.com" autocomplete="off">
-              <p class="field-error" id="connectEmailAddressErr" style="display:none;">Email Address is required.</p>
-            </div>
-            <div class="form-field">
               <span class="form-field__label">Tenant ID <span class="form-field__required">*</span></span>
               <input type="text" class="form-field__input" id="connectTenantId" placeholder="e.g. xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" autocomplete="off">
               <p class="field-error" id="connectTenantIdErr" style="display:none;">Tenant ID is required.</p>
@@ -2543,7 +2543,7 @@
         </div>
         <div class="modal__footer">
           <div class="modal__actions" style="width:100%;">
-            <button class="btn-cancel" type="button" id="connectBackBtn" style="flex:1;">Back</button>
+            <button class="btn-cancel" type="button" id="connectBackBtn" style="flex:1;">Cancel</button>
             <button class="btn-primary" type="button" id="connectManualSubmitBtn" style="flex:1;">Connect Mailbox</button>
           </div>
         </div>
@@ -3174,11 +3174,9 @@
     var connectResultRetryBtn = document.getElementById('connectResultRetryBtn');
     var connectResultDoneBtn = document.getElementById('connectResultDoneBtn');
 
-    var fEmailAddress = document.getElementById('connectEmailAddress');
     var fTenantId     = document.getElementById('connectTenantId');
     var fClientId     = document.getElementById('connectClientId');
     var fClientSecret = document.getElementById('connectClientSecret');
-    var errEmailAddress = document.getElementById('connectEmailAddressErr');
     var errTenantId     = document.getElementById('connectTenantIdErr');
     var errClientId     = document.getElementById('connectClientIdErr');
     var errClientSecret = document.getElementById('connectClientSecretErr');
@@ -3188,12 +3186,12 @@
     function isValidEmail(val) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val); }
 
     function resetConnectForm() {
-      [fEmailAddress, fTenantId, fClientId, fClientSecret].forEach(function (f) {
+      [fTenantId, fClientId, fClientSecret].forEach(function (f) {
         f.value = '';
         f.style.borderColor = '';
         f.style.boxShadow = '';
       });
-      [errEmailAddress, errTenantId, errClientId, errClientSecret].forEach(function (e) { e.style.display = 'none'; });
+      [errTenantId, errClientId, errClientSecret].forEach(function (e) { e.style.display = 'none'; });
       selectedProvider = 'microsoft';
       connectStep1.style.display = '';
       connectStep2.style.display = 'none';
@@ -3239,17 +3237,10 @@
     });
 
     connectBackBtn.addEventListener('click', function() {
-      document.getElementById('connectMailboxTitle').textContent = 'Connect Mailbox';
-      connectStep2.style.display = 'none';
-      connectStep1.style.display = '';
-      [fEmailAddress, fTenantId, fClientId, fClientSecret].forEach(function(f) { f.value = ''; f.style.borderColor = ''; f.style.boxShadow = ''; });
-      [errEmailAddress, errTenantId, errClientId, errClientSecret].forEach(function(e) { e.style.display = 'none'; });
-      connectStep2Form.style.display = '';
-      connectVerifying.style.display = 'none';
-      connectResult.style.display = 'none';
+      closeModal(connectMailboxOverlay);
+      resetConnectForm();
     });
 
-    fEmailAddress.addEventListener('input', function () { clearError(fEmailAddress, errEmailAddress); });
     fTenantId.addEventListener('input',     function () { clearError(fTenantId,     errTenantId); });
     fClientId.addEventListener('input',     function () { clearError(fClientId,     errClientId); });
     fClientSecret.addEventListener('input', function () { clearError(fClientSecret, errClientSecret); });
@@ -3317,13 +3308,11 @@
     }
 
     connectManualSubmitBtn.addEventListener('click', function () {
-      var emailVal   = fEmailAddress.value.trim();
       var tenantVal  = fTenantId.value.trim();
       var clientVal  = fClientId.value.trim();
       var secretVal  = fClientSecret.value.trim();
       var valid = true;
 
-      if (!emailVal)   { markError(fEmailAddress, errEmailAddress); valid = false; }
       if (!tenantVal)  { markError(fTenantId,     errTenantId);     valid = false; }
       if (!clientVal)  { markError(fClientId,     errClientId);     valid = false; }
       if (!secretVal)  { markError(fClientSecret, errClientSecret); valid = false; }
@@ -3337,7 +3326,7 @@
       /* Simulate async verification — succeed 70%, fail 30% */
       setTimeout(function() {
         var success = Math.random() < 0.7;
-        showConnectResult(success, emailVal);
+        showConnectResult(success, fTenantId.value.trim());
       }, 7000);
     });
 
