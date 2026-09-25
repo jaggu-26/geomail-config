@@ -1173,6 +1173,21 @@
     font-family: inherit;
   }
 
+  .btn-add-users-inline {
+    background: var(--blue-10, rgba(24,82,254,0.06));
+    border: 1px solid var(--brand);
+    border-radius: var(--radius-sm);
+    padding: 4px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--brand);
+    cursor: pointer;
+    font-family: inherit;
+    white-space: nowrap;
+    transition: background 120ms ease;
+  }
+  .btn-add-users-inline:hover { background: rgba(24,82,254,0.12); }
+
   /* Generic primary modal button (GeoMail Configuration modals) */
   .btn-primary {
     background: var(--brand);
@@ -3416,18 +3431,24 @@
     function addMailboxRow(email, providerKey, emails) {
       var row = document.createElement('div');
       row.className = 'table-row';
-      row.dataset.status = 'active';
+      row.dataset.status = 'inactive';
       var now = new Date();
       var lastConnected = now.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) +
         ', ' + now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
       row.innerHTML =
         '<div class="table-cell table-cell--mailbox">' + email + '</div>' +
         '<div class="table-cell table-cell--provider">' + PROVIDER_MARKUP[providerKey] + '</div>' +
-        '<div class="table-cell" data-status-cell><span class="status-chip status-chip--active">Active</span></div>' +
+        '<div class="table-cell" data-status-cell><span style="color:var(--prim-grey-300);font-size:14px;">—</span></div>' +
         '<div class="table-cell">' + lastConnected + '</div>' +
-        '<div class="table-cell">' + buildEmailCell(emails || []) + '</div>' +
+        '<div class="table-cell table-cell--emails"><button class="btn-add-users-inline" type="button">+ Add Users</button></div>' +
         '<div class="table-cell table-cell--actions"><button class="row-action-btn" type="button" aria-label="Row actions"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg></button></div>';
       mailboxTableBody.appendChild(row);
+      /* Wire the inline Add Users button to open the modal for this row */
+      row.querySelector('.btn-add-users-inline').addEventListener('click', function() {
+        activePopoverRow = row;
+        resetAddUsersForm();
+        openModal(addUsersOverlay);
+      });
       document.body.setAttribute('data-has-mailboxes', 'true');
     }
 
