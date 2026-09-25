@@ -693,6 +693,14 @@
   .status-chip--active { background: var(--prim-green-100); color: var(--prim-green-800); }
   .status-chip--inactive { background: var(--grey-100); color: var(--color-text-placeholder); }
   .status-chip--danger { background: var(--prim-red-100); color: var(--prim-red-600); }
+  .status-chip--revoked { background: #FEF3C7; color: #B45309; }
+  .reauth-inline-link {
+    background: none; border: none; padding: 0;
+    font-family: inherit; font-size: 12px; font-weight: 600;
+    color: var(--brand); cursor: pointer; text-decoration: underline;
+    white-space: nowrap; line-height: 1;
+  }
+  .reauth-inline-link:hover { color: var(--prim-blue-700); }
   .status-chip--blue { background: var(--prim-blue-50); color: var(--prim-blue-700); }
   .check-now-link {
     font-size: 12px;
@@ -2512,6 +2520,21 @@
                   </button>
                 </div>
               </div>
+              <div class="table-row" data-status="revoked">
+                <div class="table-cell table-cell--mailbox">charter@geoserves.com</div>
+                <div class="table-cell table-cell--provider"><img src="Assets/logo-microsoft.svg" width="16" height="16" alt="">Microsoft</div>
+                <div class="table-cell table-cell--status" data-status-cell style="gap:8px;display:flex;align-items:center;">
+                  <span class="status-chip status-chip--revoked">Revoked</span>
+                  <button type="button" class="reauth-inline-link">Re-authenticate</button>
+                </div>
+                <div class="table-cell table-cell--last-connected">01 Aug 2026</div>
+                <div class="table-cell table-cell--emails"><div class="email-cell" data-emails='["charter-ops@geoserves.com"]'></div></div>
+                <div class="table-cell table-cell--actions">
+                  <button class="row-action-btn" type="button" aria-label="Row actions">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
+                  </button>
+                </div>
+              </div>
             </div>
             </div><!-- /.mailbox-table-section -->
           </div>
@@ -3103,11 +3126,11 @@
     function openRowPopoverFor(btn, row) {
       activePopoverRow = row;
       var status = row.dataset.status;
-      var isDisconnected = status === 'disconnected';
+      var isLocked = status === 'disconnected' || status === 'revoked';
       // Show/hide sections based on status
-      mailboxEnabledRow.style.display = isDisconnected ? 'none' : 'flex';
-      popoverDisconnectedSection.style.display = isDisconnected ? 'block' : 'none';
-      if (!isDisconnected) {
+      mailboxEnabledRow.style.display = isLocked ? 'none' : 'flex';
+      popoverDisconnectedSection.style.display = isLocked ? 'block' : 'none';
+      if (!isLocked) {
         mailboxEnabledToggle.classList.toggle('toggle--on', status === 'active');
       }
       var rect = btn.getBoundingClientRect();
@@ -3142,8 +3165,8 @@
     mailboxEnabledToggle.addEventListener('click', function () {
       if (!activePopoverRow) return;
       var currentStatus = activePopoverRow.dataset.status;
-      // Only allow toggle between active <-> inactive (not disconnected)
-      if (currentStatus === 'disconnected') return;
+      // Only allow toggle between active <-> inactive (not disconnected/revoked)
+      if (currentStatus === 'disconnected' || currentStatus === 'revoked') return;
       var makeEnabled = currentStatus === 'inactive';
       var statusCell = activePopoverRow.querySelector('[data-status-cell]');
       if (makeEnabled) {
@@ -3178,12 +3201,21 @@
 
     function reauthenticateRowEl(row) {
       var statusCell = row.querySelector('[data-status-cell]');
-      // Clear any inline styles from the disconnected state layout
       statusCell.style.gap = '';
+      statusCell.style.display = '';
       statusCell.innerHTML = '<span class="status-chip status-chip--active">Active</span>';
       row.dataset.status = 'active';
       showToast('Mailbox re-authenticated.');
     }
+
+    /* Inline Re-authenticate link on Revoked rows */
+    document.addEventListener('click', function(e) {
+      var link = e.target.closest('.reauth-inline-link');
+      if (link) {
+        var row = link.closest('.table-row');
+        if (row) openReauthModal(row);
+      }
+    });
 
     document.getElementById('closeReauthModalBtn').addEventListener('click', function() { closeModal(reauthModalOverlay); });
     document.getElementById('cancelReauthBtn').addEventListener('click', function() { closeModal(reauthModalOverlay); });
