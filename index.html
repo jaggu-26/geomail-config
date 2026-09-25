@@ -2657,13 +2657,13 @@
             </div>
             <span>Microsoft 365</span>
           </button>
-          <button class="provider-card provider-card--disabled" type="button" data-provider="google" disabled>
+          <button class="provider-card" type="button" data-provider="google">
             <div class="provider-card__logo">
               <img src="Assets/logo-google.svg" alt="Google">
             </div>
             <span>Google Workspace</span>
           </button>
-          <button class="provider-card provider-card--disabled" type="button" data-provider="imap" disabled>
+          <button class="provider-card" type="button" data-provider="imap">
             <div class="provider-card__logo">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/></svg>
             </div>
@@ -3366,6 +3366,7 @@
       document.querySelectorAll('.provider-card').forEach(function(c) {
         c.classList.toggle('provider-card--selected', c.dataset.provider === 'microsoft');
       });
+      connectManualSubmitBtn.textContent = setupBtnLabels.microsoft;
     }
 
     function markError(input, errEl) {
@@ -3380,12 +3381,19 @@
       errEl.style.display = 'none';
     }
 
+    var setupBtnLabels = {
+      microsoft: 'Setup Microsoft 365 Mailbox',
+      google:    'Setup Google Workspace Mailbox',
+      imap:      'Setup IMAP / SMTP Mailbox'
+    };
+
     document.querySelectorAll('.provider-card').forEach(function(card) {
       card.addEventListener('click', function() {
         selectedProvider = card.dataset.provider;
         document.querySelectorAll('.provider-card').forEach(function(c) {
           c.classList.toggle('provider-card--selected', c === card);
         });
+        connectManualSubmitBtn.textContent = setupBtnLabels[selectedProvider] || 'Setup Mailbox';
       });
     });
 
