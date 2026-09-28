@@ -2396,6 +2396,11 @@
   .provider-mailbox-names { white-space: nowrap; color: var(--prim-grey-600); }
   .provider-mailbox-names__more { margin-left: 4px; }
 
+  .provider-card__tag { font-size: 11px; font-weight: 600; color: var(--prim-grey-400); min-height: 14px; }
+  .provider-card:disabled { cursor: not-allowed; background: var(--prim-grey-50); color: var(--prim-grey-400); }
+  .provider-card:disabled .provider-card__logo { opacity: 0.5; }
+  .provider-card--done .provider-card__tag { color: var(--prim-green-700); }
+
   /* Provider mailboxes popup */
   .provider-mailbox-names {
     background: none; border: none; padding: 0; font-family: inherit; font-size: 12px; cursor: pointer; text-align: left;
@@ -3543,10 +3548,17 @@
           <button class="provider-card provider-card--selected" type="button" data-prov-select="microsoft">
             <div class="provider-card__logo"><img src="Assets/logo-microsoft.svg" alt=""></div>
             <span>Microsoft 365</span>
+            <span class="provider-card__tag" data-prov-tag></span>
           </button>
           <button class="provider-card" type="button" data-prov-select="sedna">
             <div class="provider-card__logo"><span class="sedna-mark sedna-mark--lg" aria-hidden="true">S</span></div>
             <span>Sedna</span>
+            <span class="provider-card__tag" data-prov-tag></span>
+          </button>
+          <button class="provider-card provider-card--soon" type="button" disabled aria-disabled="true">
+            <div class="provider-card__logo"><img src="Assets/logo-google.svg" alt=""></div>
+            <span>Google Workspace</span>
+            <span class="provider-card__tag">Coming soon</span>
           </button>
         </div>
 
@@ -3562,7 +3574,7 @@
         </div>
 
         <!-- Form fields below the icon -->
-        <div class="form-row" style="flex-direction:column;align-items:stretch;gap:14px;width:100%;margin-top:0;">
+        <div class="form-row" id="pSetupFields" style="flex-direction:column;align-items:stretch;gap:14px;width:100%;margin-top:0;">
           <!-- Microsoft / Google fields -->
           <div id="pSetupMsFields">
             <div style="display:flex;flex-direction:column;gap:14px;">
@@ -3600,6 +3612,7 @@
             </div>
           </div>
         </div>
+        <div class="pmb-notice pmb-notice--muted" id="pSetupAllSet" role="status" hidden>All supported providers are already set up. Each provider is a one-time setup — delete an existing provider from its actions menu to set it up again.</div>
         <div id="pSetupResultMsg" style="display:none;padding:10px 14px;border-radius:7px;font-size:12px;margin-top:4px;"></div>
         <p style="font-size:12px;color:var(--prim-grey-400);margin:0;align-self:flex-start;">Credentials are encrypted at rest and never stored in plain text.</p>
       </div>
@@ -3926,6 +3939,7 @@
       confirmConfirmDeleteBtn.textContent = confirmLabel;
       openModal(confirmDeleteOverlay);
     }
+    window.geoMailConfirm = openConfirmAction;
 
     function openConfirmDelete(row, title, subtitle) {
       openConfirmAction(title, subtitle, 'Delete', function () {
@@ -5011,9 +5025,11 @@
             '<span class="provider-mailbox-names__first">' + esc(names[0]) + '</span>' +
             (names.length > 1 ? '<span class="provider-mailbox-names__more">+' + (names.length - 1) + ' more</span>' : '') + '</button>'
           : '<span class="provider-last-updated">—</span>';
-        var action = p.status === 'enabled'  ? item('data-prov-action="disable" data-id="' + p.id + '"', 'Disable', true)
+        var action = (p.status === 'enabled'  ? item('data-prov-action="disable" data-id="' + p.id + '"', 'Disable')
                    : p.status === 'disabled' ? item('data-prov-action="enable" data-id="' + p.id + '"', 'Enable')
-                   : item('data-prov-action="reauth" data-id="' + p.id + '"', 'Re-authenticate');
+                   : item('data-prov-action="reauth" data-id="' + p.id + '"', 'Re-authenticate')) +
+          '<div class="provider-kebab-divider"></div>' +
+          item('data-prov-action="delete" data-id="' + p.id + '"', 'Delete', true);
         return '<tr data-provider-id="' + p.id + '">' +
           '<td><button class="provider-row-label-btn" type="button" data-prov-action="edit" data-id="' + p.id + '" title="Edit provider details">' +
             '<span class="provider-row-name"><span class="provider-row-logo">' + t.icon(14) + '</span>' +
@@ -5028,11 +5044,13 @@
       document.getElementById('providerCount').textContent = providers.length;
       var open = availableTypes();
       var addBtn = document.getElementById('openAddProviderBtn');
-      addBtn.disabled = !open.length;
-      addBtn.title = open.length ? '' : 'All supported providers are already set up';
-      document.getElementById('providerHint').textContent = open.length
-        ? 'Each provider is a one-time setup for your organization. Not yet set up: ' + open.map(function (k) { return TYPES[k].label; }).join(', ') + '.'
-        : 'Each provider is a one-time setup. All supported providers (Microsoft 365, Sedna) are set up — use the actions menu to manage them.';
+      addBtn.disabled = false;
+      addBtn.title = '';
+      document.getElementById('providerHint').textContent = !providers.length
+        ? 'No providers yet. Add Microsoft 365 or Sedna to start connecting mailboxes.'
+        : open.length
+          ? 'Each provider is a one-time setup for your organization. Not yet set up: ' + open.map(function (k) { return TYPES[k].label; }).join(', ') + '.'
+          : 'Each provider is a one-time setup. All supported providers are set up — manage or delete them from the actions menu.';
       document.getElementById('providerAlertDot').hidden = !providers.some(function (x) { return x.status === 'revoked'; });
     }
     function availableTypes() {
@@ -5158,7 +5176,18 @@
       var p = providerById(parseInt(btn.dataset.id, 10));
       if (!p) return;
       var action = btn.dataset.provAction;
-      if (action === 'edit') openProviderModal('edit', p);
+      if (action === 'delete') {
+        var owned = mailboxes.filter(function (m) { return m.providerId === p.id; });
+        var impact = owned.length
+          ? 'Its ' + plural(owned.length, 'mailbox', 'mailboxes') + ' and their user mappings will be removed and stop syncing. Previously ingested emails are retained.'
+          : 'No mailboxes are connected to it.';
+        window.geoMailConfirm('Delete ' + p.name + '?', impact + ' You can set it up again later.', 'Delete Provider', function () {
+          providers.splice(providers.indexOf(p), 1);
+          mailboxes = mailboxes.filter(function (m) { return m.providerId !== p.id; });
+          renderAll();
+          toast(p.name + ' deleted' + (owned.length ? ' with ' + plural(owned.length, 'mailbox', 'mailboxes') + '.' : '.'));
+        });
+      } else if (action === 'edit') openProviderModal('edit', p);
       else if (action === 'reauth') openProviderModal('reauth', p);
       else if (action === 'disable') {
         setProviderStatus(p, 'disabled'); renderAll();
@@ -5202,13 +5231,20 @@
         mode === 'add' ? 'Add Mail Application Provider' : mode === 'edit' ? 'Edit Provider Details' : 'Re-authenticate Provider';
       pmValidateBtn.textContent = mode === 'add' ? 'Validate & Connect' : mode === 'edit' ? 'Validate & Save' : 'Validate & Re-authenticate';
       var open = availableTypes();
-      if (mode === 'add' && !open.length) return;
-      var showCards = mode === 'add' && open.length > 1;
-      document.getElementById('providerSetupCards').style.display = showCards ? '' : 'none';
-      document.getElementById('providerSetupCardsLabel').style.display = showCards ? '' : 'none';
+      var adding = mode === 'add';
+      var allSet = adding && !open.length;
+      document.getElementById('providerSetupCards').style.display = adding ? '' : 'none';
+      document.getElementById('providerSetupCardsLabel').style.display = adding ? '' : 'none';
       document.querySelectorAll('[data-prov-select]').forEach(function (c) {
-        c.style.display = open.indexOf(c.dataset.provSelect) > -1 ? '' : 'none';
+        var done = open.indexOf(c.dataset.provSelect) === -1;
+        c.disabled = done;
+        c.classList.toggle('provider-card--done', done);
+        c.querySelector('[data-prov-tag]').textContent = done ? 'Already set up' : '';
       });
+      document.getElementById('providerSetupBanner').style.display = allSet ? 'none' : '';
+      document.getElementById('pSetupFields').style.display = allSet ? 'none' : '';
+      document.getElementById('pSetupAllSet').hidden = !allSet;
+      pmValidateBtn.disabled = allSet;
       var creds = p ? p.creds : {};
       setVal('pSetupTenantId', creds.tenant);
       setVal('pSetupClientId', creds.client);
@@ -5222,7 +5258,8 @@
       document.getElementById('pSetupResultMsg').style.display = 'none';
       pmForm.style.display = '';
       pmVerifying.style.display = 'none';
-      applyType(p ? p.type : open[0]);
+      applyType(p ? p.type : (open[0] || 'microsoft'));
+      if (allSet) document.querySelectorAll('[data-prov-select]').forEach(function (c) { c.classList.remove('provider-card--selected'); });
       window.openModal(pmOverlay);
     }
     document.getElementById('openAddProviderBtn').addEventListener('click', function () { openProviderModal('add'); });
@@ -5230,6 +5267,7 @@
     document.getElementById('cancelProviderSetupBtn').addEventListener('click', function () { window.closeModal(pmOverlay); });
 
     pmValidateBtn.addEventListener('click', function () {
+      if (pmMode === 'add' && availableTypes().indexOf(pmType) === -1) return;
       var secretRequired = pmMode !== 'edit';
       var ok = true;
       var creds;
