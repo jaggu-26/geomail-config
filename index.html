@@ -2207,131 +2207,12 @@
   }
 
   /* ===== Colour Picker ===== */
-  .colour-picker-wrap {
-    position: fixed;
-    top: 16px;
-    right: 20px;
-    z-index: 10001;
-    display: flex;
-    align-items: center;
-  }
-  .colour-picker-btn {
-    width: 32px;
-    height: 32px;
-    border-radius: 9999px;
-    border: 1px solid var(--prim-grey-200, #E2E8F0);
-    background: var(--prim-grey-100, #F1F5F9);
-    box-shadow: 0 2px 8px rgba(0,0,0,.08);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    color: var(--prim-grey-500, #64748B);
-    transition: color 150ms, background 150ms;
-  }
-  .colour-picker-btn:hover { background: var(--prim-grey-200); color: var(--prim-grey-700); }
-  .colour-picker-btn svg { width: 16px; height: 16px; flex-shrink: 0; }
-  .colour-dropdown {
-    position: absolute;
-    top: calc(100% + 8px);
-    right: 0;
-    background: var(--card, #fff);
-    border: 1px solid var(--prim-grey-200, #E2E8F0);
-    border-radius: 12px;
-    box-shadow: 0 8px 24px rgba(0,0,0,.12);
-    padding: 12px;
-    display: none;
-    flex-direction: column;
-    gap: 10px;
-    min-width: 140px;
-  }
-  .colour-dropdown--open { display: flex; }
-  .colour-dropdown__label {
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--prim-grey-400);
-    text-transform: uppercase;
-    letter-spacing: .04em;
-    margin: 0;
-  }
-  .colour-swatches {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-  }
-  .colour-option-btn {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    width: 100%;
-    padding: 8px 10px;
-    border-radius: 8px;
-    border: none;
-    background: none;
-    font-family: inherit;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--prim-grey-600, #475569);
-    cursor: pointer;
-    text-align: left;
-    transition: background 120ms;
-  }
-  .colour-option-btn:hover { background: var(--prim-grey-50, #F8FAFC); }
-  .colour-option-btn--active {
-    background: var(--prim-blue-50, #EEF2FF);
-    color: var(--brand, #1852FE);
-    font-weight: 600;
-  }
-  .colour-option-btn__check {
-    width: 16px;
-    height: 16px;
-    margin-left: auto;
-    flex-shrink: 0;
-    color: var(--brand, #1852FE);
-    opacity: 0;
-  }
-  .colour-option-btn--active .colour-option-btn__check { opacity: 1; }
-
-  /* ===== Mailbox empty state (Option 2) ===== */
-  .mailbox-empty-state {
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 20px;
-    padding: 64px 32px;
-    text-align: center;
-  }
-  .mailbox-empty-state__illustration { color: var(--prim-grey-200, #E2E8F0); }
-  .mailbox-empty-state__illustration svg { width: 88px; height: 88px; }
-  .mailbox-empty-state__title {
-    font-size: 15px;
-    font-weight: 700;
-    color: var(--prim-grey-700, #334155);
-    margin: 0;
-  }
-  .mailbox-empty-state__sub {
-    font-size: 13px;
-    color: var(--prim-grey-400, #94A3B8);
-    margin: 0;
-    line-height: 1.6;
-  }
 
   /* Show/hide based on active option */
-  body[data-option="2"] .mailbox-table-section  { display: none !important; }
-  body[data-option="2"] .mailbox-empty-state    { display: none; }
-  body[data-option="2"] #openConnectMailboxBtn  { display: none !important; }
-  body[data-option="1"] .mailbox-table-section  { display: contents; }
-  body[data-option="1"] .mailbox-empty-state    { display: none; }
-  body[data-option="1"] .mail-providers-section,
-  body[data-option="1"] .mb-v2-section          { display: none; }
   body[data-option="2"] .mail-providers-section,
   body[data-option="2"] .mb-v2-section          { display: block; }
 
   /* ===== Option 2: Mail Integration ===== */
-  .opt2-label { display: none; }
-  body[data-option="2"] .opt1-label { display: none; }
-  body[data-option="2"] .opt2-label { display: inline; }
   body[data-option="2"] [data-mi-panel]:not(.is-active) { display: none; }
   .mi-subtabs { display: none; gap: 24px; padding: 0 20px; border-bottom: 1px solid var(--prim-grey-100); }
   body[data-option="2"] .mi-subtabs { display: flex; }
@@ -2686,31 +2567,7 @@
   .provider-setup-step-indicator span::before { content: '→'; margin-right: 6px; }
 </style>
 </head>
-<body data-option="1">
-<!-- Colour Picker -->
-<div class="colour-picker-wrap" id="colourPickerWrap">
-  <button class="colour-picker-btn" type="button" id="colourPickerBtn" aria-label="Change accent colour" aria-expanded="false">
-    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10c.83 0 1.5-.67 1.5-1.5 0-.39-.15-.74-.39-1.01-.23-.26-.38-.61-.38-.99 0-.83.67-1.5 1.5-1.5H16c2.76 0 5-2.24 5-5 0-4.42-4.03-8-9-8z" fill="currentColor" opacity=".15"/>
-      <circle cx="6.5" cy="11.5" r="1.5" fill="#EF4444"/>
-      <circle cx="9.5" cy="7.5" r="1.5" fill="#F59E0B"/>
-      <circle cx="14.5" cy="7.5" r="1.5" fill="#10B981"/>
-      <circle cx="17.5" cy="11.5" r="1.5" fill="#3B81F6"/>
-    </svg>
-  </button>
-  <div class="colour-dropdown" id="colourDropdown" role="listbox" aria-label="Design options">
-    <p class="colour-dropdown__label">Design Option</p>
-    <button class="colour-option-btn colour-option-btn--active" type="button" data-option-btn="1">
-      Option 1
-      <svg class="colour-option-btn__check" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 8 6 12 14 4"/></svg>
-    </button>
-    <button class="colour-option-btn" type="button" data-option-btn="2">
-      Option 2
-      <svg class="colour-option-btn__check" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 8 6 12 14 4"/></svg>
-    </button>
-  </div>
-</div>
-
+<body data-option="2">
 <div class="app">
 
   <!-- Outer collapsed nav rail -->
@@ -2799,15 +2656,11 @@
         <div class="table-group">
           <div class="table-filters">
             <div class="bunker-tabs" id="geoMailTabs">
-              <button class="chip-tab chip-tab--active" type="button" data-tab="mailboxes"><span class="opt1-label">Mailboxes</span><span class="opt2-label">Mail Integration</span></button>
+              <button class="chip-tab chip-tab--active" type="button" data-tab="mailboxes">Mail Integration</button>
               <button class="chip-tab" type="button" data-tab="sop">SOP Documents</button>
               <button class="chip-tab" type="button" data-tab="checklists">Checklist Templates</button>
             </div>
             <div class="table-filters__right" id="geoMailTabActions">
-              <button class="btn-add-user" type="button" id="openConnectMailboxBtn" data-for-tab="mailboxes">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19" stroke-linecap="round"/><line x1="5" y1="12" x2="19" y2="12" stroke-linecap="round"/></svg>
-                <span>Setup a new Mailbox</span>
-              </button>
               <button class="btn-add-user" type="button" id="openUploadSopBtn" data-for-tab="sop" style="display: none;">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19" stroke-linecap="round"/><line x1="5" y1="12" x2="19" y2="12" stroke-linecap="round"/></svg>
                 <span>Upload SOP</span>
@@ -2876,63 +2729,6 @@
               </table></div>
               <div class="mb-v2-empty" id="mbV2Empty" style="display:none;">No mailboxes yet. Add a mailbox under an enabled provider to start syncing.</div>
             </div>
-
-            <!-- Table (Option 1) -->
-            <div class="mailbox-table-section">
-            <div class="table-head-row">
-              <div class="table-head-cell table-head-cell--mailbox">Mailbox</div>
-              <div class="table-head-cell table-head-cell--provider">Provider</div>
-              <div class="table-head-cell table-head-cell--status">Status</div>
-              <div class="table-head-cell table-head-cell--last-connected">Last Connected</div>
-              <div class="table-head-cell table-head-cell--emails">Emails Associated</div>
-              <div class="table-head-cell table-head-cell--actions" style="width:48px;"></div>
-            </div>
-            <div class="table-body" id="mailboxTableBody">
-              <div class="table-row" data-status="active">
-                <div class="table-cell table-cell--mailbox" title="ops@geoserves.com">ops@geoserves.com</div>
-                <div class="table-cell table-cell--provider"><img src="Assets/logo-microsoft.svg" width="16" height="16" alt="">Microsoft</div>
-                <div class="table-cell table-cell--status" data-status-cell>
-                  <span class="status-chip status-chip--active">Active</span>
-                </div>
-                <div class="table-cell table-cell--last-connected">12 Jun 2026</div>
-                <div class="table-cell table-cell--emails"><div class="email-cell" data-emails='["captain@fleet.com","ops-team@geoserves.com","charterer@cargo.io","dispatch@fleet.io"]'></div></div>
-                <div class="table-cell table-cell--actions">
-                  <button class="row-action-btn" type="button" aria-label="Row actions">
-                    <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
-                  </button>
-                </div>
-              </div>
-              <div class="table-row" data-status="inactive">
-                <div class="table-cell table-cell--mailbox" title="notify@geoserves.com">notify@geoserves.com</div>
-                <div class="table-cell table-cell--provider"><img src="Assets/logo-microsoft.svg" width="16" height="16" alt="">Microsoft</div>
-                <div class="table-cell table-cell--status" data-status-cell>
-                  <span class="status-chip status-chip--inactive">Inactive</span>
-                </div>
-                <div class="table-cell table-cell--last-connected">—</div>
-                <div class="table-cell table-cell--emails"><div class="email-cell" data-emails='["notify-ops@geoserves.com"]'></div></div>
-                <div class="table-cell table-cell--actions">
-                  <button class="row-action-btn" type="button" aria-label="Row actions">
-                    <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
-                  </button>
-                </div>
-              </div>
-              <div class="table-row" data-status="revoked">
-                <div class="table-cell table-cell--mailbox" title="charter@geoserves.com">charter@geoserves.com</div>
-                <div class="table-cell table-cell--provider"><img src="Assets/logo-microsoft.svg" width="16" height="16" alt="">Microsoft</div>
-                <div class="table-cell table-cell--status" data-status-cell>
-                  <span class="status-chip status-chip--revoked">Revoked</span>
-                </div>
-                <div class="table-cell table-cell--last-connected">01 Aug 2026</div>
-                <div class="table-cell table-cell--emails"><div class="email-cell" data-emails='["charter-ops@geoserves.com"]'></div></div>
-                <div class="table-cell table-cell--actions">
-                  <button class="row-action-btn" type="button" aria-label="Row actions">
-                    <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
-                  </button>
-                </div>
-              </div>
-            </div>
-            </div><!-- /.mailbox-table-section -->
-          </div>
 
           <!-- Tab: SOP Documents -->
           <div class="geomail-tab-panel" id="tabPanelSop" style="display: none;">
@@ -3250,130 +3046,6 @@
   </div>
 </div>
 
-<!-- Connect Mailbox modal -->
-<div class="modal-overlay" id="connectMailboxOverlay">
-  <div class="modal modal--md" role="dialog" aria-modal="true" aria-labelledby="connectMailboxTitle">
-    <div class="modal__header">
-      <h2 class="modal__title" id="connectMailboxTitle">Setup your Mailbox</h2>
-      <button class="modal__close" type="button" id="closeConnectMailboxBtn" aria-label="Close">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18" stroke-linecap="round"/><line x1="6" y1="6" x2="18" y2="18" stroke-linecap="round"/></svg>
-      </button>
-    </div>
-
-    <!-- Main form (provider + credentials, single step) -->
-    <div id="connectMainForm">
-      <div class="modal__content">
-        <p style="font-size:13px;font-weight:500;color:var(--prim-grey-400);margin:0;align-self:flex-start;">Select your email provider</p>
-        <div class="provider-card-grid">
-          <button class="provider-card provider-card--selected" type="button" data-provider="microsoft">
-            <div class="provider-card__logo">
-              <img src="Assets/logo-microsoft.svg" alt="Microsoft">
-            </div>
-            <span>Microsoft 365</span>
-          </button>
-          <button class="provider-card" type="button" data-provider="google">
-            <div class="provider-card__logo">
-              <img src="Assets/logo-google.svg" alt="Google">
-            </div>
-            <span>Google Workspace</span>
-          </button>
-          <button class="provider-card" type="button" data-provider="imap">
-            <div class="provider-card__logo">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/></svg>
-            </div>
-            <span>IMAP / SMTP</span>
-          </button>
-        </div>
-        <p class="modal__subtitle" style="margin-top:4px;margin-bottom:4px;">Provide the following details to authenticate and connect a mailbox to GeoMail.</p>
-        <div class="form-row" style="flex-direction: column; align-items: stretch; gap: 16px; width: 100%;">
-          <div class="form-field">
-            <span class="form-field__label">Tenant ID <span class="form-field__required">*</span></span>
-            <input type="text" class="form-field__input" id="connectTenantId" placeholder="e.g. xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" autocomplete="off">
-            <p class="field-error" id="connectTenantIdErr" style="display:none;">Tenant ID is required.</p>
-          </div>
-          <div class="form-field">
-            <span class="form-field__label">Client ID <span class="form-field__required">*</span></span>
-            <input type="text" class="form-field__input" id="connectClientId" placeholder="e.g. xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" autocomplete="off">
-            <p class="field-error" id="connectClientIdErr" style="display:none;">Client ID is required.</p>
-          </div>
-          <div class="form-field">
-            <span class="form-field__label">Client Secret Code <span class="form-field__required">*</span></span>
-            <input type="password" class="form-field__input" id="connectClientSecret" placeholder="Enter client secret code" autocomplete="new-password">
-            <p class="field-error" id="connectClientSecretErr" style="display:none;">Client Secret Code is required.</p>
-          </div>
-        </div>
-        <p style="font-size:12px;color:var(--prim-grey-400);margin:0;align-self:flex-start;">Credentials are encrypted at rest and never stored in plain text.</p>
-      </div>
-      <div class="modal__footer">
-        <div class="modal__actions" style="width:100%;">
-          <button class="btn-cancel" type="button" id="cancelConnectMailboxBtn" style="flex:1;">Cancel</button>
-          <button class="btn-primary" type="button" id="connectManualSubmitBtn" style="flex:1;">Setup Microsoft 365 Mailbox</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Verifying state -->
-    <div id="connectVerifying" style="display:none;">
-      <div class="connect-state">
-        <div class="connect-spinner"></div>
-        <p class="connect-state__title">Verifying details...</p>
-        <p class="connect-state__msg">Please wait while we authenticate your mailbox.</p>
-      </div>
-    </div>
-
-    <!-- Result state -->
-    <div id="connectResult" style="display:none;">
-      <div class="connect-state">
-        <div class="connect-result-icon" id="connectResultIcon"></div>
-        <p class="connect-state__title" id="connectResultTitle"></p>
-        <p class="connect-state__msg" id="connectResultMsg"></p>
-      </div>
-      <div class="modal__footer">
-        <div class="modal__actions" style="width:100%;">
-          <button class="btn-cancel" type="button" id="connectResultRetryBtn" style="flex:1; display:none;">Try Again</button>
-          <button class="btn-primary" type="button" id="connectResultDoneBtn" style="flex:1;">Done</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Hidden stubs to keep JS variable references valid -->
-    <div id="connectStep1" style="display:none;"></div>
-    <div id="connectStep2" style="display:none;"><div id="connectStep2Form" style="display:none;"></div></div>
-  </div>
-</div>
-
-<!-- Add Users modal -->
-<div class="modal-overlay" id="addUsersOverlay">
-  <div class="modal modal--sm" role="dialog" aria-modal="true" aria-labelledby="addUsersTitle">
-    <div class="modal__header">
-      <h2 class="modal__title" id="addUsersTitle">Add Users</h2>
-      <button class="modal__close" type="button" id="closeAddUsersBtn" aria-label="Close">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18" stroke-linecap="round"/><line x1="6" y1="6" x2="18" y2="18" stroke-linecap="round"/></svg>
-      </button>
-    </div>
-    <div class="modal__content" style="align-items:stretch;">
-      <p style="font-size:14px;color:var(--prim-grey-400);margin:0;">Add email addresses and set permissions for this mailbox.</p>
-      <div class="add-users-perm-header">
-        <span class="add-users-perm-header__email">Email Address</span>
-        <span class="add-users-perm-header__perms">Permissions</span>
-      </div>
-      <div id="addUsersRowList">
-        <!-- rows injected by JS -->
-      </div>
-      <button class="add-users-add-btn" type="button" id="addUsersAddRowBtn">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        Add
-      </button>
-    </div>
-    <div class="modal__footer">
-      <div class="modal__actions" style="width:100%;">
-        <button class="btn-cancel" type="button" id="cancelAddUsersBtn" style="flex:1;">Cancel</button>
-        <button class="btn-primary" type="button" id="confirmAddUsersBtn" style="flex:1;">Save</button>
-      </div>
-    </div>
-  </div>
-</div>
-
 <!-- Upload SOP modal -->
 <div class="modal-overlay" id="uploadSopOverlay">
   <div class="modal modal--sm" role="dialog" aria-modal="true" aria-labelledby="uploadSopTitle">
@@ -3468,40 +3140,7 @@
   </div>
 </div>
 
-<!-- Generic confirm modal (reused for Remove Mailbox / Delete SOP) -->
-<!-- Re-authenticate modal -->
-<div class="modal-overlay" id="reauthModalOverlay">
-  <div class="modal modal--sm" role="dialog" aria-modal="true" aria-labelledby="reauthModalTitle">
-    <div class="modal__header">
-      <h2 class="modal__title" id="reauthModalTitle">Re-authenticate Mailbox</h2>
-      <button class="modal__close" type="button" id="closeReauthModalBtn" aria-label="Close">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18" stroke-linecap="round"/><line x1="6" y1="6" x2="18" y2="18" stroke-linecap="round"/></svg>
-      </button>
-    </div>
-    <div class="modal__content" style="align-items:stretch;">
-      <p id="reauthModalDesc" style="font-size:14px;color:var(--prim-grey-500);margin:0;line-height:1.6;"></p>
-      <div class="form-row" style="flex-direction:column;align-items:stretch;gap:16px;width:100%;">
-        <div class="form-field">
-          <span class="form-field__label">Client ID <span class="form-field__required">*</span></span>
-          <input type="text" class="form-field__input" id="reauthClientId" placeholder="Enter client ID" autocomplete="off">
-          <p class="field-error" id="reauthClientIdErr" style="display:none;">Client ID is required.</p>
-        </div>
-        <div class="form-field">
-          <span class="form-field__label">Client Secret <span class="form-field__required">*</span></span>
-          <input type="password" class="form-field__input" id="reauthClientSecret" placeholder="Enter client secret" autocomplete="new-password">
-          <p class="field-error" id="reauthClientSecretErr" style="display:none;">Client Secret is required.</p>
-        </div>
-      </div>
-    </div>
-    <div class="modal__footer">
-      <div class="modal__actions" style="width:100%;">
-        <button class="btn-cancel" type="button" id="cancelReauthBtn" style="flex:1;">Cancel</button>
-        <button class="btn-primary" type="button" id="confirmReauthBtn" style="flex:1;">Re-authenticate</button>
-      </div>
-    </div>
-  </div>
-</div>
-
+<!-- Generic confirm modal (Delete provider / Delete SOP) -->
 <div class="modal-overlay" id="confirmDeleteOverlay">
   <div class="modal modal--xs" role="alertdialog" aria-modal="true" aria-labelledby="confirmDeleteTitle">
     <div class="delete-modal__header">
@@ -3642,39 +3281,6 @@
   <span id="toastMessage"></span>
 </div>
 
-<!-- Row actions popover (Mailboxes tab) -->
-<div class="row-actions-popover" id="rowActionsPopover">
-
-  <!-- Active / Inactive: toggle -->
-  <div class="popover-toggle-row" id="mailboxEnabledRow">
-    <span>Mailbox Enabled</span>
-    <button class="toggle" type="button" id="mailboxEnabledToggle" aria-label="Toggle mailbox enabled"></button>
-  </div>
-
-  <!-- Disconnected: notice + re-auth -->
-  <div id="popoverDisconnectedSection" style="display:none;">
-    <div class="popover-disconnected-notice">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-      <span>Re-authenticate to enable or disable this mailbox.</span>
-    </div>
-    <div class="popover-list" style="margin-top:4px;">
-      <button class="popover-item" type="button" id="popoverReauthBtn">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4v6h6M20 20v-6h-6" stroke-linecap="round" stroke-linejoin="round"/><path d="M4.6 15a8 8 0 0014.3 2.3M19.4 9A8 8 0 005 6.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <span>Re-authenticate</span>
-      </button>
-    </div>
-  </div>
-
-  <div class="popover-divider"></div>
-
-  <div class="popover-list">
-    <button class="popover-item" type="button" id="addUsersBtn">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 10.25C13.5188 10.25 14.75 9.01878 14.75 7.5C14.75 5.98122 13.5188 4.75 12 4.75C10.4812 4.75 9.25 5.98122 9.25 7.5C9.25 9.01878 10.4812 10.25 12 10.25Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M16.0001 14.0002C15.0001 13 14.0401 12.75 12.0001 12.75C9.44911 12.75 7.26111 14.28 6.29111 16.47C5.92611 17.295 6.37811 18.244 7.23811 18.515C8.46311 18.901 10.0841 19.249 12.0001 19.249C12.4221 19.249 12.8241 19.226 13.2171 19.196" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M20.25 17.75H15.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M17.75 20.25L17.75 15.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      <span>Add Users</span>
-    </button>
-  </div>
-</div>
-
 <div class="row-actions-popover" id="sopActionsPopover">
   <div class="popover-list">
     <button class="popover-item" type="button" id="sopReplaceBtn">
@@ -3794,137 +3400,7 @@
       t.addEventListener('click', function () { activateTab(t.dataset.tab); });
     });
 
-    /* ================= MAILBOXES TAB ================= */
-    var mailboxTableBody = document.getElementById('mailboxTableBody');
-    var rowActionsPopover = document.getElementById('rowActionsPopover');
-    var mailboxEnabledRow = document.getElementById('mailboxEnabledRow');
-    var mailboxEnabledToggle = document.getElementById('mailboxEnabledToggle');
-    var popoverDisconnectedSection = document.getElementById('popoverDisconnectedSection');
-    var popoverReauthBtn = document.getElementById('popoverReauthBtn');
-    var activePopoverRow = null;
-
-    function closeRowPopover() {
-      rowActionsPopover.classList.remove('row-actions-popover--open');
-      activePopoverRow = null;
-    }
-
-    function openRowPopoverFor(btn, row) {
-      activePopoverRow = row;
-      var status = row.dataset.status;
-      var isLocked = status === 'disconnected' || status === 'revoked';
-      // Show/hide sections based on status
-      mailboxEnabledRow.style.display = isLocked ? 'none' : 'flex';
-      popoverDisconnectedSection.style.display = isLocked ? 'block' : 'none';
-      if (!isLocked) {
-        mailboxEnabledToggle.classList.toggle('toggle--on', status === 'active');
-      }
-      var rect = btn.getBoundingClientRect();
-      rowActionsPopover.classList.add('row-actions-popover--open');
-      var popRect = rowActionsPopover.getBoundingClientRect();
-      var left = rect.right - popRect.width;
-      var top = rect.bottom + 4;
-      if (left < 4) left = 4;
-      if (top + popRect.height > window.innerHeight - 4) top = rect.top - popRect.height - 4;
-      rowActionsPopover.style.left = left + 'px';
-      rowActionsPopover.style.top = top + 'px';
-    }
-
-    document.addEventListener('click', function (e) {
-      var kebab = e.target.closest('#mailboxTableBody .row-action-btn');
-      if (kebab) {
-        var row = kebab.closest('.table-row');
-        if (activePopoverRow === row && rowActionsPopover.classList.contains('row-actions-popover--open')) {
-          closeRowPopover();
-        } else {
-          openRowPopoverFor(kebab, row);
-        }
-        return;
-      }
-      if (!rowActionsPopover.contains(e.target)) closeRowPopover();
-    });
-
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape') closeRowPopover();
-    });
-
-    mailboxEnabledToggle.addEventListener('click', function () {
-      if (!activePopoverRow) return;
-      var currentStatus = activePopoverRow.dataset.status;
-      // Only allow toggle between active <-> inactive (not disconnected/revoked)
-      if (currentStatus === 'disconnected' || currentStatus === 'revoked') return;
-      var makeEnabled = currentStatus === 'inactive';
-      var statusCell = activePopoverRow.querySelector('[data-status-cell]');
-      if (makeEnabled) {
-        statusCell.innerHTML = '<span class="status-chip status-chip--active">Active</span>';
-        activePopoverRow.dataset.status = 'active';
-      } else {
-        statusCell.innerHTML = '<span class="status-chip status-chip--inactive">Inactive</span>';
-        activePopoverRow.dataset.status = 'inactive';
-      }
-      mailboxEnabledToggle.classList.toggle('toggle--on', makeEnabled);
-      showToast(makeEnabled ? 'Mailbox enabled.' : 'Mailbox disabled.');
-    });
-
-    var reauthModalOverlay  = document.getElementById('reauthModalOverlay');
-    var reauthModalDesc     = document.getElementById('reauthModalDesc');
-    var reauthClientIdInput = document.getElementById('reauthClientId');
-    var reauthClientSecretInput = document.getElementById('reauthClientSecret');
-    var reauthClientIdErr   = document.getElementById('reauthClientIdErr');
-    var reauthClientSecretErr = document.getElementById('reauthClientSecretErr');
-    var reauthTargetRow     = null;
-
-    function openReauthModal(row) {
-      reauthTargetRow = row;
-      var email = row.querySelector('.table-cell--mailbox').textContent.trim();
-      reauthModalDesc.textContent = 'The token for ' + email + ' has expired or was revoked. Re-authenticate to resume syncing.';
-      reauthClientIdInput.value = '';
-      reauthClientSecretInput.value = '';
-      [reauthClientIdErr, reauthClientSecretErr].forEach(function(e) { e.style.display = 'none'; });
-      [reauthClientIdInput, reauthClientSecretInput].forEach(function(f) { f.style.borderColor = ''; f.style.boxShadow = ''; });
-      openModal(reauthModalOverlay);
-    }
-
-    function reauthenticateRowEl(row) {
-      var statusCell = row.querySelector('[data-status-cell]');
-      statusCell.style.gap = '';
-      statusCell.style.display = '';
-      statusCell.innerHTML = '<span class="status-chip status-chip--active">Active</span>';
-      row.dataset.status = 'active';
-      showToast('Mailbox re-authenticated.');
-    }
-
-    /* Inline Re-authenticate link on Revoked rows */
-    document.addEventListener('click', function(e) {
-      var link = e.target.closest('.reauth-inline-link');
-      if (link) {
-        var row = link.closest('.table-row');
-        if (row) openReauthModal(row);
-      }
-    });
-
-    document.getElementById('closeReauthModalBtn').addEventListener('click', function() { closeModal(reauthModalOverlay); });
-    document.getElementById('cancelReauthBtn').addEventListener('click', function() { closeModal(reauthModalOverlay); });
-
-    document.getElementById('confirmReauthBtn').addEventListener('click', function() {
-      var cid = reauthClientIdInput.value.trim();
-      var csec = reauthClientSecretInput.value.trim();
-      var valid = true;
-      if (!cid)  { markError(reauthClientIdInput,     reauthClientIdErr);     valid = false; }
-      if (!csec) { markError(reauthClientSecretInput, reauthClientSecretErr); valid = false; }
-      if (!valid) return;
-      closeModal(reauthModalOverlay);
-      if (reauthTargetRow) reauthenticateRowEl(reauthTargetRow);
-      reauthTargetRow = null;
-    });
-
-    /* Re-authenticate (row actions popover, for Disconnected rows) */
-    popoverReauthBtn.addEventListener('click', function () {
-      var row = activePopoverRow;
-      closeRowPopover();
-      if (row) openReauthModal(row);
-    });
-
-    /* Remove Mailbox -> generic confirm modal */
+    /* Generic confirm modal */
     var confirmDeleteOverlay = document.getElementById('confirmDeleteOverlay');
     var confirmDeleteTitle = document.getElementById('confirmDeleteTitle');
     var confirmDeleteSubtitle = document.getElementById('confirmDeleteSubtitle');
@@ -3948,299 +3424,12 @@
       });
     }
 
-    /* Add Users modal */
-    var addUsersOverlay   = document.getElementById('addUsersOverlay');
-    var addUsersRowList   = document.getElementById('addUsersRowList');
-    var addUsersTargetRow = null;
-    var addUsersRowCount  = 0;
-
-    function createAddUserRow(focusInput) {
-      var id = ++addUsersRowCount;
-      var row = document.createElement('div');
-      row.className = 'add-users-row';
-      var perms = ['Read', 'Write', 'Send'];
-      var radioName = 'perm_' + id;
-      row.innerHTML =
-        '<input type="email" class="add-users-row__email" placeholder="email@example.com" autocomplete="off">' +
-        '<div class="add-users-row__perms">' +
-          perms.map(function(p, i) {
-            return '<label class="add-users-perm-radio">' +
-              '<input type="radio" name="' + radioName + '" value="' + p.toLowerCase() + '"' + (i === 0 ? ' checked' : '') + '>' +
-              p + '</label>';
-          }).join('') +
-        '</div>' +
-        '<button type="button" class="add-users-row__remove" aria-label="Remove row">' +
-          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="14" height="14"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' +
-        '</button>';
-      row.querySelector('.add-users-row__remove').addEventListener('click', function() {
-        row.remove();
-        if (!addUsersRowList.children.length) createAddUserRow(false);
-      });
-      addUsersRowList.appendChild(row);
-      if (focusInput !== false) row.querySelector('.add-users-row__email').focus();
-      return row;
-    }
-
-    function resetAddUsersForm() {
-      addUsersRowList.innerHTML = '';
-      addUsersRowCount = 0;
-      addUsersTargetRow = null;
-      createAddUserRow(false);
-    }
-
-    document.getElementById('addUsersAddRowBtn').addEventListener('click', function() {
-      createAddUserRow(true);
-    });
-
-    document.getElementById('addUsersBtn').addEventListener('click', function() {
-      addUsersTargetRow = activePopoverRow;
-      closeRowPopover();
-      resetAddUsersForm();
-      openModal(addUsersOverlay);
-    });
-
-    document.getElementById('closeAddUsersBtn').addEventListener('click', function() { closeModal(addUsersOverlay); resetAddUsersForm(); });
-    document.getElementById('cancelAddUsersBtn').addEventListener('click', function() { closeModal(addUsersOverlay); resetAddUsersForm(); });
-
-    document.getElementById('confirmAddUsersBtn').addEventListener('click', function() {
-      var rows = addUsersRowList.querySelectorAll('.add-users-row');
-      var newEmails = [];
-      var hasError = false;
-      rows.forEach(function(r) {
-        var inp = r.querySelector('.add-users-row__email');
-        var val = inp.value.trim();
-        inp.classList.remove('add-users-row__email--error');
-        if (!val) return;
-        if (!isValidEmail(val)) { inp.classList.add('add-users-row__email--error'); hasError = true; return; }
-        newEmails.push(val);
-      });
-      if (hasError) return;
-      if (!newEmails.length) return;
-      if (addUsersTargetRow) {
-        var cell = addUsersTargetRow.querySelector('.table-cell--emails');
-        if (cell) {
-          var existing = cell.querySelector('.email-cell');
-          var currentEmails = [];
-          if (existing && existing.dataset.emails) {
-            try { currentEmails = JSON.parse(existing.dataset.emails); } catch(e) {}
-          }
-          var merged = currentEmails.concat(newEmails.filter(function(e) { return currentEmails.indexOf(e) === -1; }));
-          cell.innerHTML = buildEmailCell(merged);
-        }
-      }
-      closeModal(addUsersOverlay);
-      resetAddUsersForm();
-      showToast('Users added.');
-    });
-
     cancelConfirmDeleteBtn.addEventListener('click', function () { pendingConfirmCallback = null; closeModal(confirmDeleteOverlay); });
 
     confirmConfirmDeleteBtn.addEventListener('click', function () {
       if (pendingConfirmCallback) pendingConfirmCallback();
       pendingConfirmCallback = null;
       closeModal(confirmDeleteOverlay);
-    });
-
-    /* ---------- Email cell renderer ---------- */
-    function buildEmailCell(emails) {
-      var addBtn = '<button class="btn-add-users-inline" type="button" style="flex-shrink:0;" title="Add Users">+ Add</button>';
-      if (!emails || !emails.length) {
-        return '<div class="email-cell" style="gap:8px;">' + addBtn + '</div>';
-      }
-      var first = '<span class="email-cell__text" title="' + emails[0] + '">' + emails[0] + '</span>';
-      var more = '';
-      if (emails.length > 1) {
-        var hidden = emails.slice(1);
-        more = '<span class="email-more-btn stage-count-tip" data-tip="' + hidden.join(', ') + '">+' + hidden.length + ' email' + (hidden.length > 1 ? 's' : '') + '</span>';
-      }
-      return '<div class="email-cell" style="gap:8px;">' + first + more + addBtn + '</div>';
-    }
-
-    document.querySelectorAll('.email-cell[data-emails]').forEach(function(cell) {
-      var emails = JSON.parse(cell.getAttribute('data-emails'));
-      var row = cell.closest('.table-row');
-      var wrapper = document.createElement('div');
-      wrapper.innerHTML = buildEmailCell(emails);
-      cell.replaceWith(wrapper.firstChild);
-      if (row) {
-        var newBtn = row.querySelector('.btn-add-users-inline');
-        if (newBtn) {
-          newBtn.addEventListener('click', function() {
-            activePopoverRow = row;
-            resetAddUsersForm();
-            openModal(addUsersOverlay);
-          });
-        }
-      }
-    });
-
-    /* ---------- Connect Mailbox modal ---------- */
-    var connectMailboxOverlay = document.getElementById('connectMailboxOverlay');
-    var openConnectMailboxBtn = document.getElementById('openConnectMailboxBtn');
-    var connectManualSubmitBtn = document.getElementById('connectManualSubmitBtn');
-    var connectMainForm = document.getElementById('connectMainForm');
-    var connectStep1 = document.getElementById('connectStep1');
-    var connectStep2 = document.getElementById('connectStep2');
-    var connectStep2Form = document.getElementById('connectStep2Form');
-    var connectVerifying = document.getElementById('connectVerifying');
-    var connectResult = document.getElementById('connectResult');
-    var connectResultIcon = document.getElementById('connectResultIcon');
-    var connectResultTitle = document.getElementById('connectResultTitle');
-    var connectResultMsg = document.getElementById('connectResultMsg');
-    var connectResultRetryBtn = document.getElementById('connectResultRetryBtn');
-    var connectResultDoneBtn = document.getElementById('connectResultDoneBtn');
-
-    var fTenantId     = document.getElementById('connectTenantId');
-    var fClientId     = document.getElementById('connectClientId');
-    var fClientSecret = document.getElementById('connectClientSecret');
-    var errTenantId     = document.getElementById('connectTenantIdErr');
-    var errClientId     = document.getElementById('connectClientIdErr');
-    var errClientSecret = document.getElementById('connectClientSecretErr');
-
-    var selectedProvider = 'microsoft';
-
-    function isValidEmail(val) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val); }
-
-    function resetConnectForm() {
-      [fTenantId, fClientId, fClientSecret].forEach(function (f) {
-        f.value = '';
-        f.style.borderColor = '';
-        f.style.boxShadow = '';
-      });
-      [errTenantId, errClientId, errClientSecret].forEach(function (e) { e.style.display = 'none'; });
-      selectedProvider = 'microsoft';
-      connectMainForm.style.display = '';
-      connectVerifying.style.display = 'none';
-      connectResult.style.display = 'none';
-      document.querySelectorAll('.provider-card').forEach(function(c) {
-        c.classList.toggle('provider-card--selected', c.dataset.provider === 'microsoft');
-      });
-      connectManualSubmitBtn.textContent = setupBtnLabels.microsoft;
-    }
-
-    function markError(input, errEl) {
-      input.style.borderColor = 'var(--color-danger)';
-      input.style.boxShadow = '0 0 0 3px rgba(220,38,37,0.15)';
-      errEl.style.display = 'block';
-    }
-
-    function clearError(input, errEl) {
-      input.style.borderColor = '';
-      input.style.boxShadow = '';
-      errEl.style.display = 'none';
-    }
-
-    var setupBtnLabels = {
-      microsoft: 'Setup Microsoft 365 Mailbox',
-      google:    'Setup Google Workspace Mailbox',
-      imap:      'Setup IMAP / SMTP Mailbox'
-    };
-
-    document.querySelectorAll('.provider-card').forEach(function(card) {
-      card.addEventListener('click', function() {
-        selectedProvider = card.dataset.provider;
-        document.querySelectorAll('.provider-card').forEach(function(c) {
-          c.classList.toggle('provider-card--selected', c === card);
-        });
-        connectManualSubmitBtn.textContent = setupBtnLabels[selectedProvider] || 'Setup Mailbox';
-      });
-    });
-
-
-    fTenantId.addEventListener('input',     function () { clearError(fTenantId,     errTenantId); });
-    fClientId.addEventListener('input',     function () { clearError(fClientId,     errClientId); });
-    fClientSecret.addEventListener('input', function () { clearError(fClientSecret, errClientSecret); });
-
-    openConnectMailboxBtn.addEventListener('click', function () {
-      resetConnectForm();
-      openModal(connectMailboxOverlay);
-    });
-
-    var PROVIDER_MARKUP = {
-      microsoft: '<img src="Assets/logo-microsoft.svg" width="16" height="16" alt="">Microsoft',
-      google: '<img src="Assets/logo-google.svg" width="16" height="16" alt="">Google',
-      imap: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="6" rx="1.5"/><rect x="3" y="14" width="18" height="6" rx="1.5"/><line x1="7" y1="7" x2="7.01" y2="7" stroke-linecap="round"/><line x1="7" y1="17" x2="7.01" y2="17" stroke-linecap="round"/></svg>IMAP / SMTP'
-    };
-
-    function addMailboxRow(email, providerKey, emails) {
-      var row = document.createElement('div');
-      row.className = 'table-row';
-      row.dataset.status = 'inactive';
-      var now = new Date();
-      var lastConnected = now.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) +
-        ', ' + now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-      row.innerHTML =
-        '<div class="table-cell table-cell--mailbox" title="' + email + '">' + email + '</div>' +
-        '<div class="table-cell table-cell--provider">' + PROVIDER_MARKUP[providerKey] + '</div>' +
-        '<div class="table-cell" data-status-cell><span style="color:var(--prim-grey-300);font-size:14px;">—</span></div>' +
-        '<div class="table-cell">' + lastConnected + '</div>' +
-        '<div class="table-cell table-cell--emails"><button class="btn-add-users-inline" type="button" title="Add Users">+ Add</button></div>' +
-        '<div class="table-cell table-cell--actions"><button class="row-action-btn" type="button" aria-label="Row actions"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg></button></div>';
-      mailboxTableBody.appendChild(row);
-      /* Wire the inline Add Users button to open the modal for this row */
-      row.querySelector('.btn-add-users-inline').addEventListener('click', function() {
-        activePopoverRow = row;
-        resetAddUsersForm();
-        openModal(addUsersOverlay);
-      });
-      document.body.setAttribute('data-has-mailboxes', 'true');
-    }
-
-    function showConnectResult(success, emailVal) {
-      connectVerifying.style.display = 'none';
-      connectResult.style.display = '';
-      if (success) {
-        connectResultIcon.className = 'connect-result-icon connect-result-icon--success';
-        connectResultIcon.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
-        connectResultTitle.textContent = 'Mailbox Connected!';
-        connectResultMsg.textContent = emailVal + ' has been successfully connected to GeoMail.';
-        connectResultRetryBtn.style.display = 'none';
-        connectResultDoneBtn.textContent = 'Done';
-        connectResultDoneBtn.onclick = function() {
-          addMailboxRow(emailVal, selectedProvider, []);
-          closeModal(connectMailboxOverlay);
-          resetConnectForm();
-          showToast('Mailbox connected.');
-        };
-      } else {
-        connectResultIcon.className = 'connect-result-icon connect-result-icon--error';
-        connectResultIcon.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
-        connectResultTitle.textContent = 'Connection Failed';
-        connectResultMsg.textContent = 'We couldn\'t authenticate your mailbox. Please check your credentials and try again.';
-        connectResultRetryBtn.style.display = '';
-        connectResultRetryBtn.onclick = function() {
-          connectResult.style.display = 'none';
-          connectMainForm.style.display = '';
-        };
-        connectResultDoneBtn.textContent = 'Close';
-        connectResultDoneBtn.onclick = function() {
-          closeModal(connectMailboxOverlay);
-          resetConnectForm();
-        };
-      }
-    }
-
-    connectManualSubmitBtn.addEventListener('click', function () {
-      var tenantVal  = fTenantId.value.trim();
-      var clientVal  = fClientId.value.trim();
-      var secretVal  = fClientSecret.value.trim();
-      var valid = true;
-
-      if (!tenantVal)  { markError(fTenantId,     errTenantId);     valid = false; }
-      if (!clientVal)  { markError(fClientId,     errClientId);     valid = false; }
-      if (!secretVal)  { markError(fClientSecret, errClientSecret); valid = false; }
-
-      if (!valid) return;
-
-      /* Show verifying state */
-      connectMainForm.style.display = 'none';
-      connectVerifying.style.display = '';
-
-      /* Simulate async verification — succeed 70%, fail 30% */
-      setTimeout(function() {
-        var success = Math.random() < 0.7;
-        showConnectResult(success, fTenantId.value.trim());
-      }, 7000);
     });
 
     /* ================= SOP DOCUMENTS TAB ================= */
@@ -4484,7 +3673,7 @@
     document.getElementById('sopDeleteBtn').addEventListener('click', function () {
       if (!activeSopRow) return;
       var row = activeSopRow;
-      var docName = row.querySelector('.table-cell--name').textContent;
+      var docName = row.querySelector('.table-cell--name, .table-cell--mailbox').textContent.trim();
       closeSopPopover();
       openConfirmDelete(row, 'Delete SOP', 'Delete "' + docName + '"? This cannot be undone.');
     });
@@ -4881,56 +4070,6 @@
     /* Initial state */
     renderChecklistCards();
     activateTab('mailboxes');
-  })();
-
-  /* Colour Wheel Dropdown — Option Switcher */
-  (function () {
-    var triggerBtn = document.getElementById('colourPickerBtn');
-    var dropdown = document.getElementById('colourDropdown');
-    var optionBtns = document.querySelectorAll('[data-option-btn]');
-
-    triggerBtn.addEventListener('click', function (e) {
-      e.stopPropagation();
-      var open = dropdown.classList.toggle('colour-dropdown--open');
-      triggerBtn.setAttribute('aria-expanded', open);
-    });
-
-    // Set data-has-mailboxes on load if rows already exist
-    if (document.querySelectorAll('#mailboxTableBody .table-row').length > 0) {
-      document.body.setAttribute('data-has-mailboxes', 'true');
-    }
-
-    optionBtns.forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        var opt = btn.getAttribute('data-option-btn');
-        document.body.setAttribute('data-option', opt);
-        // Re-check mailbox rows whenever switching options
-        if (document.querySelectorAll('#mailboxTableBody .table-row').length > 0) {
-          document.body.setAttribute('data-has-mailboxes', 'true');
-        }
-        optionBtns.forEach(function (b) {
-          b.classList.toggle('colour-option-btn--active', b.getAttribute('data-option-btn') === opt);
-        });
-        dropdown.classList.remove('colour-dropdown--open');
-        triggerBtn.setAttribute('aria-expanded', 'false');
-      });
-    });
-
-    document.addEventListener('click', function (e) {
-      if (!document.getElementById('colourPickerWrap').contains(e.target)) {
-        dropdown.classList.remove('colour-dropdown--open');
-        triggerBtn.setAttribute('aria-expanded', 'false');
-      }
-    });
-
-    /* Empty state CTA triggers the same Connect Mailbox modal */
-    var emptyBtn = document.getElementById('emptyStateConnectBtn');
-    if (emptyBtn) {
-      emptyBtn.addEventListener('click', function () {
-        var connectBtn = document.getElementById('openConnectMailboxBtn');
-        if (connectBtn) connectBtn.click();
-      });
-    }
   })();
 
   /* ===== Option 2: Mail Application Providers + Mailbox Management ===== */
