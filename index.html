@@ -2428,45 +2428,49 @@
 
   /* User mapping modal */
   .um-hint { font-size: 12px; line-height: 18px; color: var(--prim-grey-500); margin: 0; }
-  .um-list { display: flex; flex-direction: column; gap: 8px; width: 100%; }
-  .um-row {
-    display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 12px; align-items: center;
-    padding: 10px 12px; border: 1px solid var(--prim-grey-100); border-radius: 8px; background: var(--card);
+  .um-modal { width: 720px; }
+  .um-table { width: 100%; flex-shrink: 0; border: 1px solid var(--prim-grey-100); border-radius: 8px; overflow: hidden; }
+  .um-grid {
+    display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr) 172px 32px;
+    column-gap: 12px; align-items: center; padding: 0 12px;
   }
-  .um-row--error { border-color: var(--danger); background: #FEF1F2; }
+  .um-grid--head {
+    height: 32px; background: var(--prim-grey-50); border-bottom: 1px solid var(--prim-grey-100);
+    font-size: 11px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--prim-grey-400);
+  }
+  .um-grid--row { min-height: 56px; border-bottom: 1px solid var(--prim-grey-100); background: var(--card); }
+  .um-grid--add { min-height: 60px; background: var(--prim-grey-50); }
+  .um-row--error { background: #FEF1F2; }
+  .um-row--error .um-perms { outline: 1px solid var(--danger); outline-offset: 3px; border-radius: 9999px; }
   .um-user { display: flex; align-items: center; gap: 10px; min-width: 0; }
   .um-avatar {
-    width: 30px; height: 30px; border-radius: 9999px; background: #DBEAFE; color: var(--brand);
+    width: 32px; height: 32px; border-radius: 9999px; background: #DBEAFE; color: var(--brand);
     display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0;
   }
-  .um-user__meta { min-width: 0; flex: 1; display: flex; flex-direction: column; gap: 4px; }
-  .um-user__name { font-size: 13px; font-weight: 600; color: var(--prim-grey-800); }
-  .um-email-input {
-    width: 100%; height: 30px; box-sizing: border-box; font-family: inherit; font-size: 12px;
-    color: var(--color-text-default); border: 1px solid var(--prim-grey-200); border-radius: var(--radius-sm);
-    padding: 0 8px; outline: none; background: var(--card);
+  .um-user__name { font-size: 13px; font-weight: 600; color: var(--prim-grey-800); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .um-control {
+    width: 100%; height: 36px; box-sizing: border-box; font-family: inherit; font-size: 13px;
+    color: var(--color-text-default); background-color: var(--card);
+    border: 1px solid var(--prim-grey-200); border-radius: var(--radius-sm); padding: 0 10px; outline: none;
   }
-  .um-email-input:focus { border-color: var(--prim-blue-500); box-shadow: 0 0 0 3px rgba(36,99,235,0.18); }
+  .um-control:focus { border-color: var(--prim-blue-500); box-shadow: 0 0 0 3px rgba(36,99,235,0.18); }
+  .um-control:disabled { background-color: var(--prim-grey-100); color: var(--color-text-placeholder); cursor: not-allowed; }
+  select.um-control { padding-right: 32px; }
   .um-perms { display: flex; gap: 4px; }
   .um-perm {
-    height: 28px; padding: 0 10px; border-radius: 9999px; border: 1px solid var(--prim-grey-200);
+    height: 32px; padding: 0 12px; border-radius: 9999px; border: 1px solid var(--prim-grey-200);
     background: var(--card); color: var(--prim-grey-500); font-family: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
     transition: background 150ms ease, border-color 150ms ease, color 150ms ease;
   }
   .um-perm[aria-pressed="true"] { background: #DBEAFE; border-color: var(--brand); color: var(--brand); }
   .um-remove {
-    width: 30px; height: 30px; border: none; background: none; border-radius: var(--radius-sm);
+    width: 32px; height: 32px; border: none; background: none; border-radius: var(--radius-sm);
     color: var(--prim-grey-400); cursor: pointer; display: flex; align-items: center; justify-content: center;
   }
   .um-remove:hover { background: #FEF1F2; color: var(--danger); }
   .um-remove svg { width: 16px; height: 16px; }
-  .um-add {
-    display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto; gap: 12px; align-items: end;
-    width: 100%; padding: 12px; border: 1px dashed var(--prim-grey-200); border-radius: 8px; box-sizing: border-box;
-  }
-  .um-add .form-field__input { height: 36px; font-size: 13px; }
-  .um-add__btn { height: 36px; padding: 0 16px; }
-  .um-empty { font-size: 12px; color: var(--prim-grey-400); padding: 8px 0; }
+  .um-add__btn { height: 36px; padding: 0 16px; width: 100%; font-size: 13px; }
+  .um-empty { font-size: 12px; color: var(--prim-grey-400); padding: 16px 12px; margin: 0; border-bottom: 1px solid var(--prim-grey-100); }
   .um-section-label { font-size: 12px; font-weight: 600; color: var(--color-text-secondary); margin: 0; }
   .perm-chip {
     display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 9999px;
@@ -2477,9 +2481,12 @@
   .um-view-row__email { font-size: 12px; color: var(--prim-grey-500); }
   .um-view-row__perms { display: flex; gap: 4px; margin-left: auto; flex-wrap: wrap; justify-content: flex-end; }
   @media (max-width: 640px) {
-    .um-row { grid-template-columns: minmax(0, 1fr) auto; }
-    .um-row .um-perms { grid-column: 1 / -1; order: 3; }
-    .um-add { grid-template-columns: 1fr; }
+    .um-grid--head { display: none; }
+    .um-grid--row, .um-grid--add { grid-template-columns: minmax(0, 1fr) 32px; row-gap: 8px; padding: 12px; }
+    .um-grid--row .um-control, .um-grid--row .um-perms { grid-column: 1 / -1; }
+    .um-grid--row .um-remove { grid-row: 1; grid-column: 2; }
+    .um-grid--add > * { grid-column: 1 / -1; }
+    .um-grid--add > span { display: none; }
   }
 
   .btn-add-mailbox {
@@ -3133,7 +3140,7 @@
 
 <!-- Option 2: User mapping modal -->
 <div class="modal-overlay" id="userMappingOverlay">
-  <div class="modal modal--md" role="dialog" aria-modal="true" aria-labelledby="umTitle">
+  <div class="modal modal--md um-modal" role="dialog" aria-modal="true" aria-labelledby="umTitle">
     <div class="modal__header">
       <h2 class="modal__title" id="umTitle">Add / Modify Users</h2>
       <button class="modal__close" type="button" data-modal-cancel aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18" stroke-linecap="round"/><line x1="6" y1="6" x2="18" y2="18" stroke-linecap="round"/></svg></button>
@@ -3141,17 +3148,17 @@
     <div class="modal__content" style="gap:16px;">
       <p class="um-hint">Map GeoOne users to <strong id="umMailboxName"></strong> with their individual email ID and permissions. <strong>Read</strong>: view ingested emails · <strong>Write</strong>: draft replies &amp; add notes · <strong>Send</strong>: send from this mailbox.</p>
       <p class="um-section-label" id="umMappedLabel">Mapped users</p>
-      <div class="um-list" id="umList"></div>
-      <div class="um-add" id="umAddRow">
-        <div class="form-field">
-          <label class="form-field__label" for="umUserSelect">GeoOne User</label>
-          <select class="form-field__input form-field__select" id="umUserSelect"></select>
+      <div class="um-table">
+        <div class="um-grid um-grid--head" aria-hidden="true">
+          <span>User</span><span>Email ID</span><span>Permissions</span><span></span>
         </div>
-        <div class="form-field">
-          <label class="form-field__label" for="umUserEmail">Email ID</label>
-          <input type="email" class="form-field__input" id="umUserEmail" placeholder="e.g. name@company.com" autocomplete="off">
+        <div id="umList"></div>
+        <div class="um-grid um-grid--add" id="umAddRow">
+          <select class="um-control form-field__select" id="umUserSelect" aria-label="GeoOne user"></select>
+          <input type="email" class="um-control" id="umUserEmail" placeholder="Email ID" autocomplete="off" aria-label="Email ID">
+          <button class="btn-primary um-add__btn" type="button" id="umAddBtn">Add User</button>
+          <span></span>
         </div>
-        <button class="btn-primary um-add__btn" type="button" id="umAddBtn">Add</button>
       </div>
       <p class="field-error" id="umError" role="alert" style="display:none;margin:0;"></p>
       <p class="um-hint">Removing a user revokes future access only. Previously ingested emails are retained.</p>
@@ -5396,11 +5403,10 @@
         var btns = Object.keys(PERM_LABELS).map(function (k) {
           return '<button class="um-perm" type="button" data-um-perm="' + k + '" data-idx="' + i + '" aria-pressed="' + !!mu.perms[k] + '">' + PERM_LABELS[k] + '</button>';
         }).join('');
-        return '<div class="um-row' + (errorIdx && errorIdx.indexOf(i) > -1 ? ' um-row--error' : '') + '">' +
-          '<div class="um-user"><span class="um-avatar">' + initials(u.name) + '</span><div class="um-user__meta">' +
-            '<span class="um-user__name">' + esc(u.name) + '</span>' +
-            '<input class="um-email-input" type="email" data-um-email data-idx="' + i + '" value="' + esc(mu.email) + '" aria-label="Email ID for ' + esc(u.name) + '">' +
-          '</div></div>' +
+        return '<div class="um-grid um-grid--row' + (errorIdx && errorIdx.indexOf(i) > -1 ? ' um-row--error' : '') + '">' +
+          '<div class="um-user"><span class="um-avatar">' + initials(u.name) + '</span>' +
+            '<span class="um-user__name" title="' + esc(u.name) + '">' + esc(u.name) + '</span></div>' +
+          '<input class="um-control" type="email" data-um-email data-idx="' + i + '" value="' + esc(mu.email) + '" aria-label="Email ID for ' + esc(u.name) + '">' +
           '<div class="um-perms" role="group" aria-label="Permissions">' + btns + '</div>' +
           '<button class="um-remove" type="button" data-um-remove="' + i + '" aria-label="Remove ' + esc(u.name) + '">' + REMOVE_ICON + '</button>' +
         '</div>';
