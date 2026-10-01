@@ -3263,7 +3263,7 @@
             </div>
           </div>
         </div>
-        <div class="pmb-notice pmb-notice--muted" id="pSetupAllSet" role="status" hidden>All supported providers are already set up. Each provider is a one-time setup — delete an existing provider from its actions menu to set it up again.</div>
+        <div class="pmb-notice pmb-notice--muted" id="pSetupAllSet" role="status" hidden></div>
         <div id="pSetupResultMsg" style="display:none;padding:10px 14px;border-radius:7px;font-size:12px;margin-top:4px;"></div>
         <p style="font-size:12px;color:var(--prim-grey-400);margin:0;align-self:flex-start;">Credentials are encrypted at rest and never stored in plain text.</p>
       </div>
@@ -4107,9 +4107,9 @@
     var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     var toast = function (m) { if (window.geoMailShowToast) window.geoMailShowToast(m); };
 
+    // One mail provider per organization — see availableTypes().
     var providers = [
-      { id: 1, name: 'Microsoft 365', type: 'microsoft', status: 'enabled', lastUpdated: '12 Jun 2026, 09:14', creds: { tenant: '', client: '' } },
-      { id: 2, name: 'Sedna',         type: 'sedna',     status: 'revoked', lastUpdated: '01 Aug 2026, 11:02', creds: { url: '' } }
+      { id: 1, name: 'Microsoft 365', type: 'microsoft', status: 'enabled', lastUpdated: '12 Jun 2026, 09:14', creds: { tenant: '', client: '' } }
     ];
     var USERS = [
       { id: 'u1', name: 'John Samuel',  email: 'johnsam@geoserves.com' },
@@ -4135,12 +4135,12 @@
         { userId: 'u8', email: 'fatima.noor@geoserves.com', perms: perms(true, true, true) },
         { userId: 'u2', email: 'priya.raman@geoserves.com', perms: perms(true, false, false) } ] },
       { id: 105, email: 'bunkers@geoserves.com', providerId: 1, status: 'active', lastUpdated: '22 Sep 2026, 09:30', users: [] },
-      { id: 106, email: 'charter@geoserves.com', providerId: 2, status: 'disconnected', lastUpdated: '01 Aug 2026, 11:02', users: [
+      { id: 106, email: 'charter@geoserves.com', providerId: 1, status: 'disconnected', lastUpdated: '01 Aug 2026, 11:02', users: [
         { userId: 'u5', email: 'daniel.ortiz@geoserves.com', perms: perms(true, true, true) },
         { userId: 'u6', email: 'mei.chen@geoserves.com',     perms: perms(true, false, false) } ] },
-      { id: 107, email: 'fixtures@geoserves.com', providerId: 2, status: 'disconnected', lastUpdated: '01 Aug 2026, 11:02', users: [
+      { id: 107, email: 'fixtures@geoserves.com', providerId: 1, status: 'disconnected', lastUpdated: '01 Aug 2026, 11:02', users: [
         { userId: 'u5', email: 'daniel.ortiz@geoserves.com', perms: perms(true, true, false) } ] },
-      { id: 108, email: 'postfixture@geoserves.com', providerId: 2, status: 'disconnected', lastUpdated: '01 Aug 2026, 11:02', users: [
+      { id: 108, email: 'postfixture@geoserves.com', providerId: 1, status: 'disconnected', lastUpdated: '01 Aug 2026, 11:02', users: [
         { userId: 'u3', email: 'marcus.lee@geoserves.com', perms: perms(true, false, false) },
         { userId: 'u6', email: 'mei.chen@geoserves.com',   perms: perms(true, true, false) },
         { userId: 'u1', email: 'johnsam@geoserves.com',    perms: perms(true, false, false) } ] }
@@ -4195,19 +4195,18 @@
         '</tr>';
       }).join('');
       document.getElementById('providerCount').textContent = providers.length;
-      var open = availableTypes();
       var addBtn = document.getElementById('openAddProviderBtn');
       addBtn.disabled = false;
       addBtn.title = '';
       document.getElementById('providerHint').textContent = !providers.length
-        ? 'No providers yet. Add Microsoft 365, Google Workspace or Sedna to start connecting mailboxes.'
-        : open.length
-          ? 'Each provider is a one-time setup for your organization. Not yet set up: ' + open.map(function (k) { return TYPES[k].label; }).join(', ') + '.'
-          : 'Each provider is a one-time setup. All supported providers are set up — manage or delete them from the actions menu.';
+        ? 'No mail provider connected yet. Choose Microsoft 365, Google Workspace or Sedna to get started.'
+        : 'Your organization can connect one mail provider at a time. Delete ' + esc(providers[0].name) + ' from its actions menu to switch to a different provider.';
       document.getElementById('providerAlertDot').hidden = !providers.some(function (x) { return x.status === 'revoked'; });
     }
     function availableTypes() {
-      return Object.keys(TYPES).filter(function (k) { return !providers.some(function (p) { return p.type === k; }); });
+      // A company connects exactly one mail provider at a time. Once any
+      // provider exists, Add Provider offers nothing until it is deleted.
+      return providers.length ? [] : Object.keys(TYPES);
     }
 
     function mailboxMenu(m) {
@@ -4381,13 +4380,13 @@
 
     function openProviderModal(mode, p) {
       pmMode = mode; pmTarget = p || null;
-      document.getElementById('providerSetupTitle').textContent =
-        mode === 'add' ? 'Add Mail Application Provider' : mode === 'edit' ? 'Edit Provider Details' : 'Re-authenticate Provider';
-      pmValidateBtn.textContent = mode === 'add' ? 'Validate & Connect' : mode === 'edit' ? 'Validate & Save' : 'Validate & Re-authenticate';
       var open = availableTypes();
       var adding = mode === 'add';
       var allSet = adding && !open.length;
       var showPicker = adding && open.length > 0;
+      document.getElementById('providerSetupTitle').textContent =
+        allSet ? 'Mail Provider Already Connected' : mode === 'add' ? 'Add Mail Application Provider' : mode === 'edit' ? 'Edit Provider Details' : 'Re-authenticate Provider';
+      pmValidateBtn.textContent = mode === 'add' ? 'Validate & Connect' : mode === 'edit' ? 'Validate & Save' : 'Validate & Re-authenticate';
       document.getElementById('providerSetupCards').style.display = showPicker ? '' : 'none';
       document.getElementById('providerSetupCardsLabel').style.display = showPicker ? '' : 'none';
       document.querySelectorAll('[data-prov-select]').forEach(function (c) {
@@ -4398,7 +4397,12 @@
       document.getElementById('providerSetupBanner').style.display = allSet ? 'none' : '';
       document.getElementById('pSetupFields').style.display = allSet ? 'none' : '';
       document.getElementById('pSetupAllSet').hidden = !allSet;
-      pmValidateBtn.disabled = allSet;
+      if (allSet) {
+        document.getElementById('pSetupAllSet').textContent = 'Your organization already has a mail provider connected: ' +
+          providers[0].name + '. Delete it from the Mail Providers actions menu first to set up a different provider.';
+      }
+      pmValidateBtn.style.display = allSet ? 'none' : '';
+      document.getElementById('cancelProviderSetupBtn').textContent = allSet ? 'Close' : 'Cancel';
       var creds = p ? p.creds : {};
       setVal('pSetupTenantId', creds.tenant);
       setVal('pSetupClientId', creds.client);
