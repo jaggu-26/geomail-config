@@ -1350,7 +1350,7 @@
   /* Provider selection cards */
   .provider-card-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
     gap: 14px;
     width: 100%;
     padding: 4px 0;
@@ -2277,11 +2277,6 @@
   .provider-mailbox-names { white-space: nowrap; color: var(--prim-grey-600); }
   .provider-mailbox-names__more { margin-left: 4px; }
 
-  .provider-card__tag { font-size: 11px; font-weight: 600; color: var(--prim-grey-400); min-height: 14px; }
-  .provider-card:disabled { cursor: not-allowed; background: var(--prim-grey-50); color: var(--prim-grey-400); }
-  .provider-card:disabled .provider-card__logo { opacity: 0.5; }
-  .provider-card--done .provider-card__tag { color: var(--prim-green-700); }
-
   /* Provider mailboxes popup */
   .provider-mailbox-names {
     background: none; border: none; padding: 0; font-family: inherit; font-size: 12px; cursor: pointer; text-align: left;
@@ -3187,17 +3182,14 @@
           <button class="provider-card provider-card--selected" type="button" data-prov-select="microsoft">
             <div class="provider-card__logo"><img src="Assets/logo-microsoft.svg" alt=""></div>
             <span>Microsoft 365</span>
-            <span class="provider-card__tag" data-prov-tag></span>
+          </button>
+          <button class="provider-card" type="button" data-prov-select="google">
+            <div class="provider-card__logo"><img src="Assets/logo-google.svg" alt=""></div>
+            <span>Google Workspace</span>
           </button>
           <button class="provider-card" type="button" data-prov-select="sedna">
             <div class="provider-card__logo"><span class="sedna-mark sedna-mark--lg" aria-hidden="true">S</span></div>
             <span>Sedna</span>
-            <span class="provider-card__tag" data-prov-tag></span>
-          </button>
-          <button class="provider-card provider-card--soon" type="button" disabled aria-disabled="true">
-            <div class="provider-card__logo"><img src="Assets/logo-google.svg" alt=""></div>
-            <span>Google Workspace</span>
-            <span class="provider-card__tag">Coming soon</span>
           </button>
         </div>
 
@@ -3231,6 +3223,26 @@
                 <span class="form-field__label">Client Secret Code <span class="form-field__required">*</span></span>
                 <input type="password" class="form-field__input" id="pSetupClientSecret" placeholder="Enter client secret value" autocomplete="new-password">
                 <p class="field-error" id="pSetupClientSecretErr" style="display:none;">Client Secret Code is required.</p>
+              </div>
+            </div>
+          </div>
+          <!-- Google Workspace-specific fields -->
+          <div id="pSetupGoogleFields" style="display:none;">
+            <div style="display:flex;flex-direction:column;gap:14px;">
+              <div class="form-field">
+                <span class="form-field__label">Workspace Domain <span class="form-field__required">*</span></span>
+                <input type="text" class="form-field__input" id="pSetupGoogleDomain" placeholder="e.g. geoserves.com" autocomplete="off">
+                <p class="field-error" id="pSetupGoogleDomainErr" style="display:none;">Workspace domain is required.</p>
+              </div>
+              <div class="form-field">
+                <span class="form-field__label">Client ID <span class="form-field__required">*</span></span>
+                <input type="text" class="form-field__input" id="pSetupGoogleClientId" placeholder="e.g. xxxxxxxxxxxx.apps.googleusercontent.com" autocomplete="off">
+                <p class="field-error" id="pSetupGoogleClientIdErr" style="display:none;">Client ID is required.</p>
+              </div>
+              <div class="form-field">
+                <span class="form-field__label">Client Secret <span class="form-field__required">*</span></span>
+                <input type="password" class="form-field__input" id="pSetupGoogleSecret" placeholder="Enter client secret value" autocomplete="new-password">
+                <p class="field-error" id="pSetupGoogleSecretErr" style="display:none;">Client Secret is required.</p>
               </div>
             </div>
           </div>
@@ -4077,6 +4089,8 @@
     var TYPES = {
       microsoft: { label: 'Microsoft 365', desc: 'Azure Active Directory · OAuth 2.0',
         icon: function (size) { return '<img src="Assets/logo-microsoft.svg" alt="" style="width:' + size + 'px;height:' + size + 'px;">'; } },
+      google: { label: 'Google Workspace', desc: 'Google OAuth 2.0',
+        icon: function (size) { return '<img src="Assets/logo-google.svg" alt="" style="width:' + size + 'px;height:' + size + 'px;">'; } },
       sedna: { label: 'Sedna', desc: 'Sedna API integration',
         icon: function (size) { return '<span class="sedna-mark' + (size > 16 ? ' sedna-mark--lg' : '') + '" aria-hidden="true">S</span>'; } }
     };
@@ -4186,7 +4200,7 @@
       addBtn.disabled = false;
       addBtn.title = '';
       document.getElementById('providerHint').textContent = !providers.length
-        ? 'No providers yet. Add Microsoft 365 or Sedna to start connecting mailboxes.'
+        ? 'No providers yet. Add Microsoft 365, Google Workspace or Sedna to start connecting mailboxes.'
         : open.length
           ? 'Each provider is a one-time setup for your organization. Not yet set up: ' + open.map(function (k) { return TYPES[k].label; }).join(', ') + '.'
           : 'Each provider is a one-time setup. All supported providers are set up — manage or delete them from the actions menu.';
@@ -4343,7 +4357,7 @@
     var pmVerifying = document.getElementById('providerVerifying');
     var pmValidateBtn = document.getElementById('providerValidateBtn');
     var pmType = 'microsoft', pmMode = 'add', pmTarget = null;
-    var PM_ERRORS = ['pSetupTenantIdErr', 'pSetupClientIdErr', 'pSetupClientSecretErr', 'pSetupSednaUrlErr', 'pSetupSednaKeyErr'];
+    var PM_ERRORS = ['pSetupTenantIdErr', 'pSetupClientIdErr', 'pSetupClientSecretErr', 'pSetupGoogleDomainErr', 'pSetupGoogleClientIdErr', 'pSetupGoogleSecretErr', 'pSetupSednaUrlErr', 'pSetupSednaKeyErr'];
     function val(id) { return document.getElementById(id).value.trim(); }
     function setVal(id, v) { document.getElementById(id).value = v || ''; }
     function showErr(id, show) { document.getElementById(id).style.display = show ? '' : 'none'; return !show; }
@@ -4355,6 +4369,7 @@
       document.getElementById('providerSetupBannerDesc').textContent = t.desc;
       document.getElementById('providerSetupIconBox').innerHTML = t.icon(24);
       document.getElementById('pSetupMsFields').style.display = type === 'microsoft' ? '' : 'none';
+      document.getElementById('pSetupGoogleFields').style.display = type === 'google' ? '' : 'none';
       document.getElementById('pSetupSednaFields').style.display = type === 'sedna' ? '' : 'none';
       document.querySelectorAll('[data-prov-select]').forEach(function (c) {
         c.classList.toggle('provider-card--selected', c.dataset.provSelect === type);
@@ -4372,13 +4387,13 @@
       var open = availableTypes();
       var adding = mode === 'add';
       var allSet = adding && !open.length;
-      document.getElementById('providerSetupCards').style.display = adding ? '' : 'none';
-      document.getElementById('providerSetupCardsLabel').style.display = adding ? '' : 'none';
+      var showPicker = adding && open.length > 0;
+      document.getElementById('providerSetupCards').style.display = showPicker ? '' : 'none';
+      document.getElementById('providerSetupCardsLabel').style.display = showPicker ? '' : 'none';
       document.querySelectorAll('[data-prov-select]').forEach(function (c) {
-        var done = open.indexOf(c.dataset.provSelect) === -1;
-        c.disabled = done;
-        c.classList.toggle('provider-card--done', done);
-        c.querySelector('[data-prov-tag]').textContent = done ? 'Already set up' : '';
+        // Only ever list providers that aren't set up yet — a configured provider
+        // is managed from its own actions menu, not re-offered here.
+        c.style.display = (adding && open.indexOf(c.dataset.provSelect) === -1) ? 'none' : '';
       });
       document.getElementById('providerSetupBanner').style.display = allSet ? 'none' : '';
       document.getElementById('pSetupFields').style.display = allSet ? 'none' : '';
@@ -4388,10 +4403,14 @@
       setVal('pSetupTenantId', creds.tenant);
       setVal('pSetupClientId', creds.client);
       setVal('pSetupClientSecret', '');
+      setVal('pSetupGoogleDomain', creds.domain);
+      setVal('pSetupGoogleClientId', creds.client);
+      setVal('pSetupGoogleSecret', '');
       setVal('pSetupSednaUrl', creds.url);
       setVal('pSetupSednaKey', '');
       var keepHint = mode === 'edit' ? 'Leave blank to keep the current value' : '';
       document.getElementById('pSetupClientSecret').placeholder = keepHint || 'Enter client secret value';
+      document.getElementById('pSetupGoogleSecret').placeholder = keepHint || 'Enter client secret value';
       document.getElementById('pSetupSednaKey').placeholder = keepHint || 'Enter Sedna API key';
       PM_ERRORS.forEach(function (id) { showErr(id, false); });
       document.getElementById('pSetupResultMsg').style.display = 'none';
@@ -4400,6 +4419,8 @@
       applyType(p ? p.type : (open[0] || 'microsoft'));
       if (allSet) document.querySelectorAll('[data-prov-select]').forEach(function (c) { c.classList.remove('provider-card--selected'); });
       window.openModal(pmOverlay);
+      // If exactly one provider is still available, there's nothing to choose — the picker
+      // stays hidden (see showPicker above) and the form opens straight to that provider.
     }
     document.getElementById('openAddProviderBtn').addEventListener('click', function () { openProviderModal('add'); });
     document.getElementById('closeProviderSetupBtn').addEventListener('click', function () { window.closeModal(pmOverlay); });
@@ -4415,6 +4436,11 @@
         ok = showErr('pSetupTenantIdErr', !creds.tenant) && ok;
         ok = showErr('pSetupClientIdErr', !creds.client) && ok;
         ok = showErr('pSetupClientSecretErr', secretRequired && !val('pSetupClientSecret')) && ok;
+      } else if (pmType === 'google') {
+        creds = { domain: val('pSetupGoogleDomain'), client: val('pSetupGoogleClientId') };
+        ok = showErr('pSetupGoogleDomainErr', !creds.domain) && ok;
+        ok = showErr('pSetupGoogleClientIdErr', !creds.client) && ok;
+        ok = showErr('pSetupGoogleSecretErr', secretRequired && !val('pSetupGoogleSecret')) && ok;
       } else {
         creds = { url: val('pSetupSednaUrl') };
         ok = showErr('pSetupSednaUrlErr', !creds.url) && ok;
