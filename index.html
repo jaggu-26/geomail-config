@@ -2238,7 +2238,21 @@
   .mi-panel-hint { margin: 0; flex: 1; min-width: 0; font-size: 12px; line-height: 18px; color: var(--prim-grey-500); }
   body[data-option="2"] .mail-providers-header { gap: 16px; }
   body[data-option="2"] .mail-providers-section { border-bottom: none; }
-  .btn-add-provider:disabled { opacity: 0.45; cursor: not-allowed; background: none; border-color: var(--prim-grey-200); color: var(--prim-grey-400); }
+
+  /* Empty state: no mail provider connected yet */
+  .mi-empty-state {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    padding: 56px 32px;
+    text-align: center;
+  }
+  .mi-empty-state__illustration { color: var(--prim-grey-200, #E2E8F0); }
+  .mi-empty-state__illustration svg { width: 88px; height: 88px; }
+  .mi-empty-state__title { font-size: 15px; font-weight: 700; color: var(--prim-grey-700, #334155); margin: 0; }
+  .mi-empty-state__sub { font-size: 13px; color: var(--prim-grey-400, #94A3B8); margin: 6px 0 0; line-height: 1.6; }
 
   /* ===== Option 2: Mailbox Management ===== */
   .mb-v2-section { display: none; }
@@ -2427,22 +2441,6 @@
     border-radius: 20px;
     padding: 2px 8px;
   }
-  .btn-add-provider {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: none;
-    border: 1px dashed var(--prim-grey-300);
-    border-radius: var(--radius-sm, 4px);
-    padding: 6px 12px;
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--brand);
-    cursor: pointer;
-    font-family: inherit;
-    transition: border-color 0.15s, background 0.15s;
-  }
-  .btn-add-provider:hover { border-color: var(--brand); background: rgba(24,82,254,0.04); }
   .providers-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
   .providers-table {
     width: max-content;
@@ -2678,14 +2676,10 @@
 
             <!-- Tab 1: Mail Providers (one-time setup per provider) -->
             <div class="mail-providers-section" id="miPanelProviders" role="tabpanel" aria-labelledby="miTabProviders" data-mi-panel="providers">
-              <div class="mail-providers-header">
+              <div class="mail-providers-header" id="miProvidersHeader">
                 <p class="mi-panel-hint" id="providerHint"></p>
-                <button class="btn-add-provider" type="button" id="openAddProviderBtn">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:12px;height:12px;flex-shrink:0;" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19" stroke-linecap="round"/><line x1="5" y1="12" x2="19" y2="12" stroke-linecap="round"/></svg>
-                  Add Provider
-                </button>
               </div>
-              <div class="providers-table-wrap"><table class="providers-table" id="providersTable">
+              <div class="providers-table-wrap" id="miProvidersTableWrap"><table class="providers-table" id="providersTable">
                 <thead>
                   <tr>
                     <th>Provider</th>
@@ -2697,6 +2691,28 @@
                 </thead>
                 <tbody id="providersTableBody"></tbody>
               </table></div>
+
+              <!-- Empty state: no mail provider connected yet -->
+              <div class="mi-empty-state" id="miProvidersEmpty">
+                <div class="mi-empty-state__illustration">
+                  <svg viewBox="0 0 88 88" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="8" y="20" width="72" height="52" rx="6" stroke="currentColor" stroke-width="3.5"/>
+                    <path d="M8 32l33.5 22a5 5 0 0 0 5 0L80 32" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/>
+                    <path d="M28 20V16a4 4 0 0 1 4-4h24a4 4 0 0 1 4 4v4" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/>
+                    <circle cx="66" cy="62" r="12" fill="var(--bg,#F7FAFC)" stroke="currentColor" stroke-width="3"/>
+                    <line x1="66" y1="57" x2="66" y2="67" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                    <line x1="61" y1="62" x2="71" y2="62" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                  </svg>
+                </div>
+                <div>
+                  <p class="mi-empty-state__title">No mail provider connected yet</p>
+                  <p class="mi-empty-state__sub">Connect Microsoft 365, Google Workspace or Sedna to start adding mailboxes.</p>
+                </div>
+                <button class="btn-primary" type="button" id="openAddProviderBtn">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;flex-shrink:0;" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19" stroke-linecap="round"/><line x1="5" y1="12" x2="19" y2="12" stroke-linecap="round"/></svg>
+                  Add Provider
+                </button>
+              </div>
             </div>
 
             <!-- Tab 2: Mailboxes (repeatable) -->
@@ -4195,12 +4211,14 @@
         '</tr>';
       }).join('');
       document.getElementById('providerCount').textContent = providers.length;
-      var addBtn = document.getElementById('openAddProviderBtn');
-      addBtn.disabled = false;
-      addBtn.title = '';
-      document.getElementById('providerHint').textContent = !providers.length
-        ? 'No mail provider connected yet. Choose Microsoft 365, Google Workspace or Sedna to get started.'
-        : 'Your organization can connect one mail provider at a time. Delete ' + esc(providers[0].name) + ' from its actions menu to switch to a different provider.';
+      var hasProvider = providers.length > 0;
+      document.getElementById('miProvidersHeader').style.display = hasProvider ? '' : 'none';
+      document.getElementById('miProvidersTableWrap').style.display = hasProvider ? '' : 'none';
+      document.getElementById('miProvidersEmpty').style.display = hasProvider ? 'none' : 'flex';
+      if (hasProvider) {
+        document.getElementById('providerHint').textContent =
+          'Your organization can connect one mail provider at a time. Delete ' + esc(providers[0].name) + ' from its actions menu to switch to a different provider.';
+      }
       document.getElementById('providerAlertDot').hidden = !providers.some(function (x) { return x.status === 'revoked'; });
     }
     function availableTypes() {
