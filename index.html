@@ -2321,6 +2321,42 @@
   .pmb-row__meta { font-size: 12px; color: var(--prim-grey-500); margin-top: 2px; display: flex; flex-wrap: wrap; gap: 4px 8px; align-items: center; }
   .pmb-row__meta .mb-v2-users-link { font-size: 12px; }
 
+  /* Vessel mapping */
+  .vm-modal { width: 880px; }
+  .vm-toolbar { display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 16px; padding: 12px 24px 0; flex-shrink: 0; }
+  .vm-search { position: relative; }
+  .vm-search svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; color: var(--prim-grey-500); pointer-events: none; }
+  .vm-search .form-field__input { padding-left: 40px; }
+  .vm-meta { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 24px 12px; font-size: 13px; color: var(--color-text-default); flex-shrink: 0; }
+  .vm-selectall { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 500; cursor: pointer; white-space: nowrap; }
+  .vm-selectall input { width: 18px; height: 18px; margin: 0; accent-color: var(--brand); cursor: pointer; }
+  .vm-grid-wrap { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding: 0 24px 16px; }
+  .vm-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+  .vm-card {
+    display: flex; align-items: center; gap: 12px; min-width: 0; padding: 14px 16px; text-align: left;
+    border: 2px solid transparent; border-radius: 6px; background: var(--prim-grey-50);
+    font-family: inherit; cursor: pointer; transition: background 150ms ease, border-color 150ms ease;
+  }
+  .vm-card:hover { background: #E8EEF9; }
+  .vm-card:focus-visible { outline: 2px solid var(--prim-blue-400, #3B81F6); outline-offset: 2px; }
+  .vm-card[aria-pressed="true"] { background: #DBEAFE; border-color: var(--brand); }
+  .vm-card__icon {
+    width: 32px; height: 32px; border-radius: 9999px; background: var(--brand); color: #fff; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .vm-card__icon svg { width: 18px; height: 18px; }
+  .vm-card__text { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+  .vm-card__name { font-size: 15px; font-weight: 600; color: var(--prim-grey-800); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .vm-card__meta { font-size: 12px; color: var(--prim-grey-500); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .vm-empty { grid-column: 1 / -1; padding: 40px 0; text-align: center; font-size: 13px; color: var(--prim-grey-400); }
+  .mv-row__icon { width: 32px; height: 32px; border-radius: 9999px; background: var(--brand); color: #fff; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .mv-row__icon svg { width: 16px; height: 16px; }
+  @media (max-width: 760px) {
+    .vm-toolbar { grid-template-columns: 1fr; gap: 12px; }
+    .vm-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 480px) { .vm-grid { grid-template-columns: 1fr; } }
+
   /* User mapping modal */
   .um-hint { font-size: 12px; line-height: 18px; color: var(--prim-grey-500); margin: 0; }
   .um-modal { width: 720px; }
@@ -2733,6 +2769,7 @@
                     <th>Status</th>
                     <th>Last Updated</th>
                     <th>Users Mapped</th>
+                    <th>Vessels Mapped</th>
                     <th style="width:48px;"></th>
                   </tr>
                 </thead>
@@ -2942,7 +2979,7 @@
       <div class="modal__footer">
         <div class="modal__actions" style="width:100%;justify-content:center;">
           <button class="btn-cancel" type="button" id="addMbV2MapUsersBtn" style="flex:1;">Map Users</button>
-          <button class="btn-cancel" type="button" id="addMbV2AnotherBtn" style="flex:1;">Add Another</button>
+          <button class="btn-cancel" type="button" id="addMbV2MapVesselBtn" style="flex:1;">Map Vessel</button>
           <button class="btn-primary" type="button" id="addMbV2DoneBtn" style="flex:1;">Done</button>
         </div>
       </div>
@@ -3017,6 +3054,51 @@
       <div class="modal__actions" style="width:100%;">
         <button class="btn-cancel" type="button" data-modal-cancel style="flex:1;">Close</button>
         <button class="btn-primary" type="button" id="pmbAddBtn" style="flex:1;">Add Mailbox</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Option 2: Map vessels to a mailbox -->
+<div class="modal-overlay" id="vesselMapOverlay">
+  <div class="modal vm-modal" role="dialog" aria-modal="true" aria-labelledby="vmTitle">
+    <div class="modal__header">
+      <h2 class="modal__title" id="vmTitle">Map Vessels</h2>
+      <button class="modal__close" type="button" data-modal-cancel aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18" stroke-linecap="round"/><line x1="6" y1="6" x2="18" y2="18" stroke-linecap="round"/></svg></button>
+    </div>
+    <div class="vm-toolbar">
+      <div class="vm-search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg>
+        <input type="search" class="form-field__input" id="vmSearch" placeholder="Search Vessel Name" autocomplete="off" aria-label="Search vessel name">
+      </div>
+      <select class="form-field__input form-field__select" id="vmType" aria-label="Vessel type"></select>
+      <select class="form-field__input form-field__select" id="vmSub" aria-label="Sub company"></select>
+    </div>
+    <div class="vm-meta">
+      <span id="vmCounts" aria-live="polite"></span>
+      <label class="vm-selectall"><input type="checkbox" id="vmSelectAll"> Select all</label>
+    </div>
+    <div class="vm-grid-wrap"><div class="vm-grid" id="vmGrid"></div></div>
+    <div class="modal__footer">
+      <div class="modal__actions">
+        <button class="btn-primary" type="button" id="vmSaveBtn" style="min-width:120px;">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Option 2: Mapped vessels (read-only) -->
+<div class="modal-overlay" id="mappedVesselsOverlay">
+  <div class="modal" style="width:560px;" role="dialog" aria-modal="true" aria-labelledby="mvTitle">
+    <div class="modal__header">
+      <h2 class="modal__title" id="mvTitle">Mapped Vessels</h2>
+      <button class="modal__close" type="button" data-modal-cancel aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18" stroke-linecap="round"/><line x1="6" y1="6" x2="18" y2="18" stroke-linecap="round"/></svg></button>
+    </div>
+    <div class="modal__content" style="gap:0;" id="mvList"></div>
+    <div class="modal__footer">
+      <div class="modal__actions" style="width:100%;">
+        <button class="btn-cancel" type="button" data-modal-cancel style="flex:1;">Close</button>
+        <button class="btn-primary" type="button" id="mvManageBtn" style="flex:1;">Add / Modify Vessels</button>
       </div>
     </div>
   </div>
@@ -4142,25 +4224,52 @@
       { id: 101, email: 'ops@geoserves.com', providerId: 1, status: 'active', lastUpdated: '14 Sep 2026, 10:22', users: [
         { userId: 'u1', email: 'johnsam@geoserves.com',     perms: perms(true, true, true) },
         { userId: 'u2', email: 'priya.raman@geoserves.com', perms: perms(true, true, false) },
-        { userId: 'u3', email: 'marcus.lee@geoserves.com',  perms: perms(true, false, false) } ] },
+        { userId: 'u3', email: 'marcus.lee@geoserves.com',  perms: perms(true, false, false) } ], vessels: [1, 2, 3, 4, 5] },
       { id: 102, email: 'notify@geoserves.com', providerId: 1, status: 'inactive', lastUpdated: '03 Sep 2026, 16:40', users: [
-        { userId: 'u4', email: 'aisha.khan@geoserves.com', perms: perms(true, false, false) } ] },
+        { userId: 'u4', email: 'aisha.khan@geoserves.com', perms: perms(true, false, false) } ], vessels: [12, 14] },
       { id: 103, email: 'technical@geoserves.com', providerId: 1, status: 'active', lastUpdated: '09 Sep 2026, 08:05', users: [
-        { userId: 'u7', email: 'lars.nilsen@geoserves.com', perms: perms(true, true, false) } ] },
+        { userId: 'u7', email: 'lars.nilsen@geoserves.com', perms: perms(true, true, false) } ], vessels: [] },
       { id: 104, email: 'crewing@geoserves.com', providerId: 1, status: 'active', lastUpdated: '20 Sep 2026, 13:47', users: [
         { userId: 'u8', email: 'fatima.noor@geoserves.com', perms: perms(true, true, true) },
-        { userId: 'u2', email: 'priya.raman@geoserves.com', perms: perms(true, false, false) } ] },
-      { id: 105, email: 'bunkers@geoserves.com', providerId: 1, status: 'active', lastUpdated: '22 Sep 2026, 09:30', users: [] },
+        { userId: 'u2', email: 'priya.raman@geoserves.com', perms: perms(true, false, false) } ], vessels: [6, 7, 8] },
+      { id: 105, email: 'bunkers@geoserves.com', providerId: 1, status: 'active', lastUpdated: '22 Sep 2026, 09:30', users: [], vessels: [] },
       { id: 106, email: 'charter@geoserves.com', providerId: 1, status: 'disconnected', lastUpdated: '01 Aug 2026, 11:02', users: [
         { userId: 'u5', email: 'daniel.ortiz@geoserves.com', perms: perms(true, true, true) },
-        { userId: 'u6', email: 'mei.chen@geoserves.com',     perms: perms(true, false, false) } ] },
+        { userId: 'u6', email: 'mei.chen@geoserves.com',     perms: perms(true, false, false) } ], vessels: [9, 10, 11] },
       { id: 107, email: 'fixtures@geoserves.com', providerId: 1, status: 'disconnected', lastUpdated: '01 Aug 2026, 11:02', users: [
-        { userId: 'u5', email: 'daniel.ortiz@geoserves.com', perms: perms(true, true, false) } ] },
+        { userId: 'u5', email: 'daniel.ortiz@geoserves.com', perms: perms(true, true, false) } ], vessels: [13] },
       { id: 108, email: 'postfixture@geoserves.com', providerId: 1, status: 'disconnected', lastUpdated: '01 Aug 2026, 11:02', users: [
         { userId: 'u3', email: 'marcus.lee@geoserves.com', perms: perms(true, false, false) },
         { userId: 'u6', email: 'mei.chen@geoserves.com',   perms: perms(true, true, false) },
-        { userId: 'u1', email: 'johnsam@geoserves.com',    perms: perms(true, false, false) } ] }
+        { userId: 'u1', email: 'johnsam@geoserves.com',    perms: perms(true, false, false) } ], vessels: [] }
     ];
+
+    var SHIP_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17l1.5-6h13L20 17M4 17c0 1.5 1.5 3 4 3h8c2.5 0 4-1.5 4-3M9 11V7h6v4"/></svg>';
+    var VESSELS = (function () {
+      var seed = [
+        ['STI Bosphorus', 'MR', 9785691], ['Sti Symphony', 'LR2', 9719692], ['PS Sydney', 'MR', 9829459],
+        ['Sti Yorkville', 'MR', 9688350], ['Alkea', 'Handymax', 9425502], ['Amax Anthem', 'Handymax', 9472634],
+        ['Sti San Telmo', 'MR', 9794410], ['Atria', 'Handymax', 9595137], ['Conti Benguela', 'Handymax', 9391373],
+        ['Sti Gallantry', 'LR2', 9712876], ['Sti Opera', 'MR', 9669940], ['STI Lily', 'LR2', 9838242],
+        ['Proodos', 'MR Plus', 9290921], ['Sti Grace', 'LR2', 9722584], ['STI Pontiac', 'MR', 9704465],
+        ['Sti Brixton', 'Handymax', 9686869], ['S Fontvieille', 'MR', 9645786], ['Sti Manhattan', 'MR', 9707261]
+      ];
+      var more = ['Sti Rose', 'Sti Rambla', 'Sti Elysees', 'Sti Madison', 'Sti Jardins', 'Sti Excelsior', 'Sti Veneto', 'Sti Alexis',
+        'Sti Winnie', 'Sti Lauren', 'Sti Broadway', 'Sti Selatar', 'Sti Gramercy', 'Sti Queens', 'Sti Mayfair', 'Sti Duchessa',
+        'Sti Oxford', 'Sti Lombard', 'Sti Fulham', 'Sti Memphis', 'Sti Soho', 'Sti Westminster', 'Sti Texas City', 'Sti Orchard',
+        'Sti Tribeca', 'Sti Hammersmith', 'Sti Pimlico', 'Sti Sanctity', 'Sti Savile Row', 'Sti Spiga'];
+      var types = ['MR', 'LR2', 'Handymax', 'MR Plus', 'LR1'];
+      var subs = ['Mercury Pool', 'Scorpio Pool', 'Handy Pool', 'Aframax Pool'];
+      var list = seed.map(function (v) { return { name: v[0], type: v[1], imo: v[2] }; });
+      more.forEach(function (n, i) {
+        list.push({ name: n, type: types[i % types.length], imo: 9200000 + ((i + 1) * 15731) % 690000 });
+      });
+      return list.map(function (v, i) {
+        v.id = i + 1; v.category = 'Product Carrier'; v.sub = subs[i % subs.length]; return v;
+      });
+    })();
+    function vesselById(id) { return VESSELS.find(function (v) { return v.id === id; }); }
+    function vesselMeta(v) { return v.type + ' | ' + v.imo + ' | ' + v.category; }
 
     function providerById(id) { return providers.find(function (p) { return p.id === id; }); }
     function mailboxById(id) { return mailboxes.find(function (m) { return m.id === id; }); }
@@ -4229,7 +4338,8 @@
 
     function mailboxMenu(m) {
       var p = providerById(m.providerId);
-      var html = item('data-mb-action="users" data-id="' + m.id + '"', 'Add / Modify Users');
+      var html = item('data-mb-action="users" data-id="' + m.id + '"', 'Add / Modify Users') +
+        item('data-mb-action="vessels" data-id="' + m.id + '"', 'Add / Modify Vessels');
       var status = '';
       if (m.status === 'active') {
         status = item('data-mb-action="inactive" data-id="' + m.id + '"', 'Make Inactive', true);
@@ -4254,12 +4364,17 @@
         var usersHtml = n
           ? '<button class="mb-v2-users-link" type="button" data-mb-action="view" data-id="' + m.id + '">' + plural(n, 'user') + '</button>'
           : '<button class="mb-v2-users-link mb-v2-users-link--empty" type="button" data-mb-action="users" data-id="' + m.id + '">0 users</button>';
+        var nv = (m.vessels || []).length;
+        var vesselsHtml = nv
+          ? '<button class="mb-v2-users-link" type="button" data-mb-action="viewvessels" data-id="' + m.id + '">' + plural(nv, 'vessel') + '</button>'
+          : '<button class="mb-v2-users-link mb-v2-users-link--empty" type="button" data-mb-action="vessels" data-id="' + m.id + '">0 vessels</button>';
         return '<tr data-mailbox-id="' + m.id + '">' +
           '<td><span class="mb-v2-mailbox">' + esc(m.email) + '</span></td>' +
           '<td><span class="mb-v2-provider" title="' + esc(p.name) + '">' + t.icon(14) + t.label + '</span></td>' +
           '<td>' + badge(MAILBOX_BADGE, m.status) + '</td>' +
           '<td class="provider-last-updated" style="white-space:nowrap;">' + m.lastUpdated + '</td>' +
           '<td>' + usersHtml + '</td>' +
+          '<td>' + vesselsHtml + '</td>' +
           '<td>' + kebab('m' + m.id, mailboxMenu(m)) + '</td>' +
         '</tr>';
       }).join('');
@@ -4503,6 +4618,8 @@
       var action = btn.dataset.mbAction;
       if (action === 'users') openUserMapping(m);
       else if (action === 'view') openMappedUsers(m);
+      else if (action === 'vessels') openVesselMapping(m);
+      else if (action === 'viewvessels') openMappedVessels(m);
       else if (action === 'inactive' && m.status === 'active') {
         m.status = 'inactive'; m.lastUpdated = stamp(); renderAll();
         toast(m.email + ' is Inactive. No new emails will be fetched from the next sync cycle.');
@@ -4587,6 +4704,100 @@
     document.getElementById('pmbAddBtn').addEventListener('click', function () {
       window.closeModal(pmbOverlay);
       openAddMailbox(pmbTarget.id);
+    });
+
+    /* ---------- Vessel mapping ---------- */
+    var vmOverlay = document.getElementById('vesselMapOverlay');
+    var vmSearch = document.getElementById('vmSearch');
+    var vmType = document.getElementById('vmType');
+    var vmSub = document.getElementById('vmSub');
+    var vmGrid = document.getElementById('vmGrid');
+    var vmAll = document.getElementById('vmSelectAll');
+    var vmTarget = null, vmDraft = {};
+
+    function uniq(key) {
+      var seen = {};
+      return VESSELS.map(function (v) { return v[key]; }).filter(function (x) { return seen[x] ? false : (seen[x] = true); });
+    }
+    function fillSelect(sel, placeholder, values) {
+      sel.innerHTML = '<option value="">' + placeholder + '</option>' + values.map(function (v) { return '<option value="' + esc(v) + '">' + esc(v) + '</option>'; }).join('');
+    }
+    function vmFiltered() {
+      var q = vmSearch.value.trim().toLowerCase();
+      return VESSELS.filter(function (v) {
+        return (!q || v.name.toLowerCase().indexOf(q) > -1) && (!vmType.value || v.type === vmType.value) && (!vmSub.value || v.sub === vmSub.value);
+      });
+    }
+    function renderVesselGrid() {
+      var list = vmFiltered();
+      var selectedTotal = VESSELS.filter(function (v) { return vmDraft[v.id]; }).length;
+      var selectedShown = list.filter(function (v) { return vmDraft[v.id]; }).length;
+      document.getElementById('vmCounts').textContent =
+        'Selected: ' + selectedTotal + ' (' + selectedShown + ' with current filters) | Filtered: ' + list.length + ' | Total: ' + VESSELS.length;
+      vmGrid.innerHTML = list.length ? list.map(function (v) {
+        return '<button class="vm-card" type="button" data-vid="' + v.id + '" aria-pressed="' + !!vmDraft[v.id] + '" title="' + esc(v.name + ' — ' + vesselMeta(v)) + '">' +
+          '<span class="vm-card__icon">' + SHIP_ICON + '</span>' +
+          '<span class="vm-card__text"><span class="vm-card__name">' + esc(v.name) + '</span><span class="vm-card__meta">' + esc(vesselMeta(v)) + '</span></span></button>';
+      }).join('') : '<div class="vm-empty">No vessels match your filters.</div>';
+      vmAll.disabled = !list.length;
+      vmAll.checked = list.length > 0 && selectedShown === list.length;
+      vmAll.indeterminate = selectedShown > 0 && selectedShown < list.length;
+    }
+    function openVesselMapping(m) {
+      vmTarget = m;
+      vmDraft = {};
+      (m.vessels || []).forEach(function (id) { vmDraft[id] = true; });
+      document.getElementById('vmTitle').textContent = 'Map Vessels · ' + m.email;
+      vmSearch.value = '';
+      fillSelect(vmType, 'Select Vessel Type', uniq('type'));
+      fillSelect(vmSub, 'Select Sub Company', uniq('sub'));
+      renderVesselGrid();
+      vmGrid.parentNode.scrollTop = 0;
+      window.openModal(vmOverlay);
+    }
+    vmGrid.addEventListener('click', function (e) {
+      var card = e.target.closest('[data-vid]');
+      if (!card) return;
+      var id = parseInt(card.dataset.vid, 10);
+      if (vmDraft[id]) delete vmDraft[id]; else vmDraft[id] = true;
+      renderVesselGrid();
+      var again = vmGrid.querySelector('[data-vid="' + id + '"]');
+      if (again) again.focus();
+    });
+    [vmSearch, vmType, vmSub].forEach(function (el) { el.addEventListener(el === vmSearch ? 'input' : 'change', renderVesselGrid); });
+    vmAll.addEventListener('click', function () {
+      var list = vmFiltered();
+      var allOn = list.every(function (v) { return vmDraft[v.id]; });
+      list.forEach(function (v) { if (allOn) delete vmDraft[v.id]; else vmDraft[v.id] = true; });
+      renderVesselGrid();
+    });
+    document.getElementById('vmSaveBtn').addEventListener('click', function () {
+      var ids = VESSELS.filter(function (v) { return vmDraft[v.id]; }).map(function (v) { return v.id; });
+      var changed = JSON.stringify(ids) !== JSON.stringify(vmTarget.vessels || []);
+      vmTarget.vessels = ids;
+      if (changed) vmTarget.lastUpdated = stamp();
+      window.closeModal(vmOverlay);
+      renderAll();
+      if (changed) toast(ids.length ? plural(ids.length, 'vessel') + ' mapped to ' + vmTarget.email + '.' : 'Vessel mapping cleared for ' + vmTarget.email + '.');
+    });
+
+    /* ---------- Mapped vessels (read-only) ---------- */
+    var mvOverlay = document.getElementById('mappedVesselsOverlay');
+    var mvTarget = null;
+    function openMappedVessels(m) {
+      mvTarget = m;
+      document.getElementById('mvTitle').textContent = 'Mapped Vessels · ' + m.email;
+      document.getElementById('mvList').innerHTML = (m.vessels || []).length ? m.vessels.map(function (id) {
+        var v = vesselById(id);
+        return v ? '<div class="um-view-row"><span class="mv-row__icon">' + SHIP_ICON + '</span>' +
+          '<div style="min-width:0;"><div class="um-user__name">' + esc(v.name) + '</div><div class="um-view-row__email">' + esc(vesselMeta(v)) + '</div></div>' +
+          '<span class="perm-chip" style="margin-left:auto;">' + esc(v.sub) + '</span></div>' : '';
+      }).join('') : '<p class="um-empty">No vessels mapped yet.</p>';
+      window.openModal(mvOverlay);
+    }
+    document.getElementById('mvManageBtn').addEventListener('click', function () {
+      window.closeModal(mvOverlay);
+      openVesselMapping(mvTarget);
     });
 
     /* ---------- Mapped users (read-only) ---------- */
@@ -4798,19 +5009,22 @@
           toast('Provider is no longer enabled. Mailbox was not added.');
           return;
         }
-        amNewMailbox = { id: Date.now(), email: email, providerId: p.id, status: 'active', lastUpdated: stamp(), users: [] };
+        amNewMailbox = { id: Date.now(), email: email, providerId: p.id, status: 'active', lastUpdated: stamp(), users: [], vessels: [] };
         mailboxes.push(amNewMailbox);
         renderAll();
         var icon = document.getElementById('addMbV2ResultIcon');
         icon.className = 'connect-result-icon connect-result-icon--success';
         icon.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>';
         document.getElementById('addMbV2ResultTitle').textContent = 'Mailbox Connected';
-        document.getElementById('addMbV2ResultMsg').textContent = email + ' is Active under ' + p.name + '. Map users to give them access, or add another mailbox.';
+        document.getElementById('addMbV2ResultMsg').textContent = email + ' is Active under ' + p.name + '. Map users and vessels to start using it.';
         amStep('result');
       }, 1800);
     });
     document.getElementById('addMbV2DoneBtn').addEventListener('click', function () { window.closeModal(amOverlay); });
-    document.getElementById('addMbV2AnotherBtn').addEventListener('click', function () { amNext.click(); });
+    document.getElementById('addMbV2MapVesselBtn').addEventListener('click', function () {
+      window.closeModal(amOverlay);
+      if (amNewMailbox) openVesselMapping(amNewMailbox);
+    });
     document.getElementById('addMbV2MapUsersBtn').addEventListener('click', function () {
       window.closeModal(amOverlay);
       if (amNewMailbox) openUserMapping(amNewMailbox);
