@@ -2340,17 +2340,14 @@
   .vm-card:hover { background: #E8EEF9; }
   .vm-card:focus-visible { outline: 2px solid var(--prim-blue-400, #3B81F6); outline-offset: 2px; }
   .vm-card[aria-pressed="true"] { background: #DBEAFE; border-color: var(--brand); }
-  .vm-card__icon {
-    width: 32px; height: 32px; border-radius: 9999px; background: var(--brand); color: #fff; flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .vm-card__icon svg { width: 18px; height: 18px; }
+  .vm-card__icon { width: 36px; height: 36px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+  .vm-card__icon svg { width: 36px; height: 36px; }
   .vm-card__text { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
   .vm-card__name { font-size: 15px; font-weight: 600; color: var(--prim-grey-800); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .vm-card__meta { font-size: 12px; color: var(--prim-grey-500); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .vm-empty { grid-column: 1 / -1; padding: 40px 0; text-align: center; font-size: 13px; color: var(--prim-grey-400); }
-  .mv-row__icon { width: 32px; height: 32px; border-radius: 9999px; background: var(--brand); color: #fff; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-  .mv-row__icon svg { width: 16px; height: 16px; }
+  .mv-row__icon { width: 32px; height: 32px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+  .mv-row__icon svg { width: 32px; height: 32px; }
   @media (max-width: 760px) {
     .vm-toolbar { grid-template-columns: 1fr; gap: 12px; }
     .vm-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -4244,7 +4241,7 @@
         { userId: 'u1', email: 'johnsam@geoserves.com',    perms: perms(true, false, false) } ], vessels: [] }
     ];
 
-    var SHIP_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17l1.5-6h13L20 17M4 17c0 1.5 1.5 3 4 3h8c2.5 0 4-1.5 4-3M9 11V7h6v4"/></svg>';
+    var SHIP_ICON = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 27 28" fill="none" aria-hidden="true"><rect y="0.733459" width="27" height="26.5331" rx="13.2665" fill="#1852FE"/><path d="M17.0171 9.07735H15.3763V7.43663C15.3763 7.04848 15.0613 6.73346 14.6732 6.73346H12.3293C11.9411 6.73346 11.6261 7.04848 11.6261 7.43663V9.07735H9.98539C9.08065 9.07735 8.34467 9.81334 8.34467 10.7181V14.4955C8.34467 14.8836 8.65968 15.1987 9.04783 15.1987C9.43598 15.1987 9.751 14.8836 9.751 14.4955V10.7181C9.751 10.5887 9.85601 10.4837 9.98539 10.4837H17.0171C17.1465 10.4837 17.2515 10.5887 17.2515 10.7181V14.4955C17.2515 14.8836 17.5665 15.1987 17.9546 15.1987C18.3428 15.1987 18.6578 14.8836 18.6578 14.4955V10.7181C18.6578 9.81334 17.9218 9.07735 17.0171 9.07735Z" fill="white"/><path d="M7.51218 18.2996C7.88439 18.1628 8.22004 17.9424 8.47881 17.6312C8.85852 17.1746 9.42668 16.8971 10.0389 16.8689H10.0445C10.7318 16.8689 11.3187 17.1436 11.7199 17.6209C12.1625 18.1487 12.8131 18.4515 13.506 18.4515C14.0507 18.4515 14.5795 18.2593 14.9958 17.9106C15.0998 17.8234 15.1973 17.7259 15.2845 17.6209C15.6867 17.1418 16.2755 16.8671 16.9009 16.8671C17.5337 16.868 18.1244 17.1465 18.5247 17.6302C18.7769 17.934 19.1266 18.1571 19.5082 18.2968L20.0361 16.4245C20.2714 15.6014 19.8467 14.7491 19.047 14.4416L13.7535 12.4062C13.5913 12.3443 13.4113 12.3443 13.2491 12.4062L7.95565 14.4416C7.15685 14.7491 6.73214 15.6014 6.9684 16.4273L7.51312 18.2987L7.51218 18.2996Z" fill="white"/><path d="M20.2753 21.2656C19.0161 21.2656 17.8217 20.8062 16.8972 19.983C16.8654 20.0111 16.8335 20.0383 16.8016 20.0655C14.8318 21.7166 11.9779 21.6331 10.1046 19.984C9.1802 20.8062 7.98576 21.2665 6.72662 21.2665H6.69943C6.31128 21.2647 5.99813 20.9478 6.00001 20.5596C6.00188 20.1724 6.31597 19.8602 6.70318 19.8602C6.71161 19.8602 6.71912 19.8602 6.72662 19.8602C7.82637 19.8602 8.85862 19.3755 9.55991 18.5289C9.69399 18.3685 9.90306 18.2832 10.1018 18.2748C10.31 18.2748 10.5068 18.3667 10.6409 18.5261C11.9629 20.103 14.3218 20.3102 15.8969 18.9892C16.0638 18.8495 16.2203 18.6929 16.36 18.5261C16.4941 18.3667 16.691 18.2748 16.8991 18.2748H16.901C17.1091 18.2748 17.307 18.3685 17.4401 18.5289C18.1461 19.3811 19.2271 19.8583 20.2931 19.8602H20.2968C20.684 19.8602 20.9981 20.1724 21 20.5596C21.0019 20.9478 20.6887 21.2647 20.3006 21.2665H20.2734L20.2753 21.2656Z" fill="white"/></svg>';
     var VESSELS = (function () {
       var seed = [
         ['STI Bosphorus', 'MR', 9785691], ['Sti Symphony', 'LR2', 9719692], ['PS Sydney', 'MR', 9829459],
